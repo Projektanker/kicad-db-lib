@@ -7,7 +7,10 @@
   <Design.DataContext>
     <vm:MainWindowViewModel/>
   </Design.DataContext>
-  
-  <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+  <DockPanel>    
+    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Button Content="Test" Command="{Binding Test}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+  </DockPanel>
   
 </Window>

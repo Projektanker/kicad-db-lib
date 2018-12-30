@@ -1,0 +1,12 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP 10K_0805
+D 10K 0603
+K Resistor 10K 0603
+$ENDCMP
+#
+$CMP 1K
+F file
+$ENDCMP
+#
+#End Doc Library

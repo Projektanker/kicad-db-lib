@@ -14,9 +14,11 @@ namespace KiCadDbLib
         }
 
         public static AppBuilder BuildAvaloniaApp()
-            => AppBuilder.Configure<App>()
-                .UsePlatformDetect()
-                .UseReactiveUI()
-                .LogToDebug();
+        {
+            return AppBuilder.Configure<App>()
+                           .UsePlatformDetect()
+                           .UseReactiveUI()
+                           .LogToDebug();
+        }
     }
 }
