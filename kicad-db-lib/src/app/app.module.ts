@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // < -- NgModel lives here
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // < -- NgModel lives here
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './in-memory-data.service';
@@ -14,9 +14,15 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { HeroSearchComponent } from './hero-search/hero-search.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
-import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatTableModule, MatPaginatorModule, MatSortModule } from '@angular/material';
+import {
+  MatToolbarModule, MatButtonModule, MatSidenavModule,
+  MatIconModule, MatListModule, MatTableModule, MatPaginatorModule,
+  MatSortModule, MatInputModule, MatSelectModule, MatRadioModule,
+  MatCardModule
+} from '@angular/material';
 import { NavComponent } from './nav/nav.component';
 import { PartsComponent } from './parts/parts.component';
+import { PartDetailComponent } from './part-detail/part-detail.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +33,8 @@ import { PartsComponent } from './parts/parts.component';
     DashboardComponent,
     HeroSearchComponent,
     NavComponent,
-    PartsComponent
+    PartsComponent,
+    PartDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +56,12 @@ import { PartsComponent } from './parts/parts.component';
     MatListModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatInputModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatCardModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
