@@ -34,7 +34,7 @@ import { PartDetailComponent } from './part-detail/part-detail.component';
     HeroSearchComponent,
     NavComponent,
     PartsComponent,
-    PartDetailComponent
+    PartDetailComponent,
   ],
   imports: [
     BrowserModule,
