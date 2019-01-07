@@ -1,58 +1,38 @@
 import { DataSource } from '@angular/cdk/collections';
 import { MatPaginator, MatSort } from '@angular/material';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Observable, of as observableOf, merge } from 'rxjs';
-
-// TODO: Replace this with your own data model type
-export interface PartsItem {
-  name: string;
-  id: number;
-}
-
-// TODO: replace this with real data from your application
-const EXAMPLE_DATA: PartsItem[] = [
-  { id: 1, name: 'Hydrogen' },
-  { id: 2, name: 'Helium' },
-  { id: 3, name: 'Lithium' },
-  { id: 4, name: 'Beryllium' },
-  { id: 5, name: 'Boron' },
-  { id: 6, name: 'Carbon' },
-  { id: 7, name: 'Nitrogen' },
-  { id: 8, name: 'Oxygen' },
-  { id: 9, name: 'Fluorine' },
-  { id: 10, name: 'Neon' },
-  { id: 11, name: 'Sodium' },
-  { id: 12, name: 'Magnesium' },
-  { id: 13, name: 'Aluminum' },
-  { id: 14, name: 'Silicon' },
-  { id: 15, name: 'Phosphorus' },
-  { id: 16, name: 'Sulfur' },
-  { id: 17, name: 'Chlorine' },
-  { id: 18, name: 'Argon' },
-  { id: 19, name: 'Potassium' },
-  { id: 20, name: 'Calcium' },
-];
+import { Part } from '../part/part';
+import { PartService } from '../part.service';
 
 /**
  * Data source for the Parts view. This class should
  * encapsulate all logic for fetching and manipulating the displayed data
  * (including sorting, pagination, and filtering).
  */
-export class PartsDataSource extends DataSource<PartsItem> {
-  data: PartsItem[] = EXAMPLE_DATA;
-
-  constructor(private paginator: MatPaginator, private sort: MatSort) {
+export class PartsDataSource extends DataSource<Part> {
+  data = { length: 0 };
+  constructor(private paginator: MatPaginator, private sort: MatSort,
+    // private data: Part[],
+    private partService: PartService) {
     super();
   }
+
 
   /**
    * Connect this data source to the table. The table will only update when
    * the returned stream emits new items.
    * @returns A stream of the items to be rendered.
    */
-  connect(): Observable<PartsItem[]> {
+  connect(): Observable<Part[]> {
+    return this.partService.getParts().pipe(
+      tap(data => {
+        console.log(data.length);
+        this.data.length = data.length;
+      }));
     // Combine everything that affects the rendered data into one update
     // stream for the data-table to consume.
+    /*
     const dataMutations = [
       observableOf(this.data),
       this.paginator.page,
@@ -65,6 +45,7 @@ export class PartsDataSource extends DataSource<PartsItem> {
     return merge(...dataMutations).pipe(map(() => {
       return this.getPagedData(this.getSortedData([...this.data]));
     }));
+    */
   }
 
   /**
@@ -77,7 +58,7 @@ export class PartsDataSource extends DataSource<PartsItem> {
    * Paginate the data (client-side). If you're using server-side pagination,
    * this would be replaced by requesting the appropriate data from the server.
    */
-  private getPagedData(data: PartsItem[]) {
+  private getPagedData(data: Part[]) {
     const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
     return data.splice(startIndex, this.paginator.pageSize);
   }
@@ -86,7 +67,7 @@ export class PartsDataSource extends DataSource<PartsItem> {
    * Sort the data (client-side). If you're using server-side sorting,
    * this would be replaced by requesting the appropriate data from the server.
    */
-  private getSortedData(data: PartsItem[]) {
+  private getSortedData(data: Part[]) {
     if (!this.sort.active || this.sort.direction === '') {
       return data;
     }
@@ -94,7 +75,7 @@ export class PartsDataSource extends DataSource<PartsItem> {
     return data.sort((a, b) => {
       const isAsc = this.sort.direction === 'asc';
       switch (this.sort.active) {
-        case 'name': return compare(a.name, b.name, isAsc);
+        case 'value': return compare(a.value, b.value, isAsc);
         case 'id': return compare(+a.id, +b.id, isAsc);
         default: return 0;
       }

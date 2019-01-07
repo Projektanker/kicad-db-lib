@@ -14,7 +14,7 @@ export class PartDetailComponent implements OnInit {
   part: Part;
 
   partForm = this.fb.group({
-    id: [{ value: null, disabled: true }],
+    id: [{ value: null }],
     reference: [null], // , Validators.required],
     value: [null], // , Validators.required],
     footprint: [null], // , Validators.required],
@@ -33,17 +33,6 @@ export class PartDetailComponent implements OnInit {
 
   ngOnInit() {
     this.getPart();
-    this.part = {
-      id: 11, reference: 'R',
-      value: '1K',
-      footprint: 'Resistor_SMD:R_0603_1608Metric',
-      library: 'R_0603',
-      description: 'Resistor 1K 0603 75V',
-      keywords: 'Res Resistor 1K 0603',
-      symbol: '{lib}:R',
-      datasheet: 'no datasheet'
-    };
-    this.partForm.patchValue(this.part);
   }
 
   getPart(): void {

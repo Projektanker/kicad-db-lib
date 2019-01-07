@@ -1,3 +1,8 @@
 .full-width-table {
   width: 100%;
 }
+
+.parts-card {
+  min-width: 120px;
+  margin: 20px;
+}

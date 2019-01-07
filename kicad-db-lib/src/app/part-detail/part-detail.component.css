@@ -1,19 +1,10 @@
-.example-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.example-container>* {
-  width: 100%;
-}
-
 .full-width {
   width: 100%;
 }
 
 .part-card {
   min-width: 120px;
-  margin: 20px auto;
+  margin: 20px;
 }
 
 .mat-radio-button {

@@ -7,7 +7,7 @@
       <div class="row">
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput placeholder="ID" formControlName="id">
+            <input matInput placeholder="ID" formControlName="id" readonly>
           </mat-form-field>
         </div>
         <div class="col">
@@ -85,6 +85,7 @@
     </mat-card-content>
     <mat-card-actions>
       <button mat-raised-button color="primary" type="submit" [disabled]="!partForm.valid">Submit</button>
+      <button mat-raised-button (click)="goBack()">go back</button>
     </mat-card-actions>
   </mat-card>
 </form>

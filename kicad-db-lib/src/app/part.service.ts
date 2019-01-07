@@ -43,6 +43,7 @@ export class PartService {
 
   /** PUT: update the part on the server */
   updatePart(part: Part): Observable<any> {
+    this.log(`update part id=${part.id}`);
     return this.http.put(this.partsUrl, part, httpOptions).pipe(
       tap(_ => this.log(`updated part id=${part.id}`)),
       catchError(this.handleError<any>('updatePart'))
