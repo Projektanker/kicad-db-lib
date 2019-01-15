@@ -26,5 +26,5 @@ export class Part {
     keywords: string;
 
     // Custom fields like manufacturer etc.
-    // public Dictionary<string, string> CustomFields: string;
+    customFields: { [name: string]: string };
 }

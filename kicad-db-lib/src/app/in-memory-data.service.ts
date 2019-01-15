@@ -29,7 +29,8 @@ export class InMemoryDataService implements InMemoryDbService {
         description: 'Resistor 1K 0603 75V',
         keywords: 'Res Resistor 1K 0603',
         symbol: '{lib}:R',
-        datasheet: 'no datasheet'
+        datasheet: 'no datasheet',
+        customFields: {}
       },
       {
         id: 12,
@@ -40,7 +41,8 @@ export class InMemoryDataService implements InMemoryDbService {
         description: 'Resistor 10K 0603 75V',
         keywords: 'Res Resistor 10K 0603',
         symbol: '{lib}:R',
-        datasheet: 'no datasheet'
+        datasheet: 'no datasheet',
+        customFields: {}
       },
       {
         id: 13,
@@ -51,7 +53,8 @@ export class InMemoryDataService implements InMemoryDbService {
         description: 'Resistor 1K 0603 150V',
         keywords: 'Res Resistor 1K 0603',
         symbol: '{lib}:R',
-        datasheet: 'no datasheet'
+        datasheet: 'no datasheet',
+        customFields: {}
       },
       {
         id: 14,
@@ -62,7 +65,8 @@ export class InMemoryDataService implements InMemoryDbService {
         description: 'Resistor 10K 0805 150V',
         keywords: 'Res Resistor 10K 0805',
         symbol: '{lib}:R',
-        datasheet: 'no datasheet'
+        datasheet: 'no datasheet',
+        customFields: {}
       },
       {
         id: 15,
@@ -73,7 +77,8 @@ export class InMemoryDataService implements InMemoryDbService {
         description: 'Capacitor 100nF 50V 0603',
         keywords: 'Cap Capacitor 100n 0603',
         symbol: '{lib}:C',
-        datasheet: 'no datasheet'
+        datasheet: 'no datasheet',
+        customFields: {}
       },
       {
         id: 16,
@@ -84,7 +89,8 @@ export class InMemoryDataService implements InMemoryDbService {
         description: 'Capacitor 10uF 0805 16V',
         keywords: 'Capacitor Capacitor 10u 0805',
         symbol: '{lib}:C',
-        datasheet: 'no datasheet'
+        datasheet: 'no datasheet',
+        customFields: {}
       }
     ];
     return { heroes, parts };
