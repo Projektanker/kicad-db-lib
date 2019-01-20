@@ -23,6 +23,7 @@ import {
 import { NavComponent } from './nav/nav.component';
 import { PartsComponent } from './parts/parts.component';
 import { PartDetailComponent } from './part-detail/part-detail.component';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { PartDetailComponent } from './part-detail/part-detail.component';
     NavComponent,
     PartsComponent,
     PartDetailComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,

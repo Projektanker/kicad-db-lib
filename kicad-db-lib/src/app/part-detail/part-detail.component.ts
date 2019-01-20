@@ -15,14 +15,14 @@ export class PartDetailComponent implements OnInit {
 
   partForm = this.fb.group({
     id: [{ value: null }],
-    reference: [null], // , Validators.required],
-    value: [null], // , Validators.required],
-    footprint: [null], // , Validators.required],
-    symbol: [null], // , Validators.required],
-    library: [null], // , Validators.required],
-    datasheet: null,
-    description: [null], // , Validators.required],
-    keywords: [null], // , Validators.required]
+    reference: [''], // , Validators.required],
+    value: [''], // , Validators.required],
+    footprint: [''], // , Validators.required],
+    symbol: [''], // , Validators.required],
+    library: [''], // , Validators.required],
+    datasheet: '',
+    description: [''], // , Validators.required],
+    keywords: [''], // , Validators.required]
   });
 
   constructor(
@@ -40,11 +40,17 @@ export class PartDetailComponent implements OnInit {
     this.partService.getPart(id)
       .subscribe((newPart: Part) => {
         this.part = newPart;
+        /*
+        for (const key in this.part.customFields) {
+          console.log(key);
+        }
+        */
         this.partForm.patchValue(this.part);
       });
   }
 
   onSubmit(): void {
+    console.warn('SUBMIT');
     console.warn(this.partForm.value);
     this.part = this.partForm.value;
     this.partService.updatePart(this.part)
@@ -52,6 +58,7 @@ export class PartDetailComponent implements OnInit {
   }
 
   goBack(): void {
+    console.warn('BACK');
     this.location.back();
   }
 }

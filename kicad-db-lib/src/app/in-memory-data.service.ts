@@ -30,7 +30,7 @@ export class InMemoryDataService implements InMemoryDbService {
         keywords: 'Res Resistor 1K 0603',
         symbol: '{lib}:R',
         datasheet: 'no datasheet',
-        customFields: {}
+        customFields: { OC_FARNELL: '123465', OC_MOUSER: 'm123465' }
       },
       {
         id: 12,

@@ -1,11 +1,28 @@
-<form [formGroup]="partForm" (ngSubmit)="onSubmit()">
+<form *ngIf="settingsForm" [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
   <mat-card class="part-card">
     <mat-card-header>
       <mat-card-title>Part Information</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div *ngIf="part">
-        {{part | json}}
+      <h2>Custom Fields</h2>
+      <div formArrayName="customFields" *ngFor="let field of settingsForm.get('customFields'); let i = index;">
+        <div class="row">
+          <div class="col">
+            <mat-form-field class="full-width">
+              <input matInput placeholder="Library" formControlName="library">
+              <mat-error *ngIf="partForm.controls['library'].hasError('required')">
+                Library is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div [formGroupName]="i">
+          <input formControlName="name" placeholder="Item name">
+          <input formControlName="description" placeholder="Item description">
+          <input formControlName="price" placeholder="Item price">
+        </div>
+
+        Chosen name: {{ orderForm.controls.items.controls[i].controls.name.value }}
       </div>
       <div class="row">
         <div class="col">
