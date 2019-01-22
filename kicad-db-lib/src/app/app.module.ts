@@ -36,7 +36,7 @@ import { SettingsComponent } from './settings/settings.component';
     NavComponent,
     PartsComponent,
     PartDetailComponent,
-    SettingsComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,

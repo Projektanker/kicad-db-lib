@@ -15,25 +15,38 @@ export class SettingsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private settingsService: SettingsService,
-    private location: Location) { }
+    private location: Location) {
+    console.log('Settiings constructor');
+  }
 
   ngOnInit() {
+    console.log('Settings ngOnInit');
     this.settingsService.getSettings().subscribe(
       settings => this.initForm(settings)
     );
   }
 
   initForm(settings: Settings) {
+    console.log('Settings initForm');
     const customFields: FormControl[] = [];
     settings.customFields.forEach(field => {
       customFields.push(new FormControl(field, Validators.required));
     });
-    this.settingsForm.addControl('customFields', new FormArray(customFields));
+    this.settingsForm = new FormGroup({
+      'customFields': new FormArray(customFields)
+    });
+    console.log(this.settingsForm.value);
   }
 
   addCustomField(): void {
-    const array: FormArray = this.settingsForm.get['customFields'] as FormArray;
+    console.log('addCustomField()');
+    const array: FormArray = this.settingsForm.get('customFields') as FormArray;
     array.push(new FormControl('', Validators.required));
+  }
+
+  removeCustomField(index: number): void {
+    const array: FormArray = this.settingsForm.get('customFields') as FormArray;
+    array.removeAt(index);
   }
 
   onSubmit(): void {

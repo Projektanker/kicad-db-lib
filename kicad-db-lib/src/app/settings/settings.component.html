@@ -1,110 +1,31 @@
 <form *ngIf="settingsForm" [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
-  <mat-card class="part-card">
+  <mat-card class="settings-card">
     <mat-card-header>
-      <mat-card-title>Part Information</mat-card-title>
+      <mat-card-title>Settings</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <h2>Custom Fields</h2>
-      <div formArrayName="customFields" *ngFor="let field of settingsForm.get('customFields'); let i = index;">
+      <div formArrayName="customFields" *ngFor="let fields of settingsForm.get('customFields').controls; let i = index;">
         <div class="row">
           <div class="col">
+            <button mat-button type="button" (click)="removeCustomField(i)">x</button>
             <mat-form-field class="full-width">
-              <input matInput placeholder="Library" formControlName="library">
-              <mat-error *ngIf="partForm.controls['library'].hasError('required')">
+              <input matInput placeholder={{i+1}} formControlName={{i}}>
+              <mat-error *ngIf="settingsForm.get('customFields').at(i).hasError('required')">
                 Library is <strong>required</strong>
               </mat-error>
             </mat-form-field>
           </div>
         </div>
-        <div [formGroupName]="i">
-          <input formControlName="name" placeholder="Item name">
-          <input formControlName="description" placeholder="Item description">
-          <input formControlName="price" placeholder="Item price">
-        </div>
-
-        Chosen name: {{ orderForm.controls.items.controls[i].controls.name.value }}
       </div>
       <div class="row">
         <div class="col">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="ID" formControlName="id" readonly>
-          </mat-form-field>
-        </div>
-        <div class="col">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Library" formControlName="library">
-            <mat-error *ngIf="partForm.controls['library'].hasError('required')">
-              Library is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Reference" formControlName="reference">
-            <mat-error *ngIf="partForm.controls['reference'].hasError('required')">
-              Reference is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <div class="col">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Value" formControlName="value">
-            <mat-error *ngIf="partForm.controls['value'].hasError('required')">
-              Value is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Symbol" formControlName="symbol">
-            <mat-error *ngIf="partForm.controls['symbol'].hasError('required')">
-              Symbol is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <div class="col">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Footprint" formControlName="footprint">
-            <mat-error *ngIf="partForm.controls['footprint'].hasError('required')">
-              Footprint is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Datasheet" formControlName="datasheet">
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Description" formControlName="description">
-            <mat-error *ngIf="partForm.controls['description'].hasError('required')">
-              Description is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Keywords" formControlName="keywords">
-            <mat-error *ngIf="partForm.controls['keywords'].hasError('required')">
-              Keywords is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
+          <button mat-mini-fab type="button" (click)="addCustomField()">+</button>
         </div>
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="primary" type="submit" [disabled]="!partForm.valid">Submit</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!settingsForm.valid">Submit</button>
       <button mat-raised-button color="accent" type="button" (click)="goBack()">go back</button>
     </mat-card-actions>
   </mat-card>
