@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { PartService } from '../part.service';
 import { Part } from '../part/part';
+import { SettingsService } from '../settings.service';
+import { Settings } from '../settings/settings';
 
 @Component({
   selector: 'app-part-detail',
@@ -12,23 +14,15 @@ import { Part } from '../part/part';
 })
 export class PartDetailComponent implements OnInit {
   part: Part;
+  settings: Settings;
 
-  partForm = this.fb.group({
-    id: [{ value: null }],
-    reference: [''], // , Validators.required],
-    value: [''], // , Validators.required],
-    footprint: [''], // , Validators.required],
-    symbol: [''], // , Validators.required],
-    library: [''], // , Validators.required],
-    datasheet: '',
-    description: [''], // , Validators.required],
-    keywords: [''], // , Validators.required]
-  });
+  partForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private partService: PartService,
+    private settingsService: SettingsService,
     private location: Location) { }
 
   ngOnInit() {
@@ -40,13 +34,39 @@ export class PartDetailComponent implements OnInit {
     this.partService.getPart(id)
       .subscribe((newPart: Part) => {
         this.part = newPart;
-        /*
-        for (const key in this.part.customFields) {
-          console.log(key);
-        }
-        */
-        this.partForm.patchValue(this.part);
+        this.getSettings();
       });
+  }
+
+  getSettings(): void {
+    this.settingsService.getSettings()
+      .subscribe(settings => {
+        this.settings = settings;
+        this.initForm();
+      });
+  }
+
+  initForm(): void {
+    const customFieldsGroup: FormGroup = new FormGroup({});
+    this.settings.customFields.forEach(field => {
+      customFieldsGroup.addControl(field, new FormControl('', Validators.required));
+    });
+
+    this.partForm = new FormGroup({
+      'id': new FormControl(null),
+      'reference': new FormControl('', Validators.required),
+      'value': new FormControl(''),
+      'footprint': new FormControl(''),
+      'symbol': new FormControl(''),
+      'library': new FormControl(''),
+      'datasheet': new FormControl(''),
+      'description': new FormControl(''),
+      'keywords': new FormControl(''),
+      'customFields': customFieldsGroup,
+    });
+
+    console.warn(this.partForm.value);
+    this.partForm.patchValue(this.part);
   }
 
   onSubmit(): void {

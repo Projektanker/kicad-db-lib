@@ -30,10 +30,12 @@ export class SettingsComponent implements OnInit {
 
   initForm(settings: Settings) {
     console.log('Settings initForm');
+
     const customFields: FormControl[] = [];
     settings.customFields.forEach(field => {
       customFields.push(new FormControl(field, Validators.required));
     });
+
     this.settingsForm = new FormGroup({
       'customFields': new FormArray(customFields)
     });

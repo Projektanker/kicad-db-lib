@@ -25,6 +25,7 @@ import { NavComponent } from './nav/nav.component';
 import { PartsComponent } from './parts/parts.component';
 import { PartDetailComponent } from './part-detail/part-detail.component';
 import { SettingsComponent } from './settings/settings.component';
+import { KeysPipe } from './keys.pipe';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { SettingsComponent } from './settings/settings.component';
     NavComponent,
     PartsComponent,
     PartDetailComponent,
-    SettingsComponent
+    SettingsComponent,
+    KeysPipe
   ],
   imports: [
     BrowserModule,
