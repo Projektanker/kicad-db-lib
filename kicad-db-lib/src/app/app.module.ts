@@ -18,7 +18,8 @@ import {
   MatToolbarModule, MatButtonModule, MatSidenavModule,
   MatIconModule, MatListModule, MatTableModule, MatPaginatorModule,
   MatSortModule, MatInputModule, MatSelectModule, MatRadioModule,
-  MatCardModule
+  MatCardModule,
+  MatExpansionModule
 } from '@angular/material';
 import { NavComponent } from './nav/nav.component';
 import { PartsComponent } from './parts/parts.component';
@@ -63,6 +64,7 @@ import { SettingsComponent } from './settings/settings.component';
     MatSelectModule,
     MatRadioModule,
     MatCardModule,
+    MatExpansionModule,
     ReactiveFormsModule
   ],
   providers: [],

@@ -12,6 +12,8 @@ import { Settings } from './settings';
 export class SettingsComponent implements OnInit {
   settingsForm: FormGroup;
 
+  get customFields(): FormArray { return this.settingsForm.get('customFields') as FormArray; }
+
   constructor(
     private fb: FormBuilder,
     private settingsService: SettingsService,
@@ -39,14 +41,11 @@ export class SettingsComponent implements OnInit {
   }
 
   addCustomField(): void {
-    console.log('addCustomField()');
-    const array: FormArray = this.settingsForm.get('customFields') as FormArray;
-    array.push(new FormControl('', Validators.required));
+    this.customFields.push(new FormControl('', Validators.required));
   }
 
   removeCustomField(index: number): void {
-    const array: FormArray = this.settingsForm.get('customFields') as FormArray;
-    array.removeAt(index);
+    this.customFields.removeAt(index);
   }
 
   onSubmit(): void {
