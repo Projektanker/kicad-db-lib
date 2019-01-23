@@ -1,38 +1,41 @@
-<mat-card class="parts-card">
-  <mat-card-header>
-    <mat-card-title>Parts</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <table mat-table class="full-width-table" [dataSource]="dataSource" matSort aria-label="Elements">
-      <!-- Id Column -->
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
-        <td mat-cell *matCellDef="let row">{{row.id}}</td>
-      </ng-container>
+<mat-toolbar class="mat-elevation-z6" color="primary">
+  <span>Parts</span>
+  <span class="global-toolbar-spacer"></span>
+  <button type="button" aria-label="settings" mat-icon-button routerLink="/settings">
+    <mat-icon aria-label="settings icon">settings</mat-icon>
+  </button>
+</mat-toolbar>
 
-      <!-- Library Column -->
-      <ng-container matColumnDef="library">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Library</th>
-        <td mat-cell *matCellDef="let row">{{row.library}}</td>
-      </ng-container>
+<div class="global-content">
+  <table mat-table class="full-width-table" [dataSource]="dataSource" matSort aria-label="Elements">
+    <!-- Id Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+      <td mat-cell *matCellDef="let row">{{row.id}}</td>
+    </ng-container>
 
-      <!-- Reference Column -->
-      <ng-container matColumnDef="reference">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Reference</th>
-        <td mat-cell *matCellDef="let row">{{row.reference}}</td>
-      </ng-container>
+    <!-- Library Column -->
+    <ng-container matColumnDef="library">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Library</th>
+      <td mat-cell *matCellDef="let row">{{row.library}}</td>
+    </ng-container>
 
-      <!-- Value Column -->
-      <ng-container matColumnDef="value">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Value</th>
-        <td mat-cell *matCellDef="let row">{{row.value}}</td>
-      </ng-container>
+    <!-- Reference Column -->
+    <ng-container matColumnDef="reference">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Reference</th>
+      <td mat-cell *matCellDef="let row">{{row.reference}}</td>
+    </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClicked(row)"></tr>
-    </table>
+    <!-- Value Column -->
+    <ng-container matColumnDef="value">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Value</th>
+      <td mat-cell *matCellDef="let row">{{row.value}}</td>
+    </ng-container>
 
-    <mat-paginator #paginator [length]="dataSource.data.length" [pageIndex]="0" [pageSize]="50" [pageSizeOptions]="[10, 25, 50, 100, 250]">
-    </mat-paginator>
-  </mat-card-content>
-</mat-card>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClicked(row)"></tr>
+  </table>
+
+  <mat-paginator #paginator [length]="dataSource.data.length" [pageIndex]="0" [pageSize]="50" [pageSizeOptions]="[10, 25, 50, 100, 250]">
+  </mat-paginator>
+</div>

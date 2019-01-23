@@ -1,0 +1,24 @@
+<form *ngIf="settingsForm" [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
+  <mat-toolbar class="mat-elevation-z6" color="primary">
+    <button type="submit" aria-label="submit" mat-icon-button [disabled]="!settingsForm.valid">
+      <mat-icon aria-label="submit icon">arrow_back</mat-icon>
+    </button>
+    <span>Fields</span>
+  </mat-toolbar>
+  <div class="global-content">
+    <button mat-icon-button type="button" (click)="addCustomField()">
+      <mat-icon>add</mat-icon>
+    </button>
+
+    <mat-form-field *ngFor="let field of customFields.controls; index as i;" formArrayName="customFields" class="full-width">
+      <input matInput placeholder="Custom field {{i+1}}" [formControlName]=i>
+      <button mat-icon-button matSuffix aria-label="Delete" (click)="removeCustomField(i)">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <mat-error *ngIf="settingsForm.get('customFields').at(i).hasError('required')">
+        Value is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+</form>

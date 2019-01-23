@@ -1,17 +1,14 @@
-<form *ngIf="partForm" [formGroup]="partForm" (ngSubmit)="onSubmit()">
-  <mat-card class="part-card">
-    <mat-card-header>
-      <mat-card-title>Part Information</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div *ngIf="part">
-        {{part | json}}
-      </div>
-      <div *ngIf="partForm">
-        {{partForm.value | json}}
-      </div>
+<section class="mat-typography">
+  <form *ngIf="partForm" [formGroup]="partForm" (ngSubmit)="onSubmit()">
+    <mat-toolbar class="mat-elevation-z6" color="primary">
+      <button type="submit" aria-label="submit" mat-icon-button [disabled]="!partForm.valid">
+        <mat-icon aria-label="submit icon">arrow_back</mat-icon>
+      </button>
+      <span>Part</span><span *ngIf="part">&nbsp;{{part.id}} - {{part.value}}</span>
+    </mat-toolbar>
+    <div class="global-content">
       <mat-divider></mat-divider>
-      <h3 mat-subheader>Basic fields</h3>
+      <h3>Basic fields</h3>
       <div *ngFor="let field of partForm.controls | keys; first as isFirst; last as isLast">
         <mat-form-field *ngIf="!isLast" class="full-width">
           <input matInput [placeholder]="field | uppercase" [formControlName]="field" [readonly]="isFirst">
@@ -23,7 +20,7 @@
 
       <mat-divider></mat-divider>
 
-      <h3 mat-subheader>Custom Fields</h3>
+      <h3>Custom Fields</h3>
       <div *ngFor="let field of partForm.get('customFields').controls | keys; first as isFirst; last as isLast">
         <mat-form-field formGroupName="customFields" class="full-width">
           <input matInput [placeholder]="field | uppercase" [formControlName]="field">
@@ -32,10 +29,12 @@
           </mat-error>
         </mat-form-field>
       </div>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-raised-button color="primary" type="submit" [disabled]="!partForm.valid">Submit</button>
-      <button mat-raised-button color="accent" type="button" (click)="goBack()">go back</button>
-    </mat-card-actions>
-  </mat-card>
-</form>
+    </div>
+  </form>
+  <div *ngIf="part">
+    {{part | json}}
+  </div>
+  <div *ngIf="partForm">
+    {{partForm.value | json}}
+  </div>
+</section>
