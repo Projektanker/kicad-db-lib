@@ -14,29 +14,19 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
 
-        <div formArrayName="customFields">
-          <div *ngFor="let field of customFields.controls; index as i;">
-            <div class="row">
-              <div class="col">
-                <mat-form-field class="full-width">
-                  <input matInput [placeholder]="i+1" [formControlName]=i>
-                  <button mat-button matSuffix mat-icon-button aria-label="Delete" (click)="removeCustomField(i)">
-                    <mat-icon>close</mat-icon>
-                  </button>
-                  <mat-error *ngIf="settingsForm.get('customFields').at(i).hasError('required')">
-                    Value is <strong>required</strong>
-                  </mat-error>
-                </mat-form-field>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <button mat-mini-fab type="button" (click)="addCustomField()">+</button>
-          </div>
-        </div>
+        <mat-form-field *ngFor="let field of customFields.controls; index as i;" formArrayName="customFields" class="full-width">
+          <input matInput placeholder="Custom field {{i+1}}" [formControlName]=i>
+          <button mat-icon-button matSuffix aria-label="Delete" (click)="removeCustomField(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <mat-error *ngIf="settingsForm.get('customFields').at(i).hasError('required')">
+            Value is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
 
+        <button mat-icon-button type="button" (click)="addCustomField()">
+          <mat-icon>add</mat-icon>
+        </button>
       </mat-expansion-panel>
 
     </mat-card-content>
