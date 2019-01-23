@@ -10,33 +10,28 @@
       <div *ngIf="partForm">
         {{partForm.value | json}}
       </div>
-      <div *ngFor="let field of partForm.controls | keys; first as isFirst; last as isLast">
-        <div class="row" *ngIf="!isLast">
-          <div class="col">
-            <mat-form-field class="full-width">
-              <input matInput [placeholder]="field | uppercase" [formControlName]="field" [readonly]="isFirst">
-              <mat-error *ngIf="partForm.controls[field].hasError('required')">
-                {{field | uppercase}} is <strong>required</strong>
-              </mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-      </div>
       <mat-divider></mat-divider>
-      <div formGroupName="customFields">
-        <div *ngFor="let field of partForm.get('customFields').controls | keys; first as isFirst; last as isLast">
-          <div class="row">
-            <div class="col">
-              <mat-form-field class="full-width">
-                <input matInput [placeholder]="field | uppercase" [formControlName]="field">
-                <mat-error *ngIf="partForm.controls['customFields'].controls[field].hasError('required')">
-                  {{field | uppercase}} is <strong>required</strong>
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-      </div>
+      <mat-list>
+        <h3 mat-subheader>Basic fields</h3>
+        <mat-list-item *ngFor="let field of partForm.controls | keys; first as isFirst; last as isLast">
+          <mat-form-field *ngIf="!isLast" class="full-width">
+            <input matInput [placeholder]="field | uppercase" [formControlName]="field" [readonly]="isFirst">
+            <mat-error *ngIf="partForm.controls[field].hasError('required')">
+              {{field | uppercase}} is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+        <h3 mat-subheader>Custom Fields</h3>
+        <mat-list-item *ngFor="let field of partForm.get('customFields').controls | keys; first as isFirst; last as isLast">
+          <mat-form-field formGroupName="customFields" class="full-width">
+            <input matInput [placeholder]="field | uppercase" [formControlName]="field">
+            <mat-error *ngIf="partForm.controls['customFields'].controls[field].hasError('required')">
+              {{field | uppercase}} is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+        </mat-list-item>
+      </mat-list>
     </mat-card-content>
     <mat-card-actions>
       <button mat-raised-button color="primary" type="submit" [disabled]="!partForm.valid">Submit</button>
