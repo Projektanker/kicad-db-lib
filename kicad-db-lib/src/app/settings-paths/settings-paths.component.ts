@@ -5,17 +5,14 @@ import { Location } from "@angular/common";
 import { Settings } from "../settings/settings";
 
 @Component({
-  selector: "app-settings-fields",
-  templateUrl: "./settings-fields.component.html",
-  styleUrls: ["./settings-fields.component.css"]
+  selector: "app-settings-paths",
+  templateUrl: "./settings-paths.component.html",
+  styleUrls: ["./settings-paths.component.css"]
 })
-export class SettingsFieldsComponent implements OnInit {
+export class SettingsPathsComponent implements OnInit {
   settingsForm: FormGroup;
   settings: Settings;
 
-  get customFields(): FormArray {
-    return this.settingsForm.get("customFields") as FormArray;
-  }
   constructor(
     private settingsService: SettingsService,
     private location: Location
@@ -31,29 +28,22 @@ export class SettingsFieldsComponent implements OnInit {
   initForm() {
     console.log("Settings initForm");
 
-    const customFields: FormControl[] = [];
-    for (const field of this.settings.customFields) {
-      customFields.push(new FormControl(field, Validators.required));
-    }
     this.settingsForm = new FormGroup({
-      customFields: new FormArray(customFields)
+      symbol: new FormControl(null),
+      footprint: new FormControl(null, Validators.required),
+      output: new FormControl(null)
     });
+
     console.log(this.settingsForm.value);
   }
 
-  addCustomField(): void {
-    this.customFields.push(new FormControl("", Validators.required));
-  }
-
-  removeCustomField(index: number): void {
-    this.customFields.removeAt(index);
+  setPath(field: string) {
+    console.log(`setPath(${field})`);
   }
 
   onSubmit(): void {
     console.warn(this.settingsForm.value);
-    this.settings.customFields = this.settingsForm.controls[
-      "customFields"
-    ].value;
+    this.settings.paths = this.settingsForm.value;
     this.settingsService
       .updateSettings(this.settings)
       .subscribe(() => this.goBack());

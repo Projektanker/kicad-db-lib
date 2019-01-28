@@ -1,19 +1,48 @@
 <section class="mat-typography">
   <form *ngIf="partForm" [formGroup]="partForm" (ngSubmit)="onSubmit()">
     <mat-toolbar class="mat-elevation-z6" color="primary">
-      <button type="submit" aria-label="submit" mat-icon-button [disabled]="!partForm.valid">
-        <mat-icon aria-label="submit icon">arrow_back</mat-icon>
+      <button
+        type="button"
+        aria-label="back"
+        mat-icon-button
+        (click)="goBack()"
+      >
+        <mat-icon aria-label="back icon">arrow_back</mat-icon>
       </button>
-      <span>Part</span><span *ngIf="part">&nbsp;{{part.id}} - {{part.value}}</span>
+      <span>Part</span>
+      <span *ngIf="part">
+        <span *ngIf="part.id">&nbsp;{{ part.id }}</span>
+        <span *ngIf="part.value != ''"> - {{ part.value }}</span>
+      </span>
+      <span class="spacer"></span>
+      <button
+        type="submit"
+        aria-label="submit"
+        mat-icon-button
+        [disabled]="!partForm.valid"
+      >
+        <mat-icon aria-label="submit icon">done</mat-icon>
+      </button>
     </mat-toolbar>
     <div class="global-content">
       <mat-divider></mat-divider>
       <h3>Basic fields</h3>
-      <div *ngFor="let field of partForm.controls | keys; first as isFirst; last as isLast">
-        <mat-form-field *ngIf="!isLast" class="full-width">
-          <input matInput [placeholder]="field | uppercase" [formControlName]="field" [readonly]="isFirst">
+      <div
+        *ngFor="
+          let field of (partForm.controls | keys);
+          first as isFirst;
+          last as isLast
+        "
+      >
+        <mat-form-field *ngIf="!(isLast || isFirst)" class="full-width">
+          <input
+            matInput
+            [placeholder]="field | uppercase"
+            [formControlName]="field"
+            [readonly]="isFirst"
+          />
           <mat-error *ngIf="partForm.controls[field].hasError('required')">
-            {{field | uppercase}} is <strong>required</strong>
+            {{ field | uppercase }} is <strong>required</strong>
           </mat-error>
         </mat-form-field>
       </div>
@@ -21,20 +50,33 @@
       <mat-divider></mat-divider>
 
       <h3>Custom Fields</h3>
-      <div *ngFor="let field of partForm.get('customFields').controls | keys; first as isFirst; last as isLast">
+      <div
+        *ngFor="
+          let field of (partForm.get('customFields').controls | keys);
+          first as isFirst;
+          last as isLast
+        "
+      >
         <mat-form-field formGroupName="customFields" class="full-width">
-          <input matInput [placeholder]="field | uppercase" [formControlName]="field">
-          <mat-error *ngIf="partForm.controls['customFields'].controls[field].hasError('required')">
-            {{field | uppercase}} is <strong>required</strong>
+          <input
+            matInput
+            [placeholder]="field | uppercase"
+            [formControlName]="field"
+          />
+          <mat-error
+            *ngIf="
+              partForm.controls['customFields'].controls[field].hasError(
+                'required'
+              )
+            "
+          >
+            {{ field | uppercase }} is <strong>required</strong>
           </mat-error>
         </mat-form-field>
       </div>
     </div>
   </form>
-  <div *ngIf="part">
-    {{part | json}}
-  </div>
-  <div *ngIf="partForm">
-    {{partForm.value | json}}
-  </div>
+  <p *ngIf="part">{{ part | json }}</p>
+  <p *ngIf="partForm">{{ partForm.value | json }}</p>
+  <p *ngIf="partForm">{{ partForm.status | json }}</p>
 </section>
