@@ -25,28 +25,12 @@
     matSort
     aria-label="Elements"
   >
-    <!-- Id Column -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
-      <td mat-cell *matCellDef="let row">{{ row.id }}</td>
-    </ng-container>
-
-    <!-- Library Column -->
-    <ng-container matColumnDef="library">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Library</th>
-      <td mat-cell *matCellDef="let row">{{ row.library }}</td>
-    </ng-container>
-
-    <!-- Reference Column -->
-    <ng-container matColumnDef="reference">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Reference</th>
-      <td mat-cell *matCellDef="let row">{{ row.reference }}</td>
-    </ng-container>
-
-    <!-- Value Column -->
-    <ng-container matColumnDef="value">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Value</th>
-      <td mat-cell *matCellDef="let row">{{ row.value }}</td>
+    <ng-container
+      *ngFor="let col of displayedColumns; let colIndex = index"
+      matColumnDef="{{ col }}"
+    >
+      <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
+      <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -59,13 +43,10 @@
 
   <mat-paginator
     #paginator
-    [length]="dataSource.data.length"
+    [length]="dataSource?.data.length"
     [pageIndex]="0"
     [pageSize]="50"
     [pageSizeOptions]="[10, 25, 50, 100, 250]"
   >
-    <button mat-fab color="accent" type="button">
-      <mat-icon>add</mat-icon>
-    </button>
   </mat-paginator>
 </div>
