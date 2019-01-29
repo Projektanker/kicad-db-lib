@@ -34,6 +34,7 @@ export class SettingsPathsComponent implements OnInit {
       output: new FormControl(null)
     });
 
+    this.settingsForm.setValue(this.settings.paths);
     console.log(this.settingsForm.value);
   }
 
