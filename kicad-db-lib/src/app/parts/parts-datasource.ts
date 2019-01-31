@@ -1,9 +1,15 @@
-import { DataSource } from '@angular/cdk/collections';
-import { MatPaginator, MatSort } from '@angular/material';
-import { map, tap } from 'rxjs/operators';
-import { Observable, of as observableOf, merge } from 'rxjs';
-import { Part } from '../part/part';
-import { PartService } from '../part.service';
+import { DataSource } from "@angular/cdk/collections";
+import { MatPaginator, MatSort } from "@angular/material";
+import { map, tap, catchError, finalize } from "rxjs/operators";
+import {
+  Observable,
+  of as observableOf,
+  merge,
+  BehaviorSubject,
+  of
+} from "rxjs";
+import { Part } from "../part/part";
+import { PartService } from "../part.service";
 
 /**
  * Data source for the Parts view. This class should
@@ -12,12 +18,32 @@ import { PartService } from '../part.service';
  */
 export class PartsDataSource extends DataSource<Part> {
   data = { length: 0 };
-  constructor(private paginator: MatPaginator, private sort: MatSort,
-    // private data: Part[],
-    private partService: PartService) {
-    super();
-  }
 
+  private partsSubject = new BehaviorSubject<Part[]>([
+    {
+      id: 11,
+      reference: "R",
+      value: "1K",
+      footprint: "Resistor_SMD:R_0603_1608Metric",
+      library: "R_0603",
+      description: "Resistor 1K 0603 75V",
+      keywords: "Res Resistor 1K 0603",
+      symbol: "{lib}:R",
+      datasheet: "no datasheet",
+      customFields: { OC_FARNELL: "123465", OC_MOUSER: "m123465" }
+    }
+  ]);
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+
+  public loading$ = this.loadingSubject.asObservable();
+
+  constructor(private partService: PartService) {
+    super();
+    this.partsSubject.subscribe(parts => {
+      console.log(parts);
+      console.log();
+    });
+  }
 
   /**
    * Connect this data source to the table. The table will only update when
@@ -25,65 +51,36 @@ export class PartsDataSource extends DataSource<Part> {
    * @returns A stream of the items to be rendered.
    */
   connect(): Observable<Part[]> {
-    return this.partService.getParts().pipe(
-      tap(data => {
-        console.log(data.length);
-        this.data.length = data.length;
-      }));
-    // Combine everything that affects the rendered data into one update
-    // stream for the data-table to consume.
-    /*
-    const dataMutations = [
-      observableOf(this.data),
-      this.paginator.page,
-      this.sort.sortChange
-    ];
+    return this.partsSubject.asObservable();
+  }
 
-    // Set the paginator's length
-    this.paginator.length = this.data.length;
-
-    return merge(...dataMutations).pipe(map(() => {
-      return this.getPagedData(this.getSortedData([...this.data]));
-    }));
-    */
+  loadParts() {
+    this.loadingSubject.next(true);
+    this.partService
+      .getParts()
+      .pipe(
+        catchError(error => {
+          console.error(error);
+          return of([]);
+        }),
+        finalize(() => this.loadingSubject.next(false)),
+        tap(parts => {
+          console.log(`tap: ${parts.length}`);
+          this.data.length = parts.length;
+        })
+      )
+      .subscribe(parts => {
+        console.log(`next: ${parts}`);
+        this.partsSubject.next(parts);
+      });
   }
 
   /**
    *  Called when the table is being destroyed. Use this function, to clean up
    * any open connections or free any held resources that were set up during connect.
    */
-  disconnect() { }
-
-  /**
-   * Paginate the data (client-side). If you're using server-side pagination,
-   * this would be replaced by requesting the appropriate data from the server.
-   */
-  private getPagedData(data: Part[]) {
-    const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
-    return data.splice(startIndex, this.paginator.pageSize);
+  disconnect() {
+    this.partsSubject.complete();
+    this.loadingSubject.complete();
   }
-
-  /**
-   * Sort the data (client-side). If you're using server-side sorting,
-   * this would be replaced by requesting the appropriate data from the server.
-   */
-  private getSortedData(data: Part[]) {
-    if (!this.sort.active || this.sort.direction === '') {
-      return data;
-    }
-
-    return data.sort((a, b) => {
-      const isAsc = this.sort.direction === 'asc';
-      switch (this.sort.active) {
-        case 'value': return compare(a.value, b.value, isAsc);
-        case 'id': return compare(+a.id, +b.id, isAsc);
-        default: return 0;
-      }
-    });
-  }
-}
-
-/** Simple sort comparator for example ID/Name columns (for client-side sorting). */
-function compare(a, b, isAsc) {
-  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

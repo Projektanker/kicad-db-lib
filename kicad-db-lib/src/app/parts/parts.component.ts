@@ -5,6 +5,7 @@ import { PartService } from "../part.service";
 import { Part } from "../part/part";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Location } from "@angular/common";
+import { MessageService } from "../message.service";
 
 @Component({
   selector: "app-parts",
@@ -17,18 +18,17 @@ export class PartsComponent implements OnInit {
   dataSource: PartsDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ["id", "library", "reference", "value"];
+  displayedColumns = Object.keys(new Part());
 
-  constructor(private partService: PartService, private router: Router) {}
+  constructor(
+    private partService: PartService,
+    private msg: MessageService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    // this.partService.getParts().subscribe(parts =>
-    this.dataSource = new PartsDataSource(
-      this.paginator,
-      this.sort,
-      this.partService
-    );
-    // );
+    this.dataSource = new PartsDataSource(this.partService);
+    this.dataSource.loadParts();
   }
 
   onRowClicked(row: Part) {

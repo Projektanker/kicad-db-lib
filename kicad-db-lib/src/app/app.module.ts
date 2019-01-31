@@ -28,7 +28,8 @@ import {
   MatRadioModule,
   MatCardModule,
   MatExpansionModule,
-  MatDialogModule
+  MatDialogModule,
+  MatProgressSpinnerModule
 } from "@angular/material";
 import { NavComponent } from "./nav/nav.component";
 import { PartsComponent } from "./parts/parts.component";
@@ -37,7 +38,8 @@ import { SettingsComponent } from "./settings/settings.component";
 import { KeysPipe } from "./keys.pipe";
 import { SettingsFieldsComponent } from "./settings-fields/settings-fields.component";
 import { DiscardChangesDialogComponent } from "./discard-changes-dialog/discard-changes-dialog.component";
-import { SettingsPathsComponent } from './settings-paths/settings-paths.component';
+import { SettingsPathsComponent } from "./settings-paths/settings-paths.component";
+import { ObjectCellPipe } from './object-cell.pipe';
 
 @NgModule({
   declarations: [
@@ -54,7 +56,8 @@ import { SettingsPathsComponent } from './settings-paths/settings-paths.componen
     KeysPipe,
     SettingsFieldsComponent,
     DiscardChangesDialogComponent,
-    SettingsPathsComponent
+    SettingsPathsComponent,
+    ObjectCellPipe
   ],
   imports: [
     BrowserModule,
@@ -83,6 +86,7 @@ import { SettingsPathsComponent } from './settings-paths/settings-paths.componen
     MatCardModule,
     MatExpansionModule,
     MatDialogModule,
+    MatProgressSpinnerModule,
     ReactiveFormsModule
   ],
   entryComponents: [DiscardChangesDialogComponent],

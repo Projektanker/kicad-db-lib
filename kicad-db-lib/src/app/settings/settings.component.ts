@@ -1,13 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Location } from "@angular/common";
 import { SettingsService } from "../settings.service";
-import {
-  FormBuilder,
-  FormGroup,
-  FormArray,
-  FormControl,
-  Validators
-} from "@angular/forms";
 import { Settings } from "./settings";
 import { MessageService } from "../message.service";
 
@@ -29,9 +22,18 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
     this.msg.add("Settings ngOnInit");
-    this.settingsService
-      .getSettings()
-      .subscribe(settings => (this.settings = settings));
+    this.settingsService.getSettings().subscribe(
+      settings => {
+        this.msg.add("Settings: next");
+        this.settings = settings;
+      },
+      error => {
+        this.msg.add(`Settings: ${error}`);
+      },
+      () => {
+        this.msg.add("Settings: complete");
+      }
+    );
   }
 
   goBack() {
