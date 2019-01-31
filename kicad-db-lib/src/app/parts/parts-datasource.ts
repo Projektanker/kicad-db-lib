@@ -1,6 +1,6 @@
 import { DataSource } from "@angular/cdk/collections";
 import { MatPaginator, MatSort } from "@angular/material";
-import { map, tap, catchError, finalize } from "rxjs/operators";
+import { map, tap, catchError, finalize, delay } from "rxjs/operators";
 import {
   Observable,
   of as observableOf,

@@ -39,7 +39,6 @@ import { KeysPipe } from "./keys.pipe";
 import { SettingsFieldsComponent } from "./settings-fields/settings-fields.component";
 import { DiscardChangesDialogComponent } from "./discard-changes-dialog/discard-changes-dialog.component";
 import { SettingsPathsComponent } from "./settings-paths/settings-paths.component";
-import { ObjectCellPipe } from './object-cell.pipe';
 
 @NgModule({
   declarations: [
@@ -56,8 +55,7 @@ import { ObjectCellPipe } from './object-cell.pipe';
     KeysPipe,
     SettingsFieldsComponent,
     DiscardChangesDialogComponent,
-    SettingsPathsComponent,
-    ObjectCellPipe
+    SettingsPathsComponent
   ],
   imports: [
     BrowserModule,

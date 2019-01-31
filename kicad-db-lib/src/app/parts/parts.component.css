@@ -5,3 +5,9 @@
 .global-content {
   margin-top: 40px;
 }
+
+mat-spinner {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+}

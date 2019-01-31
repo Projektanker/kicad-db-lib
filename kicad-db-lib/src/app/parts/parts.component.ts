@@ -18,7 +18,7 @@ export class PartsComponent implements OnInit {
   dataSource: PartsDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = Object.keys(new Part());
+  displayedColumns = Object.keys(new Part()).slice(0, -1);
 
   constructor(
     private partService: PartService,

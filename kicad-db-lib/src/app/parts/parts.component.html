@@ -18,6 +18,10 @@
 </mat-toolbar>
 
 <div class="global-content">
+  <mat-spinner
+    *ngIf="(dataSource.loading$ | async)"
+    diameter="56"
+  ></mat-spinner>
   <table
     mat-table
     class="full-width-table"
@@ -25,14 +29,9 @@
     matSort
     aria-label="Elements"
   >
-    <ng-container
-      *ngFor="let col of displayedColumns; let colIndex = index"
-      matColumnDef="{{ col }}"
-    >
-      <th mat-header-cell *matHeaderCellDef>{{ col }}</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element[col] | objectCell }}
-      </td>
+    <ng-container *ngFor="let col of displayedColumns" matColumnDef="{{ col }}">
+      <th mat-header-cell *matHeaderCellDef>{{ col | uppercase }}</th>
+      <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
