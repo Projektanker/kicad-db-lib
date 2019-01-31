@@ -3,6 +3,7 @@ import { FormGroup, FormArray, FormControl, Validators } from "@angular/forms";
 import { SettingsService } from "../settings.service";
 import { Location } from "@angular/common";
 import { Settings } from "../settings/settings";
+import { MessageService } from "../message.service";
 
 @Component({
   selector: "app-settings-paths",
@@ -15,7 +16,8 @@ export class SettingsPathsComponent implements OnInit {
 
   constructor(
     private settingsService: SettingsService,
-    private location: Location
+    private location: Location,
+    private msg: MessageService
   ) {}
 
   ngOnInit() {
@@ -26,7 +28,7 @@ export class SettingsPathsComponent implements OnInit {
   }
 
   initForm() {
-    console.log("Settings initForm");
+    this.msg.add("Settings initForm");
 
     this.settingsForm = new FormGroup({
       parts: new FormControl(this.settings.paths.parts, Validators.required),
@@ -37,15 +39,15 @@ export class SettingsPathsComponent implements OnInit {
       ),
       output: new FormControl(this.settings.paths.output, Validators.required)
     });
-    console.log(this.settingsForm.value);
+    this.msg.add(this.settingsForm.value);
   }
 
   setPath(field: string) {
-    console.log(`setPath(${field})`);
+    this.msg.add(`setPath(${field})`);
   }
 
   onSubmit(): void {
-    console.warn(this.settingsForm.value);
+    this.msg.add(this.settingsForm.value);
     this.settings.paths = this.settingsForm.value;
     this.settingsService
       .updateSettings(this.settings)

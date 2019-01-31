@@ -13,6 +13,7 @@ import { SettingsService } from "../settings.service";
 import { Settings } from "../settings/settings";
 import { MatDialog } from "@angular/material";
 import { DiscardChangesDialogComponent } from "../discard-changes-dialog/discard-changes-dialog.component";
+import { MessageService } from "../message.service";
 
 @Component({
   selector: "app-part-detail",
@@ -30,6 +31,7 @@ export class PartDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private partService: PartService,
     private settingsService: SettingsService,
+    private msg: MessageService,
     private location: Location,
     public dialog: MatDialog
   ) {}
@@ -82,13 +84,13 @@ export class PartDetailComponent implements OnInit {
       customFields: customFieldsGroup
     });
 
-    console.warn(this.partForm.value);
+    this.msg.add(this.partForm.value);
     this.partForm.patchValue(this.part);
   }
 
   onSubmit(): void {
-    console.warn("SUBMIT");
-    console.warn(this.partForm.value);
+    this.msg.add("SUBMIT");
+    this.msg.add(this.partForm.value);
     this.part = this.partForm.value;
     if (this.add) {
       this.partService.addPart(this.part).subscribe(() => this.location.back());
@@ -105,7 +107,7 @@ export class PartDetailComponent implements OnInit {
     } else {
       const dialogRef = this.dialog.open(DiscardChangesDialogComponent);
       dialogRef.afterClosed().subscribe(result => {
-        console.log(`The dialog was closed ${result}`);
+        this.msg.add(`The dialog was closed ${result}`);
         if (result) {
           this.location.back();
         }

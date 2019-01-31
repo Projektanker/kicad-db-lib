@@ -3,6 +3,7 @@ import { FormGroup, FormArray, FormControl, Validators } from "@angular/forms";
 import { SettingsService } from "../settings.service";
 import { Location } from "@angular/common";
 import { Settings } from "../settings/settings";
+import { MessageService } from "../message.service";
 
 @Component({
   selector: "app-settings-fields",
@@ -18,7 +19,8 @@ export class SettingsFieldsComponent implements OnInit {
   }
   constructor(
     private settingsService: SettingsService,
-    private location: Location
+    private location: Location,
+    private msg: MessageService
   ) {}
 
   ngOnInit() {
@@ -29,7 +31,7 @@ export class SettingsFieldsComponent implements OnInit {
   }
 
   initForm() {
-    console.log("Settings initForm");
+    this.msg.add("Settings initForm");
 
     const customFields: FormControl[] = [];
     for (const field of this.settings.customFields) {
@@ -38,7 +40,7 @@ export class SettingsFieldsComponent implements OnInit {
     this.settingsForm = new FormGroup({
       customFields: new FormArray(customFields)
     });
-    console.log(this.settingsForm.value);
+    this.msg.add(this.settingsForm.value);
   }
 
   addCustomField(): void {
@@ -50,7 +52,7 @@ export class SettingsFieldsComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.warn(this.settingsForm.value);
+    this.msg.add(this.settingsForm.value);
     this.settings.customFields = this.settingsForm.controls[
       "customFields"
     ].value;

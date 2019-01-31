@@ -9,6 +9,7 @@ import {
   Validators
 } from "@angular/forms";
 import { Settings } from "./settings";
+import { MessageService } from "../message.service";
 
 @Component({
   selector: "app-settings",
@@ -20,13 +21,14 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     private settingsService: SettingsService,
+    private msg: MessageService,
     private location: Location
   ) {
-    console.log("Settings constructor");
+    this.msg.add("Settings constructor");
   }
 
   ngOnInit() {
-    console.log("Settings ngOnInit");
+    this.msg.add("Settings ngOnInit");
     this.settingsService
       .getSettings()
       .subscribe(settings => (this.settings = settings));
