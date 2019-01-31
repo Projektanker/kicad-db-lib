@@ -1,8 +1,11 @@
 export class Settings {
   customFields: string[] = [];
-  paths: { [name: string]: string } = {
-    symbol: null,
-    footprint: null,
-    output: null
-  };
+  paths: SettingsPaths = new SettingsPaths();
+}
+
+export class SettingsPaths {
+  parts: string;
+  symbol: string;
+  footprint: string;
+  output: string;
 }

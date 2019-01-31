@@ -29,12 +29,14 @@ export class SettingsPathsComponent implements OnInit {
     console.log("Settings initForm");
 
     this.settingsForm = new FormGroup({
-      symbol: new FormControl(null),
-      footprint: new FormControl(null, Validators.required),
-      output: new FormControl(null)
+      parts: new FormControl(this.settings.paths.parts, Validators.required),
+      symbol: new FormControl(this.settings.paths.symbol, Validators.required),
+      footprint: new FormControl(
+        this.settings.paths.footprint,
+        Validators.required
+      ),
+      output: new FormControl(this.settings.paths.output, Validators.required)
     });
-
-    this.settingsForm.setValue(this.settings.paths);
     console.log(this.settingsForm.value);
   }
 
