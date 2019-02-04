@@ -11,5 +11,8 @@ export class AppComponent {
   constructor(private electronService: ElectronService) {
     console.log('Hello from AppComponent!');
     console.log(`isElectronApp: ${this.electronService.isElectronApp}`);
+    if (this.electronService.isElectronApp) {
+      this.electronService.ipcRenderer.send('test');
+    }
   }
 }
