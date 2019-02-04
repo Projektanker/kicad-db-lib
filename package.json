@@ -4,7 +4,7 @@
   "description": "KiCad Database Library Tool",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cd angular && npm run electron:build && cd ../electron && npm run electron"
+    "start": "cd angular && npm run electron:build && cd ../electron && npm start"
   },
   "repository": {
     "type": "git",
