@@ -1,0 +1,21 @@
+{
+  "name": "kicad-db-lib",
+  "version": "1.0.0",
+  "description": "KiCad Database Library Tool",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd angular && npm run electron:build && cd ../electron && npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "W:/git/kicad/kicad-db-lib.git/"
+  },
+  "keywords": [
+    "KiCad",
+    "Database",
+    "Angular",
+    "Electron"
+  ],
+  "author": "SR",
+  "license": "MIT"
+}
