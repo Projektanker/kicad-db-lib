@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Settings } from './settings/settings';
+import { Settings } from '../../../shared/settings/settings';
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
 
@@ -9,12 +9,9 @@ import { MessageService } from './message.service';
 export class SettingsService {
   private settings: Settings;
 
-  constructor(
-    private messageService: MessageService) {
+  constructor(private messageService: MessageService) {
     this.settings = new Settings();
-    this.settings.customFields = [
-      'OC_FARNELL', 'OC_MOUSER'
-    ];
+    this.settings.customFields = ['OC_FARNELL', 'OC_MOUSER'];
   }
 
   getSettings(): Observable<Settings> {
@@ -24,6 +21,6 @@ export class SettingsService {
 
   updateSettings(settings: Settings): Observable<any> {
     this.messageService.add('SettingsService: updateSettings');
-    return of(this.settings = settings);
+    return of((this.settings = settings));
   }
 }

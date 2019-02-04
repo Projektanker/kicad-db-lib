@@ -1,13 +1,13 @@
-import { Component, OnInit } from "@angular/core";
-import { Location } from "@angular/common";
-import { SettingsService } from "../settings.service";
-import { Settings } from "./settings";
-import { MessageService } from "../message.service";
+import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { SettingsService } from '../settings.service';
+import { Settings } from '../../../../shared/settings/settings';
+import { MessageService } from '../message.service';
 
 @Component({
-  selector: "app-settings",
-  templateUrl: "./settings.component.html",
-  styleUrls: ["./settings.component.css"]
+  selector: 'app-settings',
+  templateUrl: './settings.component.html',
+  styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
   settings: Settings;
@@ -17,21 +17,21 @@ export class SettingsComponent implements OnInit {
     private msg: MessageService,
     private location: Location
   ) {
-    this.msg.add("Settings constructor");
+    this.msg.add('Settings constructor');
   }
 
   ngOnInit() {
-    this.msg.add("Settings ngOnInit");
+    this.msg.add('Settings ngOnInit');
     this.settingsService.getSettings().subscribe(
       settings => {
-        this.msg.add("Settings: next");
+        this.msg.add('Settings: next');
         this.settings = settings;
       },
       error => {
         this.msg.add(`Settings: ${error}`);
       },
       () => {
-        this.msg.add("Settings: complete");
+        this.msg.add('Settings: complete');
       }
     );
   }
