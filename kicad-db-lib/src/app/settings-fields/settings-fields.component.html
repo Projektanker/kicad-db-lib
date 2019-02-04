@@ -10,10 +10,14 @@
         <mat-icon aria-label="submit icon">arrow_back</mat-icon>
       </button>
       <span>Fields</span>
-    </mat-toolbar-row>
-    <mat-toolbar-row>
-      <button mat-fab color="accent" type="button" (click)="addCustomField()">
-        <mat-icon>add</mat-icon>
+      <span class="spacer"></span>
+      <button
+        type="button"
+        aria-label="add"
+        mat-icon-button
+        (click)="addCustomField()"
+      >
+        <mat-icon aria-label="add icon">add</mat-icon>
       </button>
     </mat-toolbar-row>
   </mat-toolbar>

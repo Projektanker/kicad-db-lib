@@ -29,7 +29,8 @@ import {
   MatCardModule,
   MatExpansionModule,
   MatDialogModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatProgressBarModule
 } from "@angular/material";
 import { NavComponent } from "./nav/nav.component";
 import { PartsComponent } from "./parts/parts.component";
@@ -85,6 +86,7 @@ import { SettingsPathsComponent } from "./settings-paths/settings-paths.componen
     MatExpansionModule,
     MatDialogModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     ReactiveFormsModule
   ],
   entryComponents: [DiscardChangesDialogComponent],
