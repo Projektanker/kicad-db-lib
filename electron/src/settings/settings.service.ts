@@ -11,6 +11,11 @@ export class SettingsService {
       settings = JSON.parse(data);
     } catch (error) {
       settings = new Settings();
+      settings.customFields = ['OC_FARNELL', 'OC_MOUSER'];
+      settings.paths.footprint = 'footprint';
+      settings.paths.output = 'output';
+      settings.paths.parts = 'parts';
+      settings.paths.symbol = 'symbol';
     }
     return Promise.resolve(settings);
   }

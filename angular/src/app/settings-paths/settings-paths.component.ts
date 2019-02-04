@@ -11,7 +11,7 @@ import { MessageService } from '../message.service';
   styleUrls: ['./settings-paths.component.css']
 })
 export class SettingsPathsComponent implements OnInit {
-  settingsForm: FormGroup;
+  settingsForm: FormGroup = null;
   settings: Settings;
 
   constructor(
@@ -21,25 +21,45 @@ export class SettingsPathsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.settingsService.getSettings().subscribe(settings => {
-      this.settings = settings;
-      this.initForm();
-    });
+    console.log('ngOnInit');
+
+    this.initForm();
+
+    this.settingsService.getSettings().subscribe(
+      settings => {
+        console.log('ngOnInit: next');
+        console.log(settings);
+        this.settings = settings;
+        this.settingsForm.setValue(settings.paths);
+        //this.initForm();
+      },
+      (error: any) => {
+        console.log('ngOnInit: error');
+        console.error(error);
+      },
+      () => {
+        console.log('ngOnInit: complete');
+      }
+    );
   }
 
   initForm() {
-    this.msg.add('Settings initForm');
+    console.log('initForm: start');
 
     this.settingsForm = new FormGroup({
-      parts: new FormControl(this.settings.paths.parts, Validators.required),
-      symbol: new FormControl(this.settings.paths.symbol, Validators.required),
-      footprint: new FormControl(
-        this.settings.paths.footprint,
+      parts: new FormControl('this.settings.paths.parts', Validators.required),
+      symbol: new FormControl(
+        'this.settings.paths.symbol',
         Validators.required
       ),
-      output: new FormControl(this.settings.paths.output, Validators.required)
+      footprint: new FormControl(
+        'this.settings.paths.footprint',
+        Validators.required
+      ),
+      output: new FormControl('this.settings.paths.output', Validators.required)
     });
-    this.msg.add(this.settingsForm.value);
+    console.log('initForm: complete');
+    console.log(this.settingsForm.value);
   }
 
   setPath(field: string) {
@@ -47,7 +67,8 @@ export class SettingsPathsComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.msg.add(this.settingsForm.value);
+    console.log('onSubmit');
+    console.log(this.settingsForm.value);
     this.settings.paths = this.settingsForm.value;
     this.settingsService
       .updateSettings(this.settings)

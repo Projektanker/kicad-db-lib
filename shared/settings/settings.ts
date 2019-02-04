@@ -4,8 +4,8 @@ export class Settings {
 }
 
 export class SettingsPaths {
-  parts: string;
-  symbol: string;
-  footprint: string;
-  output: string;
+  parts: string = '';
+  symbol: string = '';
+  footprint: string = '';
+  output: string = '';
 }

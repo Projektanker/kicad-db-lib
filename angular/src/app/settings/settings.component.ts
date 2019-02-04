@@ -10,28 +10,30 @@ import { MessageService } from '../message.service';
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
-  settings: Settings;
+  settings: Settings = JSON.parse(
+    '{ "customFields": [ "OC_FARNELL", "OC_MOUSER" ], "paths": { "parts": "parts", "symbol": "symbol", "footprint": "footprint", "output": "footprint" } }'
+  );
 
   constructor(
     private settingsService: SettingsService,
     private msg: MessageService,
     private location: Location
   ) {
-    this.msg.add('Settings constructor');
+    console.log('Settings constructor');
   }
 
   ngOnInit() {
-    this.msg.add('Settings ngOnInit');
+    console.log('ngOnInit');
     this.settingsService.getSettings().subscribe(
       settings => {
-        this.msg.add('Settings: next');
+        console.log('ngOnInit: next');
         this.settings = settings;
       },
       error => {
-        this.msg.add(`Settings: ${error}`);
+        console.log(`ngOnInit: ${error}`);
       },
       () => {
-        this.msg.add('Settings: complete');
+        console.log('ngOnInit: complete');
       }
     );
   }

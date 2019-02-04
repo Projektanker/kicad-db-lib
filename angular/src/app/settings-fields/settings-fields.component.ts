@@ -24,7 +24,10 @@ export class SettingsFieldsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.msg.add('ngOnInit: getSettings');
     this.settingsService.getSettings().subscribe(settings => {
+      this.msg.add('ngOnInit: settings');
+      this.msg.add(settings);
       this.settings = settings;
       this.initForm();
     });
