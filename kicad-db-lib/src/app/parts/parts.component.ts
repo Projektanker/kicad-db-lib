@@ -1,16 +1,15 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { MatPaginator, MatSort } from "@angular/material";
-import { PartsDataSource } from "./parts-datasource";
-import { PartService } from "../part.service";
-import { Part } from "../part/part";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Location } from "@angular/common";
-import { MessageService } from "../message.service";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, MatSort } from '@angular/material';
+import { PartsDataSource } from './parts-datasource';
+import { PartService } from '../part.service';
+import { Part } from '../part/part';
+import { Router } from '@angular/router';
+import { MessageService } from '../message.service';
 
 @Component({
-  selector: "app-parts",
-  templateUrl: "./parts.component.html",
-  styleUrls: ["./parts.component.css"]
+  selector: 'app-parts',
+  templateUrl: './parts.component.html',
+  styleUrls: ['./parts.component.css']
 })
 export class PartsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;

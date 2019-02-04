@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { MessageService } from './message.service';
 import { Part } from './part/part';
+import { ElectronService } from 'ngx-electron';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -13,11 +14,12 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class PartService {
-  private partsUrl = 'api/parts';  // URL to web api
+  private partsUrl = 'api/parts'; // URL to web api
 
   constructor(
     private http: HttpClient,
-    private messageService: MessageService) { }
+    private messageService: MessageService
+  ) {}
 
   /** Log a PartService message with the MessageService */
   private log(message: string) {
@@ -25,11 +27,10 @@ export class PartService {
   }
   getParts(): Observable<Part[]> {
     this.log('PartService: fetched parts');
-    return this.http.get<Part[]>(this.partsUrl)
-      .pipe(
-        tap(_ => this.log('fetched parts')),
-        catchError(this.handleError('getParts', []))
-      );
+    return this.http.get<Part[]>(this.partsUrl).pipe(
+      tap(_ => this.log('fetched parts')),
+      catchError(this.handleError('getParts', []))
+    );
   }
 
   /** GET part by id. Will 404 if id not found */
@@ -82,14 +83,13 @@ export class PartService {
   }
 
   /**
- * Handle Http operation that failed.
- * Let the app continue.
- * @param operation - name of the operation that failed
- * @param result - optional value to return as the observable result
- */
+   * Handle Http operation that failed.
+   * Let the app continue.
+   * @param operation - name of the operation that failed
+   * @param result - optional value to return as the observable result
+   */
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
 
