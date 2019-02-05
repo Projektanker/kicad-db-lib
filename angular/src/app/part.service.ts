@@ -32,28 +32,65 @@ export class PartService {
     private http: HttpClient,
     private electronService: ElectronService,
     private zone: NgZone
-  ) {}
+  ) {
+    if (this.electronService.isElectronApp) {
+      this.electronService.ipcRenderer.on(
+        'part.partsChanged',
+        (event: any, arg: any) => this.ipcPartsChanged(event, arg)
+      );
+
+      this.electronService.ipcRenderer.on(
+        'part.partChanged',
+        (event: any, arg: any) => this.ipcPartChanged(event, arg)
+      );
+    }
+  }
+  private ipcPartsChanged(event: any, arg: any) {
+    console.log('ipcPartsChanged(event, arg)');
+    console.log(event);
+    console.log(arg);
+    this.zone.run(() => {
+      this.onPartsChangedSubject.next(arg);
+    });
+  }
+
+  private ipcPartChanged(event: any, arg: any) {
+    console.log('ipcPartsChanged(event, arg)');
+    console.log(event);
+    console.log(arg);
+    this.zone.run(() => {
+      this.onPartChangedSubject.next(arg);
+    });
+  }
 
   getParts() {
     console.log('getParts()');
-    this.http
-      .get<Part[]>(this.partsUrl)
-      .subscribe(
-        next => this.onPartsChangedSubject.next(next),
-        error => this.handleError(error)
-      );
+    if (this.electronService.isElectronApp) {
+      this.electronService.ipcRenderer.send('part.getParts');
+    } else {
+      this.http
+        .get<Part[]>(this.partsUrl)
+        .subscribe(
+          next => this.onPartsChangedSubject.next(next),
+          error => this.handleError(error)
+        );
+    }
   }
 
   /** GET part by id. Will 404 if id not found */
   getPart(id: number) {
     console.log(`getPart(${id})`);
-    const url = `${this.partsUrl}/${id}`;
-    this.http
-      .get<Part>(url)
-      .subscribe(
-        next => this.onPartChangedSubject.next(next),
-        error => this.handleError(error)
-      );
+    if (this.electronService.isElectronApp) {
+      this.electronService.ipcRenderer.send('part.getPart', id);
+    } else {
+      const url = `${this.partsUrl}/${id}`;
+      this.http
+        .get<Part>(url)
+        .subscribe(
+          next => this.onPartChangedSubject.next(next),
+          error => this.handleError(error)
+        );
+    }
   }
 
   /** PUT: update the part on the server */
@@ -67,9 +104,13 @@ export class PartService {
   /** POST: add a new part to the server */
   addPart(part: Part) {
     console.log('addPart(part: Part)');
-    this.http
-      .post<Part>(this.partsUrl, part, httpOptions)
-      .subscribe(() => {}, error => this.handleError(error));
+    if (this.electronService.isElectronApp) {
+      this.electronService.ipcRenderer.send('part.addPart', part);
+    } else {
+      this.http
+        .post<Part>(this.partsUrl, part, httpOptions)
+        .subscribe(() => {}, error => this.handleError(error));
+    }
   }
 
   /** DELETE: delete the part from the server */

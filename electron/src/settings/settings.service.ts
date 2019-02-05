@@ -1,13 +1,13 @@
 import { Settings } from '../../../shared/settings/settings';
-
+import * as path from 'path';
 import { fs } from '../fs';
 
 export class SettingsService {
-  async getSettings(fileName: string): Promise<Settings> {
+  async getSettings(): Promise<Settings> {
     var settings: Settings;
+    var file = path.join(__dirname, '/settings.json');
     try {
-      await fs.stat(fileName);
-      var data = await fs.readFile(fileName, 'utf8');
+      var data = await fs.readFile(file, 'utf8');
       settings = JSON.parse(data);
     } catch (error) {
       settings = new Settings();
@@ -20,8 +20,9 @@ export class SettingsService {
     return Promise.resolve(settings);
   }
 
-  async updateSettings(fileName: string, settings: Settings) {
+  async updateSettings(settings: Settings) {
+    var file = path.join(__dirname, '/settings.json');
     var data = JSON.stringify(settings);
-    fs.writeFile(fileName, data, 'utf8');
+    fs.writeFile(file, data, 'utf8');
   }
 }

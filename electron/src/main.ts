@@ -2,6 +2,8 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import { SettingsService } from './settings/settings.service';
 import { Settings } from '../../shared/settings/settings';
+import { PartService } from './parts/part.service';
+import { Part } from './parts/part';
 
 let mainWindow: Electron.BrowserWindow;
 
@@ -63,7 +65,7 @@ ipcMain.on('settings.get', (event: any) => {
   console.log(`getSettings(${file})`);
 
   var settingsService = new SettingsService();
-  var promise = settingsService.getSettings(file);
+  var promise = settingsService.getSettings();
   promise
     .then(settings => {
       console.log(settings);
@@ -75,14 +77,52 @@ ipcMain.on('settings.get', (event: any) => {
 console.log('on: settings.update');
 ipcMain.on('settings.update', (event: any, arg: Settings) => {
   console.log('ipcMain: settings.update');
-
-  var file = path.join(__dirname, '/settings.json');
-  console.log(`updateSettings(${file}, ${arg})`);
-
   var settingsService = new SettingsService();
-  var promise = settingsService.updateSettings(file, arg);
+  var promise = settingsService.updateSettings(arg);
   promise
     .then(settings => console.log('settings.update: then'))
+    .catch(error => console.error(error));
+});
+
+console.log('on: part.getParts');
+ipcMain.on('part.getParts', (event: any) => {
+  console.log('ipcMain: part.getParts');
+
+  var partService = new PartService();
+  var promise = partService.getParts();
+  promise
+    .then(parts => {
+      console.log('part.getParts: then');
+      event.sender.send('part.partsChanged', parts);
+    })
+    .catch(error => console.error(error));
+});
+
+console.log('on: part.getPart');
+ipcMain.on('part.getPart', (event: any, arg: number) => {
+  console.log(`ipcMain: part.getPart arg: ${arg}`);
+
+  var partService = new PartService();
+  var promise = partService.getPart(arg);
+  promise
+    .then(part => {
+      console.log('part.getPart: then');
+      event.sender.send('part.partChanged', part);
+    })
+    .catch(error => console.error(error));
+});
+
+console.log('on: part.addPart');
+ipcMain.on('part.addPart', (event: any, arg: Part) => {
+  console.log('ipcMain: part.addPart arg:');
+  console.log(arg);
+
+  var partService = new PartService();
+  var promise = partService.addPart(arg);
+  promise
+    .then(part => {
+      console.log('part.addPart: then');
+    })
     .catch(error => console.error(error));
 });
 

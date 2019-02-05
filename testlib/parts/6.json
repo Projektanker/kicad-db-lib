@@ -1,0 +1,12 @@
+{
+  "id": 6,
+  "reference": "C",
+  "value": "10u_16V",
+  "footprint": "Capacitor_SMD:C_0805_2012Metric",
+  "library": "C_0805",
+  "description": "Capacitor 10uF 0805 16V",
+  "keywords": "Capacitor Capacitor 10u 0805",
+  "symbol": "{lib}:C",
+  "datasheet": "no datasheet",
+  "customFields": {}
+}

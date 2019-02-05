@@ -1,0 +1,12 @@
+{
+  "id": 5,
+  "reference": "C",
+  "value": "100n_50V",
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "library": "C_0603",
+  "description": "Capacitor 100nF 50V 0603",
+  "keywords": "Cap Capacitor 100n 0603",
+  "symbol": "{lib}:C",
+  "datasheet": "no datasheet",
+  "customFields": {}
+}
