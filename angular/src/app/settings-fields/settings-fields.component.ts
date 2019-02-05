@@ -75,6 +75,7 @@ export class SettingsFieldsComponent implements OnInit {
 
   addCustomField(): void {
     this.customFields.push(new FormControl('', Validators.required));
+    //this.ref.detectChanges();
   }
 
   removeCustomField(index: number): void {
