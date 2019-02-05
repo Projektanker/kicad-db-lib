@@ -3,7 +3,7 @@ import { FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { SettingsService } from '../settings.service';
 import { Location } from '@angular/common';
 import { Settings } from '../../../../shared/settings/settings';
-import { MessageService } from '../message.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-settings-fields',
@@ -13,28 +13,55 @@ import { MessageService } from '../message.service';
 export class SettingsFieldsComponent implements OnInit {
   settingsForm: FormGroup;
   settings: Settings;
+  subscription: Subscription = new Subscription();
 
   get customFields(): FormArray {
-    return this.settingsForm.get('customFields') as FormArray;
+    if (this.settingsForm)
+      return this.settingsForm.get('customFields') as FormArray;
+    else return null;
   }
   constructor(
     private settingsService: SettingsService,
-    private location: Location,
-    private msg: MessageService
+    private location: Location
   ) {}
 
   ngOnInit() {
-    this.msg.add('ngOnInit: getSettings');
-    this.settingsService.getSettings().subscribe(settings => {
-      this.msg.add('ngOnInit: settings');
-      this.msg.add(settings);
-      this.settings = settings;
-      this.initForm();
-    });
+    console.log('ngOnInit');
+
+    var sub = this.settingsService.onSettingsChanged.subscribe(
+      (next: Settings) => {
+        console.log('onSettingsChanged: next');
+        this.onSettingsChanged(next);
+      },
+      error => {
+        console.log('onSettingsChanged: error');
+        this.handleError(error);
+      },
+      () => console.log('onSettingsChanged: complete')
+    );
+    this.subscription.add(sub);
+    this.settingsService.getSettings();
+  }
+
+  ngOnDestroy() {
+    console.log('ngOnDestroy');
+    this.subscription.unsubscribe();
+  }
+
+  private onSettingsChanged(settings: Settings) {
+    console.log('onSettingsChanged(settings: Settings)');
+    console.log(settings);
+    this.settings = settings;
+    this.initForm();
+    //this.ref.detectChanges();
+  }
+
+  private handleError(error) {
+    console.error(error);
   }
 
   initForm() {
-    this.msg.add('Settings initForm');
+    console.log('initForm()');
 
     const customFields: FormControl[] = [];
     for (const field of this.settings.customFields) {
@@ -43,11 +70,12 @@ export class SettingsFieldsComponent implements OnInit {
     this.settingsForm = new FormGroup({
       customFields: new FormArray(customFields)
     });
-    this.msg.add(this.settingsForm.value);
+    console.log(this.settingsForm.value);
   }
 
   addCustomField(): void {
     this.customFields.push(new FormControl('', Validators.required));
+    //this.ref.detectChanges();
   }
 
   removeCustomField(index: number): void {
@@ -55,13 +83,13 @@ export class SettingsFieldsComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.msg.add(this.settingsForm.value);
+    console.log('onSubmit()');
+    console.log(this.settingsForm.value);
     this.settings.customFields = this.settingsForm.controls[
       'customFields'
     ].value;
-    this.settingsService
-      .updateSettings(this.settings)
-      .subscribe(() => this.goBack());
+    this.settingsService.updateSettings(this.settings);
+    this.goBack();
   }
 
   goBack(): void {

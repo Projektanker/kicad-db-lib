@@ -56,10 +56,10 @@ export class PartDetailComponent implements OnInit {
   }
 
   getSettings(): void {
-    this.settingsService.getSettings().subscribe(settings => {
+    /*this.settingsService.getSettings().subscribe(settings => {
       this.settings = settings;
       this.initForm();
-    });
+    });*/
   }
 
   initForm(): void {
