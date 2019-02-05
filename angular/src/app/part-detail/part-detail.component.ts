@@ -14,6 +14,7 @@ import { Settings } from '../../../../shared/settings/settings';
 import { MatDialog } from '@angular/material';
 import { DiscardChangesDialogComponent } from '../discard-changes-dialog/discard-changes-dialog.component';
 import { MessageService } from '../message.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-part-detail',
@@ -21,9 +22,11 @@ import { MessageService } from '../message.service';
   styleUrls: ['./part-detail.component.css']
 })
 export class PartDetailComponent implements OnInit {
-  part: Part;
+  part: Part = null;
   add: Boolean = false;
-  settings: Settings;
+  settings: Settings = null;
+
+  subscription: Subscription = new Subscription();
 
   partForm: FormGroup;
 
@@ -31,38 +34,87 @@ export class PartDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private partService: PartService,
     private settingsService: SettingsService,
-    private msg: MessageService,
     private location: Location,
     public dialog: MatDialog
-  ) {}
+  ) {
+    console.log('constructor');
+  }
 
   ngOnInit() {
+    // settings - onSettingsChanged
+    var sub = this.settingsService.onSettingsChanged.subscribe(
+      (next: Settings) => {
+        console.log('onSettingsChanged: next');
+        this.onSettingsChanged(next);
+      },
+      error => {
+        console.log('onSettingsChanged: error');
+        this.handleError(error);
+      },
+      () => console.log('onSettingsChanged: complete')
+    );
+    this.subscription.add(sub);
+    // parts - onPartChanged
+    var sub = this.partService.onPartChanged.subscribe(
+      (next: Part) => {
+        console.log('onPartChanged: next');
+        this.onPartChanged(next);
+      },
+      error => {
+        console.log('onPartChanged: error');
+        this.handleError(error);
+      },
+      () => console.log('onPartChanged: complete')
+    );
+    this.subscription.add(sub);
+
     this.getPart();
+    this.getSettings();
+  }
+
+  ngOnDestroy() {
+    console.log('ngOnInit');
+    console.log('ngOnDestroy');
+    this.subscription.unsubscribe();
+  }
+
+  private onSettingsChanged(settings: Settings) {
+    console.log('onSettingsChanged(settings: Settings)');
+    console.log(settings);
+    this.settings = settings;
+    this.initForm();
+  }
+
+  private onPartChanged(part: Part) {
+    console.log('onPartChanged(part: Part)');
+    console.log(part);
+    this.part = part;
+    this.initForm();
+  }
+
+  private handleError(error) {
+    console.error(error);
   }
 
   getPart(): void {
     let idString = this.route.snapshot.paramMap.get('id');
     if (idString == 'new') {
       this.add = true;
-      this.part = new Part();
-      this.getSettings();
+      this.onPartChanged(new Part());
     } else {
       const id = +idString;
-      this.partService.getPart(id).subscribe((newPart: Part) => {
-        this.part = newPart;
-        this.getSettings();
-      });
+      this.partService.getPart(id);
     }
   }
 
   getSettings(): void {
-    this.settingsService.getSettings().subscribe(settings => {
-      this.settings = settings;
-      this.initForm();
-    });
+    this.settingsService.getSettings();
   }
 
   initForm(): void {
+    if (!this.part) return;
+    if (!this.settings) return;
+
     const customFieldsGroup: FormGroup = new FormGroup({});
     this.settings.customFields.forEach(field => {
       customFieldsGroup.addControl(
@@ -84,20 +136,20 @@ export class PartDetailComponent implements OnInit {
       customFields: customFieldsGroup
     });
 
-    this.msg.add(this.partForm.value);
+    console.log(this.partForm.value);
     this.partForm.patchValue(this.part);
   }
 
   onSubmit(): void {
-    this.msg.add('SUBMIT');
-    this.msg.add(this.partForm.value);
+    console.log('onSubmit()');
+    console.log(this.partForm.value);
     this.part = this.partForm.value;
     if (this.add) {
-      this.partService.addPart(this.part).subscribe(() => this.location.back());
+      this.partService.addPart(this.part);
+      this.location.back();
     } else {
-      this.partService
-        .updatePart(this.part)
-        .subscribe(() => this.location.back());
+      this.partService.updatePart(this.part);
+      this.location.back();
     }
   }
 
@@ -107,7 +159,7 @@ export class PartDetailComponent implements OnInit {
     } else {
       const dialogRef = this.dialog.open(DiscardChangesDialogComponent);
       dialogRef.afterClosed().subscribe(result => {
-        this.msg.add(`The dialog was closed ${result}`);
+        console.log(`The dialog was closed ${result}`);
         if (result) {
           this.location.back();
         }

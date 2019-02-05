@@ -19,11 +19,7 @@ export class PartsComponent implements OnInit {
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = Object.keys(new Part()).slice(0, -1);
 
-  constructor(
-    private partService: PartService,
-    private msg: MessageService,
-    private router: Router
-  ) {}
+  constructor(private partService: PartService, private router: Router) {}
 
   ngOnInit() {
     this.dataSource = new PartsDataSource(this.partService);

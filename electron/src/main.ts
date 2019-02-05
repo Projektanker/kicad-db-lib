@@ -58,14 +58,16 @@ app.on('activate', () => {
 console.log('on: settings.get');
 ipcMain.on('settings.get', (event: any) => {
   console.log('ipcMain: settings.get');
+
   var file = path.join(__dirname, '/settings.json');
   console.log(`getSettings(${file})`);
+
   var settingsService = new SettingsService();
   var promise = settingsService.getSettings(file);
   promise
     .then(settings => {
       console.log(settings);
-      event.sender.send('settings.get', settings);
+      event.sender.send('settings.changed', settings);
     })
     .catch(error => console.error(error));
 });
@@ -80,10 +82,7 @@ ipcMain.on('settings.update', (event: any, arg: Settings) => {
   var settingsService = new SettingsService();
   var promise = settingsService.updateSettings(file, arg);
   promise
-    .then(settings => {
-      console.log(settings);
-      event.sender.send('settings.update', settings);
-    })
+    .then(settings => console.log('settings.update: then'))
     .catch(error => console.error(error));
 });
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Settings } from '../../../shared/settings/settings';
 import { Observable, of, Subject } from 'rxjs';
 import { MessageService } from './message.service';
@@ -9,51 +9,50 @@ import { ElectronService } from 'ngx-electron';
 })
 export class SettingsService {
   private settings: Settings;
+  private onSettingsChangedSubject: Subject<Settings> = new Subject<Settings>();
 
-  constructor(
-    private messageService: MessageService,
-    private electronService: ElectronService
-  ) {
+  get onSettingsChanged() {
+    return this.onSettingsChangedSubject.asObservable();
+  }
+
+  constructor(private electronService: ElectronService, private zone: NgZone) {
+    console.log('constructor(...)');
     this.settings = new Settings();
     this.settings.customFields = ['OC_FARNELL', 'OC_MOUSER'];
+    console.log(this.onSettingsChanged);
+    if (this.electronService.isElectronApp) {
+      this.electronService.ipcRenderer.on(
+        'settings.changed',
+        (event: any, arg: any) => this.ipcSettingsChanged(event, arg)
+      );
+    }
   }
 
-  getSettings(): Observable<Settings> {
-    var channel = 'settings.get';
-    if (!this.electronService.isElectronApp) {
-      this.messageService.add('SettingsService: getSettings');
-      return of(this.settings);
-    }
-    console.log(channel);
-    var subject = new Subject<Settings>();
-    this.electronService.ipcRenderer.once(channel, (event: any, arg: any) => {
-      console.log(`once ${channel}`);
-      console.log(arg);
+  private ipcSettingsChanged(event: any, arg: any) {
+    console.log('ipcSettingsChanged(event, arg)');
+    console.log(event);
+    console.log(arg);
+    this.zone.run(() => {
       this.settings = arg;
-      subject.next(arg);
-      subject.complete();
+      this.onSettingsChangedSubject.next(arg);
     });
-    this.electronService.ipcRenderer.send(channel);
-    return subject;
   }
 
-  updateSettings(settings: Settings): Observable<any> {
-    var channel = 'settings.update';
-    if (!this.electronService.isElectronApp) {
-      this.messageService.add('SettingsService: updateSettings');
-      return of((this.settings = settings));
+  getSettings() {
+    console.log('getSettings()');
+
+    if (this.electronService.isElectronApp) {
+      this.electronService.ipcRenderer.send('settings.get');
+    } else {
+      this.onSettingsChangedSubject.next(this.settings);
     }
-    console.log(channel);
-    console.log(settings);
-    var subject = new Subject<Settings>();
-    this.electronService.ipcRenderer.once(channel, (event: any, arg: any) => {
-      console.log(`once ${channel}`);
-      console.log(arg);
-      this.settings = arg;
-      subject.next(arg);
-      subject.complete();
-    });
-    this.electronService.ipcRenderer.send(channel, settings);
-    return subject;
+  }
+
+  updateSettings(settings: Settings) {
+    console.log('updateSettings()');
+    this.settings = settings;
+    if (this.electronService.isElectronApp) {
+      this.electronService.ipcRenderer.send('settings.update', settings);
+    }
   }
 }

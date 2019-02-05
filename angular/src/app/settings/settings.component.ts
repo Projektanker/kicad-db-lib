@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { SettingsService } from '../settings.service';
 import { Settings } from '../../../../shared/settings/settings';
-import { MessageService } from '../message.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-settings',
@@ -14,28 +14,45 @@ export class SettingsComponent implements OnInit {
     '{ "customFields": [ "OC_FARNELL", "OC_MOUSER" ], "paths": { "parts": "parts", "symbol": "symbol", "footprint": "footprint", "output": "footprint" } }'
   );
 
+  subscription: Subscription = new Subscription();
+
   constructor(
     private settingsService: SettingsService,
-    private msg: MessageService,
     private location: Location
   ) {
-    console.log('Settings constructor');
+    console.log('constructor');
   }
 
   ngOnInit() {
     console.log('ngOnInit');
-    this.settingsService.getSettings().subscribe(
-      settings => {
-        console.log('ngOnInit: next');
-        this.settings = settings;
+    var sub = this.settingsService.onSettingsChanged.subscribe(
+      (next: Settings) => {
+        console.log('onSettingsChanged: next');
+        this.onSettingsChanged(next);
       },
       error => {
-        console.log(`ngOnInit: ${error}`);
+        console.log('onSettingsChanged: error');
+        this.handleError(error);
       },
-      () => {
-        console.log('ngOnInit: complete');
-      }
+      () => console.log('onSettingsChanged: complete')
     );
+    this.subscription.add(sub);
+    this.settingsService.getSettings();
+  }
+
+  ngOnDestroy() {
+    console.log('ngOnDestroy');
+    this.subscription.unsubscribe();
+  }
+
+  private onSettingsChanged(settings: Settings) {
+    console.log('onSettingsChanged(settings: Settings)');
+    console.log(settings);
+    this.settings = settings;
+  }
+
+  private handleError(error) {
+    console.error(error);
   }
 
   goBack() {
