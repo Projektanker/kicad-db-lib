@@ -196,6 +196,8 @@ export class KiCadLibraryReader {
       for (const file of files) {
         var library = path.join(directory, file);
         var name = file.replace('.lib', '');
+        var stat = await fs.stat(library);
+        if (!stat.isFile) continue;
         var symbols = await this.getSymbolsAsync(library);
         for (const symbol of symbols) {
           result.push(`${name}:${symbol}`);
@@ -214,6 +216,10 @@ export class KiCadLibraryReader {
       if (!(await fs.checkFileExists(library))) {
         throw new Error(`File \"${library}\" not found!`);
       }
+      var stat = await fs.stat(library);
+      if (!stat.isFile()) {
+        throw new Error(`\"${library}\" is not a file!`);
+      }
 
       var symbols = [];
       var text = await fs.readFile(library, 'utf8');
@@ -230,6 +236,51 @@ export class KiCadLibraryReader {
       return Promise.resolve(symbols);
     } catch (error) {
       Promise.reject(error);
+    }
+  }
+
+  public async getFootprintsAsync(directory: string): Promise<string[]> {
+    try {
+      if (!(await fs.checkFileExists(directory))) {
+        throw new Error(`Directory \"${directory}\" not found!`);
+      }
+      var stat = await fs.stat(directory);
+      if (!stat.isDirectory()) {
+        throw new Error(`\"${directory}\" is not a directory!`);
+      }
+      var extension = '.kicad_mod';
+      var footprints = await fs.readdir(directory);
+      footprints = footprints
+        .filter(f => f.toLowerCase().endsWith(extension))
+        .map(f => f.replace(extension, ''));
+      return Promise.resolve(footprints);
+    } catch (error) {
+      Promise.reject(error);
+    }
+  }
+
+  public async getFootprintsFromDirectoryAsync(
+    directory: string
+  ): Promise<string[]> {
+    try {
+      var folders = await fs.readdir(directory);
+      folders = folders.filter(f => f.toLowerCase().endsWith('.pretty'));
+      var result: string[] = [];
+      for (const folder of folders) {
+        var library = path.join(directory, folder);
+        var name = folder.replace('.pretty', '');
+        var stat = await fs.stat(library);
+        if (!stat.isDirectory) continue;
+        var symbols = await this.getFootprintsAsync(library);
+        for (const symbol of symbols) {
+          result.push(`${name}:${symbol}`);
+        }
+      }
+      result = result.sort();
+      console.log(result);
+      return Promise.resolve(result);
+    } catch (error) {
+      return Promise.reject(error);
     }
   }
 }
