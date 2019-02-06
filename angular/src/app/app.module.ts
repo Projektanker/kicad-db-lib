@@ -41,6 +41,7 @@ import { KeysPipe } from './keys.pipe';
 import { SettingsFieldsComponent } from './settings-fields/settings-fields.component';
 import { DiscardChangesDialogComponent } from './discard-changes-dialog/discard-changes-dialog.component';
 import { SettingsPathsComponent } from './settings-paths/settings-paths.component';
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { SettingsPathsComponent } from './settings-paths/settings-paths.componen
     KeysPipe,
     SettingsFieldsComponent,
     DiscardChangesDialogComponent,
-    SettingsPathsComponent
+    SettingsPathsComponent,
+    DeleteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -91,7 +93,7 @@ import { SettingsPathsComponent } from './settings-paths/settings-paths.componen
     MatProgressBarModule,
     ReactiveFormsModule
   ],
-  entryComponents: [DiscardChangesDialogComponent],
+  entryComponents: [DiscardChangesDialogComponent, DeleteDialogComponent],
   providers: [],
   bootstrap: [AppComponent]
 })

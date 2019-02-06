@@ -96,9 +96,13 @@ export class PartService {
   /** PUT: update the part on the server */
   updatePart(part: Part) {
     console.log('updatePart(part: Part)');
-    this.http
-      .put(this.partsUrl, part, httpOptions)
-      .subscribe(() => {}, error => this.handleError(error));
+    if (this.electronService.isElectronApp) {
+      this.electronService.ipcRenderer.send('part.updatePart', part);
+    } else {
+      this.http
+        .put(this.partsUrl, part, httpOptions)
+        .subscribe(() => {}, error => this.handleError(error));
+    }
   }
 
   /** POST: add a new part to the server */
@@ -116,12 +120,16 @@ export class PartService {
   /** DELETE: delete the part from the server */
   deletePart(part: Part | number) {
     console.log('deletePart(part: Part | number)');
-    const id = typeof part === 'number' ? part : part.id;
-    const url = `${this.partsUrl}/${id}`;
+    if (this.electronService.isElectronApp) {
+      this.electronService.ipcRenderer.send('part.deletePart', part);
+    } else {
+      const id = typeof part === 'number' ? part : part.id;
+      const url = `${this.partsUrl}/${id}`;
 
-    this.http
-      .delete<Part>(url, httpOptions)
-      .subscribe(() => {}, error => this.handleError(error));
+      this.http
+        .delete<Part>(url, httpOptions)
+        .subscribe(() => {}, error => this.handleError(error));
+    }
   }
 
   private handleError(error) {

@@ -126,6 +126,34 @@ ipcMain.on('part.addPart', (event: any, arg: Part) => {
     .catch(error => console.error(error));
 });
 
+console.log('on: part.updatePart');
+ipcMain.on('part.updatePart', (event: any, arg: Part) => {
+  console.log('ipcMain: part.updatePart arg:');
+  console.log(arg);
+
+  var partService = new PartService();
+  var promise = partService.updatePart(arg);
+  promise
+    .then(part => {
+      console.log('part.updatePart: then');
+    })
+    .catch(error => console.error(error));
+});
+
+console.log('on: part.deletePart');
+ipcMain.on('part.deletePart', (event: any, arg: Part) => {
+  console.log('ipcMain: part.deletePart arg:');
+  console.log(arg);
+
+  var partService = new PartService();
+  var promise = partService.deletePart(arg);
+  promise
+    .then(part => {
+      console.log('part.deletePart: then');
+    })
+    .catch(error => console.error(error));
+});
+
 console.log('on: test');
 ipcMain.on('test', (event: any) => {
   console.log('ipcMain: test');

@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material';
 import { DiscardChangesDialogComponent } from '../discard-changes-dialog/discard-changes-dialog.component';
 import { MessageService } from '../message.service';
 import { Subscription } from 'rxjs';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-part-detail',
@@ -117,22 +118,19 @@ export class PartDetailComponent implements OnInit {
 
     const customFieldsGroup: FormGroup = new FormGroup({});
     this.settings.customFields.forEach(field => {
-      customFieldsGroup.addControl(
-        field,
-        new FormControl('', Validators.required)
-      );
+      customFieldsGroup.addControl(field, new FormControl(''));
     });
 
     this.partForm = new FormGroup({
       id: new FormControl(null),
       reference: new FormControl('', Validators.required),
-      value: new FormControl(''),
-      footprint: new FormControl(''),
-      symbol: new FormControl(''),
-      library: new FormControl(''),
-      datasheet: new FormControl(''),
-      description: new FormControl(''),
-      keywords: new FormControl(''),
+      value: new FormControl('', Validators.required),
+      footprint: new FormControl('', Validators.required),
+      symbol: new FormControl('', Validators.required),
+      library: new FormControl('', Validators.required),
+      datasheet: new FormControl('', Validators.required),
+      description: new FormControl('', Validators.required),
+      keywords: new FormControl('', Validators.required),
       customFields: customFieldsGroup
     });
 
@@ -151,6 +149,18 @@ export class PartDetailComponent implements OnInit {
       this.partService.updatePart(this.part);
       this.location.back();
     }
+  }
+
+  delete(): void {
+    console.log('delete()');
+    const dialogRef = this.dialog.open(DeleteDialogComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`The dialog was closed ${result}`);
+      if (result) {
+        this.partService.deletePart(this.part);
+        this.location.back();
+      }
+    });
   }
 
   goBack(): void {

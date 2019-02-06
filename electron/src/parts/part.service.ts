@@ -63,4 +63,38 @@ export class PartService {
       return Promise.reject(error);
     }
   }
+
+  async updatePart(part: Part): Promise<Part> {
+    try {
+      console.log(`updatePart(part: Part)`);
+      var settingsService = new SettingsService();
+      var settings = await settingsService.getSettings();
+      var file = path.join(settings.paths.parts, `${part.id}.json`);
+      console.log(file);
+      console.log(part);
+      var json = JSON.stringify(part);
+      await fs.writeFile(file, json, 'utf8');
+      return Promise.resolve(part);
+    } catch (error) {
+      console.error(error);
+      return Promise.reject(error);
+    }
+  }
+
+  async deletePart(part: Part | number): Promise<any> {
+    try {
+      console.log(`deletePart(part: Part | number)`);
+      const id = typeof part === 'number' ? part : part.id;
+      var settingsService = new SettingsService();
+      var settings = await settingsService.getSettings();
+      var file = path.join(settings.paths.parts, `${id}.json`);
+      console.log(file);
+      console.log(part);
+      await fs.unlink(file);
+      return Promise.resolve();
+    } catch (error) {
+      console.error(error);
+      return Promise.reject(error);
+    }
+  }
 }

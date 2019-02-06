@@ -10,14 +10,22 @@
     </span>
     <span class="spacer"></span>
     <button
-      *ngIf="partForm"
       type="button"
       aria-label="submit"
       mat-icon-button
-      [disabled]="!partForm.valid"
+      [disabled]="!partForm?.valid"
       (click)="onSubmit()"
     >
       <mat-icon aria-label="submit icon">done</mat-icon>
+    </button>
+    <button
+      type="button"
+      aria-label="delete"
+      mat-icon-button
+      [disabled]="add"
+      (click)="delete()"
+    >
+      <mat-icon aria-label="submit icon">delete</mat-icon>
     </button>
   </mat-toolbar>
   <div *ngIf="!partForm">
@@ -37,7 +45,7 @@
         <mat-form-field *ngIf="!(isLast || isFirst)" class="full-width">
           <input
             matInput
-            [placeholder]="field | uppercase"
+            placeholder="{{ field | uppercase }}*"
             [formControlName]="field"
             [readonly]="isFirst"
           />
