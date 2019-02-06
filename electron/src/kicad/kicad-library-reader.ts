@@ -1,5 +1,6 @@
 import { fs } from '../fs';
 import { Part } from '../parts/part';
+import * as path from 'path';
 
 export class KiCadLibraryReader {
   private _getSymbol_library: string;
@@ -178,6 +179,29 @@ export class KiCadLibraryReader {
       lines.splice(1, 0, '#');
 
       var result = lines.join('\n');
+      console.log(result);
+      return Promise.resolve(result);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  public async getSymbolsFromDirectoryAsync(
+    directory: string
+  ): Promise<string[]> {
+    try {
+      var files = await fs.readdir(directory);
+      files = files.filter(f => f.toLowerCase().endsWith('.lib'));
+      var result: string[] = [];
+      for (const file of files) {
+        var library = path.join(directory, file);
+        var name = file.replace('.lib', '');
+        var symbols = await this.getSymbolsAsync(library);
+        for (const symbol of symbols) {
+          result.push(`${name}:${symbol}`);
+        }
+      }
+      result = result.sort();
       console.log(result);
       return Promise.resolve(result);
     } catch (error) {
