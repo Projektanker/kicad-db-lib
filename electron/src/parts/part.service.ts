@@ -97,4 +97,17 @@ export class PartService {
       return Promise.reject(error);
     }
   }
+
+  async getLibraries(): Promise<string[]> {
+    try {
+      var parts = await this.getParts();
+      var libraries = parts
+        .map(p => p.library)
+        .filter((value, index, array) => array.indexOf(value) === index)
+        .sort();
+      return Promise.resolve(libraries);
+    } catch (error) {
+      return Promise.reject(libraries);
+    }
+  }
 }
