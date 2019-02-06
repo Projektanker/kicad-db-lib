@@ -1,12 +1,1 @@
-{
-  "id": 4,
-  "reference": "R",
-  "value": "10K",
-  "footprint": "Resistor_SMD:R_0805_2012Metric",
-  "library": "R_0805",
-  "description": "Resistor 10K 0805 150V",
-  "keywords": "Res Resistor 10K 0805",
-  "symbol": "{lib}:R",
-  "datasheet": "no datasheet",
-  "customFields": {}
-}
+{"customFields":{"Hersteller":"","OC_FARNELL":"","OC_MOUSER":""},"datasheet":"no datasheet","description":"Resistor 10K 0805 150V","footprint":"Resistor_SMD:R_0805_2012Metric","id":4,"keywords":"Res Resistor 10K 0805","library":"R_0805","reference":"R","symbol":"Device:R","value":"10K"}

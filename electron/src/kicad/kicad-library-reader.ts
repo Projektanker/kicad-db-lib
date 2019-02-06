@@ -11,7 +11,10 @@ export class KiCadLibraryReader {
     bufferLibrary: boolean = true
   ): Promise<string> {
     try {
-      if (!fs.checkFileExists(library)) {
+      console.log('getSymbolAsync(...)');
+      console.log(`fs.checkFileExists(${library})`);
+      console.log(await fs.checkFileExists(library));
+      if (!(await fs.checkFileExists(library))) {
         throw new Error(`Symbol library \"${library}\" not found!`);
       }
 
@@ -20,6 +23,7 @@ export class KiCadLibraryReader {
       if (bufferLibrary && library == this._getSymbol_library) {
         lines = this._getSymbol_lines;
       } else {
+        console.log(`fs.readFile(${library}, 'utf8')`);
         var text = await fs.readFile(library, 'utf8');
         lines = text.replace('\r\n', '\n').split('\n');
         this._getSymbol_library = bufferLibrary ? library : null;
@@ -60,7 +64,7 @@ export class KiCadLibraryReader {
       // Return symbol
       var stringBuilder: string[] = [];
       // Add comment before symbol
-      stringBuilder.push(`"# ${symbol}`);
+      stringBuilder.push(`# ${symbol}`);
       stringBuilder.push('#');
 
       for (i = start; i < end; i++) {
@@ -68,8 +72,9 @@ export class KiCadLibraryReader {
       }
       // Add comment after symbol
       stringBuilder.push('#');
-
-      return Promise.resolve(stringBuilder.join('\n'));
+      var result = stringBuilder.join('\n');
+      //console.log(result);
+      return Promise.resolve(result);
     } catch (error) {
       return Promise.reject(error);
     }
@@ -77,6 +82,8 @@ export class KiCadLibraryReader {
 
   public async getSymbolTemplateAsync(part: Part): Promise<string> {
     try {
+      console.log('getSymbolTemplateAsync(part: Part)');
+
       var split = part.symbol.split(':');
       if (split.length < 2) {
         throw new Error('Symbol must be defined as "path:symbol"');
@@ -170,7 +177,9 @@ export class KiCadLibraryReader {
       lines.splice(0, 0, '# {0}');
       lines.splice(1, 0, '#');
 
-      return Promise.resolve(lines.join('\n'));
+      var result = lines.join('\n');
+      console.log(result);
+      return Promise.resolve(result);
     } catch (error) {
       return Promise.reject(error);
     }
@@ -178,7 +187,7 @@ export class KiCadLibraryReader {
 
   public async getSymbolsAsync(library: string): Promise<string[]> {
     try {
-      if (!fs.checkFileExists(library)) {
+      if (!(await fs.checkFileExists(library))) {
         throw new Error(`File \"${library}\" not found!`);
       }
 

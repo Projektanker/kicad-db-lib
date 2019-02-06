@@ -1,12 +1,1 @@
-{
-  "id": 5,
-  "reference": "C",
-  "value": "100n_50V",
-  "footprint": "Capacitor_SMD:C_0603_1608Metric",
-  "library": "C_0603",
-  "description": "Capacitor 100nF 50V 0603",
-  "keywords": "Cap Capacitor 100n 0603",
-  "symbol": "{lib}:C",
-  "datasheet": "no datasheet",
-  "customFields": {}
-}
+{"customFields":{"Hersteller":"","OC_FARNELL":"","OC_MOUSER":""},"datasheet":"no datasheet","description":"Capacitor 100nF 50V 0603","footprint":"Capacitor_SMD:C_0603_1608Metric","id":5,"keywords":"Cap Capacitor 100n 0603","library":"C_0603","reference":"C","symbol":"Device:C","value":"100n_50V"}

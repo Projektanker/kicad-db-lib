@@ -4,6 +4,8 @@ import { SettingsService } from './settings/settings.service';
 import { Settings } from '../../shared/settings/settings';
 import { PartService } from './parts/part.service';
 import { Part } from './parts/part';
+import { LibraryService } from './library/library.service';
+import { fs } from './fs';
 
 let mainWindow: Electron.BrowserWindow;
 
@@ -35,7 +37,20 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+  var lib = new LibraryService();
+  console.log('build');
+  lib
+    .build()
+    .then(() => {
+      console.log('build done!');
+      createWindow();
+    })
+    .catch(error => {
+      console.log('build error:');
+      console.error(error);
+    });
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {

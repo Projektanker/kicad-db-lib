@@ -10,19 +10,48 @@ export class KiCadLibraryBuilder {
     this._reader = new KiCadLibraryReader();
   }
 
+  private async finishLibrary(
+    outputDirectory: string,
+    library: string,
+    lib: string[],
+    dcm: string[]
+  ): Promise<any> {
+    if (!lib) return;
+    if (!dcm) return;
+
+    var libFile = path.join(outputDirectory, `${library}.lib`);
+    var dcmFile = path.join(outputDirectory, `${library}.dcm`);
+
+    lib.push('#End Library\n');
+    var libText = lib.join('\n');
+    console.log(libFile);
+    await fs.writeFile(libFile, libText, 'utf8');
+
+    dcm.push('#End Doc Library\n');
+    var dxmText = lib.join('\n');
+    console.log(dcmFile);
+    await fs.writeFile(dcmFile, dxmText, 'utf8');
+  }
+
   public async buildAsync(
     kiCadParts: Part[],
     outputDirectory: string,
     clearOutputDirectory: boolean = false
   ): Promise<any> {
     try {
+      console.log('buildAsync()');
+
       if (clearOutputDirectory) {
+        console.log('clear output directory:');
         var files = await fs.readdir(outputDirectory);
-        files = files.filter(f => {
-          return (
-            f.toLowerCase().endsWith('.lib') || f.toLowerCase().endsWith('.dcm')
-          );
-        });
+        files = files
+          .filter(f => {
+            return (
+              f.toLowerCase().endsWith('.lib') ||
+              f.toLowerCase().endsWith('.dcm')
+            );
+          })
+          .map(f => path.join(outputDirectory, f));
 
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
@@ -31,6 +60,7 @@ export class KiCadLibraryBuilder {
       }
 
       // Sort parts by Library and Value
+      console.log('Sort parts by Library and Value');
       var parts = kiCadParts.sort((a, b) => {
         if (a.library == b.library) {
           return a.value < b.value ? -1 : a.value > b.value ? 1 : 0;
@@ -40,32 +70,21 @@ export class KiCadLibraryBuilder {
       });
 
       var library: string = null;
-      var libFile = null,
-        dcmFile = null;
       var lib: string[] = null,
         dcm: string[] = null;
 
       for (let i = 0; i < parts.length; i++) {
+        console.log(`part[${i}]`);
         const part = parts[i];
 
         if (part.library != library) {
           // Close previous library files
-          if (libFile != null) {
-            lib.push('#End Library');
-            await fs.writeFile(libFile, lib.join('\n'), 'utf8');
-          }
-
-          if (dcmFile != null) {
-            dcm.push('#End Doc Library');
-            await fs.writeFile(dcmFile, dcm.join('\n'), 'utf8');
-          }
+          await this.finishLibrary(outputDirectory, library, lib, dcm);
 
           // Create new library files
           library = part.library;
           lib = [];
-          libFile = path.join(outputDirectory, `${library}.lib`);
           dcm = [];
-          dcmFile = path.join(outputDirectory, `${library}.dcm`);
 
           // Write file head
           lib.push('EESchema-LIBRARY Version 2.4');
@@ -89,7 +108,8 @@ export class KiCadLibraryBuilder {
         var partString = template;
         for (let i = 0; i < values.length; i++) {
           const value = values[i];
-          partString = partString.replace(`{${i}}`, value);
+          var find = new RegExp(`\\{${i}\\}`, 'g'); // resolves in: /\{0\}/g
+          partString = partString.replace(find, value);
         }
         partString = partString.replace('\n\n', '\n');
 
@@ -104,8 +124,11 @@ export class KiCadLibraryBuilder {
 
         dcm.push('$ENDCMP');
         dcm.push('#');
-        return Promise.resolve();
       }
+      // Close previous library files
+      await this.finishLibrary(outputDirectory, library, lib, dcm);
+
+      return Promise.resolve();
     } catch (error) {
       return Promise.reject(error);
     }
