@@ -51,7 +51,8 @@ export class PartService {
       var settingsService = new SettingsService();
       var settings = await settingsService.getSettings();
       var files = await fs.readdir(settings.paths.parts);
-      part.id = files.length + 1;
+      var allIds = files.map(f => parseInt(f)).filter(n => !isNaN(n));
+      part.id = Math.max(...allIds) + 1;
       var file = path.join(settings.paths.parts, `${part.id}.json`);
       console.log(file);
       console.log(part);
