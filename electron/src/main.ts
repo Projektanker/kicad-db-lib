@@ -76,6 +76,14 @@ app.on('activate', () => {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 
+function buildLibrary(event: any) {
+  event.sender.send('library.build.running');
+  libraryService
+    .build(true)
+    .then(() => event.sender.send('library.build.complete'))
+    .catch(error => event.sender.send('library.build.error', error));
+}
+
 console.log('on: settings.get');
 ipcMain.on('settings.get', (event: any) => {
   console.log('ipcMain: settings.get');
@@ -135,6 +143,9 @@ ipcMain.on('part.addPart', (event: any, arg: Part) => {
   promise
     .then(part => {
       console.log('part.addPart: then');
+      buildLibrary(event);
+
+      libraryService.build().then();
     })
     .catch(error => console.error(error));
 });
@@ -148,6 +159,7 @@ ipcMain.on('part.updatePart', (event: any, arg: Part) => {
   promise
     .then(part => {
       console.log('part.updatePart: then');
+      buildLibrary(event);
     })
     .catch(error => console.error(error));
 });
@@ -161,6 +173,7 @@ ipcMain.on('part.deletePart', (event: any, arg: Part) => {
   promise
     .then(part => {
       console.log('part.deletePart: then');
+      buildLibrary(event);
     })
     .catch(error => console.error(error));
 });

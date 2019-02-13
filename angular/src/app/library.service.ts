@@ -38,6 +38,24 @@ export class LibraryService {
         'library.getFootprints',
         (event: any, arg: any) => this.ipcFootprintsChanged(event, arg)
       );
+
+      this.electronService.ipcRenderer.on(
+        'library.build.running',
+        (event: any, arg: any) => console.warn('library.build.running')
+      );
+
+      this.electronService.ipcRenderer.on(
+        'library.build.complete',
+        (event: any, arg: any) => console.warn('library.build.complete')
+      );
+
+      this.electronService.ipcRenderer.on(
+        'library.build.error',
+        (event: any, arg: any) => {
+          console.warn('library.build.error');
+          console.error(arg);
+        }
+      );
     }
   }
 
