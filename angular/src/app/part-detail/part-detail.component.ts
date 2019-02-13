@@ -14,8 +14,16 @@ import { Settings } from '../../../../shared/settings/settings';
 import { MatDialog } from '@angular/material';
 import { DiscardChangesDialogComponent } from '../discard-changes-dialog/discard-changes-dialog.component';
 import { MessageService } from '../message.service';
-import { Subscription } from 'rxjs';
+import { Subscription, of, Observable } from 'rxjs';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  filter,
+  startWith
+} from 'rxjs/operators';
+import { LibraryService } from '../library.service';
 
 @Component({
   selector: 'app-part-detail',
@@ -26,6 +34,14 @@ export class PartDetailComponent implements OnInit {
   part: Part = null;
   add: Boolean = false;
   settings: Settings = null;
+  libraries: string[] = [];
+  filteredLibraries$: Observable<string[]> = null;
+  symbols: string[] = [];
+  filteredSymbols$: Observable<string[]> = null;
+  footprints: string[] = [];
+  filteredFootprints$: Observable<string[]> = null;
+
+  options: string[] = ['One', 'Two', 'Three'];
 
   subscription: Subscription = new Subscription();
 
@@ -34,6 +50,7 @@ export class PartDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private partService: PartService,
+    private libraryService: LibraryService,
     private settingsService: SettingsService,
     private location: Location,
     public dialog: MatDialog
@@ -69,12 +86,56 @@ export class PartDetailComponent implements OnInit {
     );
     this.subscription.add(sub);
 
+    // parts - onLibrariesChanged
+    var sub = this.partService.onLibrariesChanged.subscribe(
+      (next: string[]) => {
+        console.log('onLibrariesChanged: next');
+        this.onLibrariesChanged(next);
+      },
+      error => {
+        console.log('onLibrariesChanged: error');
+        this.handleError(error);
+      },
+      () => console.log('onLibrariesChanged: complete')
+    );
+    this.subscription.add(sub);
+
+    // library - onSymbolsChanged
+    var sub = this.libraryService.onSymbolsChanged.subscribe(
+      (next: string[]) => {
+        console.log('onSymbolsChanged: next');
+        this.onSymbolsChanged(next);
+      },
+      error => {
+        console.log('onSymbolsChanged: error');
+        this.handleError(error);
+      },
+      () => console.log('onSymbolsChanged: complete')
+    );
+    this.subscription.add(sub);
+
+    // library - onFootprintsChanged
+    var sub = this.libraryService.onFootprintsChanged.subscribe(
+      (next: string[]) => {
+        console.log('onFootprintsChanged: next');
+        this.onFootprintsChanged(next);
+      },
+      error => {
+        console.log('onFootprintsChanged: error');
+        this.handleError(error);
+      },
+      () => console.log('onFootprintsChanged: complete')
+    );
+    this.subscription.add(sub);
+
     this.getPart();
     this.getSettings();
+    this.getLibraries();
+    this.getSymbols();
+    this.getFootprints();
   }
 
   ngOnDestroy() {
-    console.log('ngOnInit');
     console.log('ngOnDestroy');
     this.subscription.unsubscribe();
   }
@@ -90,6 +151,27 @@ export class PartDetailComponent implements OnInit {
     console.log('onPartChanged(part: Part)');
     console.log(part);
     this.part = part;
+    this.initForm();
+  }
+
+  private onLibrariesChanged(libraries: string[]): any {
+    console.log('onLibrariesChanged(libraries: string[])');
+    console.log(libraries);
+    this.libraries = libraries;
+    this.initForm();
+  }
+
+  onSymbolsChanged(symbols: string[]): any {
+    console.log('onSymbolsChanged(symbols: string[])');
+    console.log(symbols);
+    this.symbols = symbols;
+    this.initForm();
+  }
+
+  onFootprintsChanged(footprints: string[]): any {
+    console.log('onFootprintsChanged(footprints: string[])');
+    console.log(footprints);
+    this.footprints = footprints;
     this.initForm();
   }
 
@@ -112,9 +194,24 @@ export class PartDetailComponent implements OnInit {
     this.settingsService.getSettings();
   }
 
+  getLibraries(): void {
+    this.partService.getLibraries();
+  }
+
+  getSymbols(): void {
+    this.libraryService.getSymbols();
+  }
+
+  getFootprints(): void {
+    this.libraryService.getFootprints();
+  }
+
   initForm(): void {
     if (!this.part) return;
     if (!this.settings) return;
+    //if (!this.libraries) return;
+    //if (!this.footprints) return;
+    //if (!this.symbols) return;
 
     const customFieldsGroup: FormGroup = new FormGroup({});
     this.settings.customFields.forEach(field => {
@@ -133,6 +230,54 @@ export class PartDetailComponent implements OnInit {
       keywords: new FormControl('', Validators.required),
       customFields: customFieldsGroup
     });
+
+    this.filteredLibraries$ = this.partForm.controls[
+      'library'
+    ].valueChanges.pipe(
+      startWith(this.part.library),
+      // wait 300ms after each keystroke before considering the term
+      debounceTime(300),
+      // To lower case and trim
+      map((value: string) => value.toUpperCase().trim()),
+      // ignore new term if same as previous term
+      distinctUntilChanged(),
+      // filter
+      map((value: string) =>
+        this.libraries.filter(library => library.toUpperCase().includes(value))
+      )
+    );
+
+    this.filteredSymbols$ = this.partForm.controls['symbol'].valueChanges.pipe(
+      startWith(this.part.symbol),
+      // wait 300ms after each keystroke before considering the term
+      debounceTime(300),
+      // To lower case and trim
+      map((value: string) => value.toUpperCase().trim()),
+      // ignore new term if same as previous term
+      distinctUntilChanged(),
+      // filter
+      map((value: string) =>
+        this.symbols.filter(symbol => symbol.toUpperCase().includes(value))
+      )
+    );
+
+    this.filteredFootprints$ = this.partForm.controls[
+      'footprint'
+    ].valueChanges.pipe(
+      startWith(this.part.footprint),
+      // wait 300ms after each keystroke before considering the term
+      debounceTime(300),
+      // To lower case and trim
+      map((value: string) => value.toUpperCase().trim()),
+      // ignore new term if same as previous term
+      distinctUntilChanged(),
+      // filter
+      map((value: string) =>
+        this.footprints.filter(footprint =>
+          footprint.toUpperCase().includes(value)
+        )
+      )
+    );
 
     console.log(this.partForm.value);
     this.partForm.patchValue(this.part);

@@ -16,9 +16,13 @@ const httpOptions = {
 })
 export class PartService {
   private partsUrl = 'api/parts'; // URL to web api
+  private librariesUrl = 'api/libraries'; // URL to web api
 
   private onPartChangedSubject: Subject<Part> = new Subject<Part>();
   private onPartsChangedSubject: Subject<Part[]> = new Subject<Part[]>();
+  private onLibrariesChangedSubject: Subject<string[]> = new Subject<
+    string[]
+  >();
 
   get onPartChanged(): Observable<Part> {
     return this.onPartChangedSubject.asObservable();
@@ -26,6 +30,10 @@ export class PartService {
 
   get onPartsChanged(): Observable<Part[]> {
     return this.onPartsChangedSubject.asObservable();
+  }
+
+  get onLibrariesChanged(): Observable<string[]> {
+    return this.onLibrariesChangedSubject.asObservable();
   }
 
   constructor(
@@ -43,6 +51,11 @@ export class PartService {
         'part.partChanged',
         (event: any, arg: any) => this.ipcPartChanged(event, arg)
       );
+
+      this.electronService.ipcRenderer.on(
+        'part.getLibraries',
+        (event: any, arg: any) => this.ipcLibrariesChanged(event, arg)
+      );
     }
   }
   private ipcPartsChanged(event: any, arg: any) {
@@ -55,11 +68,20 @@ export class PartService {
   }
 
   private ipcPartChanged(event: any, arg: any) {
-    console.log('ipcPartsChanged(event, arg)');
+    console.log('ipcPartChanged(event, arg)');
     console.log(event);
     console.log(arg);
     this.zone.run(() => {
       this.onPartChangedSubject.next(arg);
+    });
+  }
+
+  ipcLibrariesChanged(event: any, arg: any): any {
+    console.log('ipcLibrariesChanged(event, arg)');
+    console.log(event);
+    console.log(arg);
+    this.zone.run(() => {
+      this.onLibrariesChangedSubject.next(arg);
     });
   }
 
@@ -129,6 +151,20 @@ export class PartService {
       this.http
         .delete<Part>(url, httpOptions)
         .subscribe(() => {}, error => this.handleError(error));
+    }
+  }
+
+  getLibraries() {
+    console.log('getLibraries()');
+    if (this.electronService.isElectronApp) {
+      this.electronService.ipcRenderer.send('part.getLibraries');
+    } else {
+      this.http
+        .get<string[]>(this.librariesUrl)
+        .subscribe(
+          next => this.onLibrariesChangedSubject.next(next),
+          error => this.handleError(error)
+        );
     }
   }
 

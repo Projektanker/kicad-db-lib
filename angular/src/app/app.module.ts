@@ -31,7 +31,8 @@ import {
   MatExpansionModule,
   MatDialogModule,
   MatProgressSpinnerModule,
-  MatProgressBarModule
+  MatProgressBarModule,
+  MatAutocompleteModule
 } from '@angular/material';
 import { NavComponent } from './nav/nav.component';
 import { PartsComponent } from './parts/parts.component';
@@ -91,6 +92,7 @@ import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
     MatDialogModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    MatAutocompleteModule,
     ReactiveFormsModule
   ],
   entryComponents: [DiscardChangesDialogComponent, DeleteDialogComponent],

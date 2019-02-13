@@ -38,13 +38,14 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
+  createWindow();
+  return;
   var lib = new LibraryService();
   console.log('build');
   lib
     .build()
     .then(() => {
       console.log('build done!');
-      createWindow();
     })
     .catch(error => {
       console.log('build error:');
@@ -165,6 +166,51 @@ ipcMain.on('part.deletePart', (event: any, arg: Part) => {
   promise
     .then(part => {
       console.log('part.deletePart: then');
+    })
+    .catch(error => console.error(error));
+});
+
+console.log('on: part.getLibraries');
+ipcMain.on('part.getLibraries', (event: any, arg: string) => {
+  console.log('ipcMain: part.getLibraries arg:');
+  console.log(arg);
+
+  var partService = new PartService();
+  var promise = partService.getLibraries();
+  promise
+    .then(libraries => {
+      console.log('part.getLibraries: then');
+      event.sender.send('part.getLibraries', libraries);
+    })
+    .catch(error => console.error(error));
+});
+
+console.log('on: library.getSymbols');
+ipcMain.on('library.getSymbols', (event: any, arg: string) => {
+  console.log('ipcMain: library.getSymbols:');
+  console.log(arg);
+
+  var libraryService = new LibraryService();
+  var promise = libraryService.getSymbols();
+  promise
+    .then(symbols => {
+      console.log('library.getSymbols: then');
+      event.sender.send('library.getSymbols', symbols);
+    })
+    .catch(error => console.error(error));
+});
+
+console.log('on: library.getFootprints');
+ipcMain.on('library.getFootprints', (event: any, arg: string) => {
+  console.log('ipcMain: library.getFootprints:');
+  console.log(arg);
+
+  var libraryService = new LibraryService();
+  var promise = libraryService.getFootprints();
+  promise
+    .then(footprints => {
+      console.log('library.getFootprints: then');
+      event.sender.send('library.getFootprints', footprints);
     })
     .catch(error => console.error(error));
 });

@@ -39,7 +39,8 @@
         *ngFor="
           let field of (partForm.controls | keys);
           first as isFirst;
-          last as isLast
+          last as isLast;
+          index as i
         "
       >
         <mat-form-field *ngIf="!(isLast || isFirst)" class="full-width">
@@ -48,10 +49,42 @@
             placeholder="{{ field | uppercase }}*"
             [formControlName]="field"
             [readonly]="isFirst"
+            [matAutocomplete]="auto"
           />
           <mat-error *ngIf="partForm.controls[field].hasError('required')">
             {{ field | uppercase }} is <strong>required</strong>
           </mat-error>
+          <mat-autocomplete
+            autoActiveFirstOption
+            #auto="matAutocomplete"
+            [ngSwitch]="field"
+          >
+            <ng-container *ngSwitchCase="'library'">
+              <mat-option
+                *ngFor="let x of (filteredLibraries$ | async)"
+                [value]="x"
+              >
+                {{ x }}
+              </mat-option>
+            </ng-container>
+            <ng-container *ngSwitchCase="'symbol'">
+              <mat-option
+                *ngFor="let x of (filteredSymbols$ | async)"
+                [value]="x"
+              >
+                {{ x }}
+              </mat-option>
+            </ng-container>
+            <ng-container *ngSwitchCase="'footprint'">
+              <mat-option
+                *ngFor="let x of (filteredFootprints$ | async)"
+                [value]="x"
+              >
+                {{ x }}
+              </mat-option>
+            </ng-container>
+            <ng-container *ngSwitchDefault> </ng-container>
+          </mat-autocomplete>
         </mat-form-field>
       </div>
 

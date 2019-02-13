@@ -2,16 +2,19 @@ import { SettingsService } from '../settings/settings.service';
 import { PartService } from '../parts/part.service';
 import * as path from 'path';
 import { KiCadLibraryBuilder } from '../kicad/kicad-library-builder';
+import { KiCadLibraryReader } from '../kicad/kicad-library-reader';
 
 export class LibraryService {
   private settingsService: SettingsService;
   private partService: PartService;
   private builder: KiCadLibraryBuilder;
+  private reader: KiCadLibraryReader;
 
   constructor() {
     this.settingsService = new SettingsService();
     this.partService = new PartService();
     this.builder = new KiCadLibraryBuilder();
+    this.reader = new KiCadLibraryReader();
   }
 
   public async build(clearBeforeBuild: boolean = true): Promise<any> {
@@ -46,6 +49,32 @@ export class LibraryService {
       return Promise.resolve();
     } catch (error) {
       console.error(error);
+      return Promise.reject(error);
+    }
+  }
+
+  public async getSymbols(filter: string = ''): Promise<string[]> {
+    try {
+      var settings = await this.settingsService.getSettings();
+      var directory = settings.paths.symbol;
+      var symbols = await this.reader.getSymbolsFromDirectoryAsync(directory);
+      symbols = symbols.filter(s => s.includes(filter));
+      return Promise.resolve(symbols);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  public async getFootprints(filter: string = ''): Promise<string[]> {
+    try {
+      var settings = await this.settingsService.getSettings();
+      var directory = settings.paths.footprint;
+      var footprint = await this.reader.getFootprintsFromDirectoryAsync(
+        directory
+      );
+      footprint = footprint.filter(s => s.includes(filter));
+      return Promise.resolve(footprint);
+    } catch (error) {
       return Promise.reject(error);
     }
   }

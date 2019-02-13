@@ -93,7 +93,17 @@ export class InMemoryDataService implements InMemoryDbService {
         customFields: {}
       }
     ];
-    return { heroes, parts };
+    const libraries: string[] = ['R_0603', 'R_0805', 'C_0805', 'C_0603'].sort();
+
+    const symbols: string[] = [
+      'Devices:R',
+      'Devices:C',
+      'Devices:L',
+      'Devices:P'
+    ].sort();
+
+    const footprints: string[] = ['F1', 'F2', 'F3', 'F4'].sort();
+    return { heroes, parts, libraries, symbols, footprints };
   }
 
   // Overrides the genId method to ensure that a hero always has an id.

@@ -99,12 +99,13 @@ export class PartService {
     }
   }
 
-  async getLibraries(): Promise<string[]> {
+  async getLibraries(filter: string = ''): Promise<string[]> {
     try {
       var parts = await this.getParts();
       var libraries = parts
         .map(p => p.library)
         .filter((value, index, array) => array.indexOf(value) === index)
+        .filter(l => l.includes(filter))
         .sort();
       return Promise.resolve(libraries);
     } catch (error) {
