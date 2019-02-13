@@ -261,11 +261,7 @@ export class PartDetailComponent implements OnInit {
           // ignore new term if same as previous term
           distinctUntilChanged(),
           // filter
-          map((value: string) =>
-            this.libraries.filter(library =>
-              library.toUpperCase().includes(value)
-            )
-          )
+          tap((x: string) => this.getLibraries(x, false))
         )
         .subscribe()
     );
@@ -281,9 +277,7 @@ export class PartDetailComponent implements OnInit {
           // ignore new term if same as previous term
           distinctUntilChanged(),
           // filter
-          map((value: string) =>
-            this.symbols.filter(symbol => symbol.toUpperCase().includes(value))
-          )
+          tap((x: string) => this.getSymbols(x, false))
         )
         .subscribe()
     );
@@ -299,12 +293,6 @@ export class PartDetailComponent implements OnInit {
           distinctUntilChanged(),
           // filter
           tap((x: string) => this.getFootprints(x, false))
-          /*
-      map((value: string) =>
-        this.footprints.filter(footprint =>
-          footprint.toUpperCase().includes(value)
-        )
-      )*/
         )
         .subscribe()
     );
