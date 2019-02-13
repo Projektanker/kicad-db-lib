@@ -28,7 +28,7 @@ export class KiCadLibraryBuilder {
     await fs.writeFile(libFile, libText, 'utf8');
 
     dcm.push('#End Doc Library\n');
-    var dxmText = lib.join('\n');
+    var dxmText = dcm.join('\n');
     console.log(dcmFile);
     await fs.writeFile(dcmFile, dxmText, 'utf8');
   }

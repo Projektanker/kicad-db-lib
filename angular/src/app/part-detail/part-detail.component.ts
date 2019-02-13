@@ -239,13 +239,13 @@ export class PartDetailComponent implements OnInit {
 
     this.partForm = new FormGroup({
       id: new FormControl(null),
+      library: new FormControl('', Validators.required),
       reference: new FormControl('', Validators.required),
       value: new FormControl('', Validators.required),
-      footprint: new FormControl('', Validators.required),
       symbol: new FormControl('', Validators.required),
-      library: new FormControl('', Validators.required),
-      datasheet: new FormControl('', Validators.required),
+      footprint: new FormControl('', Validators.required),
       description: new FormControl('', Validators.required),
+      datasheet: new FormControl('', Validators.required),
       keywords: new FormControl('', Validators.required),
       customFields: customFieldsGroup
     });
