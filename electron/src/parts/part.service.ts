@@ -4,6 +4,8 @@ import * as path from 'path';
 import { SettingsService } from '../settings/settings.service';
 
 export class PartService {
+  libraries: string[] = null;
+
   async getParts(): Promise<Part[]> {
     try {
       var settingsService = new SettingsService();
@@ -99,17 +101,25 @@ export class PartService {
     }
   }
 
-  async getLibraries(filter: string = ''): Promise<string[]> {
+  async getLibraries(
+    filter: string,
+    reload: boolean,
+    max?: number
+  ): Promise<string[]> {
     try {
-      var parts = await this.getParts();
-      var libraries = parts
-        .map(p => p.library)
-        .filter((value, index, array) => array.indexOf(value) === index)
-        .filter(l => l.includes(filter))
-        .sort();
-      return Promise.resolve(libraries);
+      if (!this.libraries || reload) {
+        var parts = await this.getParts();
+        this.libraries = parts
+          .map(p => p.library)
+          .filter((value, index, array) => array.indexOf(value) === index)
+          .sort();
+      }
+      var filtered = this.libraries
+        .filter(l => l.toLowerCase().includes(filter.toLowerCase()))
+        .slice(0, max);
+      return Promise.resolve(filtered);
     } catch (error) {
-      return Promise.reject(libraries);
+      return Promise.reject(error);
     }
   }
 }

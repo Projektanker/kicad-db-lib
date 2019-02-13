@@ -59,10 +59,15 @@ export class LibraryService {
     });
   }
 
-  getSymbols(): void {
+  getSymbols(filter: string, reload: boolean, max?: number): void {
     console.log('getSymbols()');
     if (this.electronService.isElectronApp) {
-      this.electronService.ipcRenderer.send('library.getSymbols');
+      this.electronService.ipcRenderer.send(
+        'library.getSymbols',
+        filter,
+        reload,
+        max
+      );
     } else {
       this.http
         .get<string[]>(this.symbolsUrl)
@@ -73,10 +78,15 @@ export class LibraryService {
     }
   }
 
-  getFootprints(): void {
+  getFootprints(filter: string, reload: boolean, max?: number): void {
     console.log('getFootprints()');
     if (this.electronService.isElectronApp) {
-      this.electronService.ipcRenderer.send('library.getFootprints');
+      this.electronService.ipcRenderer.send(
+        'library.getFootprints',
+        filter,
+        reload,
+        max
+      );
     } else {
       this.http
         .get<string[]>(this.footprintsUrl)

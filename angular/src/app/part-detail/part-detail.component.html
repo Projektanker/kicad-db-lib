@@ -60,26 +60,17 @@
             [ngSwitch]="field"
           >
             <ng-container *ngSwitchCase="'library'">
-              <mat-option
-                *ngFor="let x of (filteredLibraries$ | async)"
-                [value]="x"
-              >
+              <mat-option *ngFor="let x of libraries" [value]="x">
                 {{ x }}
               </mat-option>
             </ng-container>
             <ng-container *ngSwitchCase="'symbol'">
-              <mat-option
-                *ngFor="let x of (filteredSymbols$ | async)"
-                [value]="x"
-              >
+              <mat-option *ngFor="let x of symbols" [value]="x">
                 {{ x }}
               </mat-option>
             </ng-container>
             <ng-container *ngSwitchCase="'footprint'">
-              <mat-option
-                *ngFor="let x of (filteredFootprints$ | async)"
-                [value]="x"
-              >
+              <mat-option *ngFor="let x of footprints" [value]="x">
                 {{ x }}
               </mat-option>
             </ng-container>

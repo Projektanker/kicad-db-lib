@@ -21,7 +21,8 @@ import {
   distinctUntilChanged,
   map,
   filter,
-  startWith
+  startWith,
+  tap
 } from 'rxjs/operators';
 import { LibraryService } from '../library.service';
 
@@ -41,7 +42,7 @@ export class PartDetailComponent implements OnInit {
   footprints: string[] = [];
   filteredFootprints$: Observable<string[]> = null;
 
-  options: string[] = ['One', 'Two', 'Three'];
+  private readonly maxItems = 100;
 
   subscription: Subscription = new Subscription();
 
@@ -157,22 +158,28 @@ export class PartDetailComponent implements OnInit {
   private onLibrariesChanged(libraries: string[]): any {
     console.log('onLibrariesChanged(libraries: string[])');
     console.log(libraries);
+    if (libraries.length == this.maxItems) {
+      libraries.push('...');
+    }
     this.libraries = libraries;
-    this.initForm();
   }
 
   onSymbolsChanged(symbols: string[]): any {
     console.log('onSymbolsChanged(symbols: string[])');
     console.log(symbols);
+    if (symbols.length == this.maxItems) {
+      symbols.push('...');
+    }
     this.symbols = symbols;
-    this.initForm();
   }
 
   onFootprintsChanged(footprints: string[]): any {
     console.log('onFootprintsChanged(footprints: string[])');
     console.log(footprints);
+    if (footprints.length == this.maxItems) {
+      footprints.push('...');
+    }
     this.footprints = footprints;
-    this.initForm();
   }
 
   private handleError(error) {
@@ -194,16 +201,28 @@ export class PartDetailComponent implements OnInit {
     this.settingsService.getSettings();
   }
 
-  getLibraries(): void {
-    this.partService.getLibraries();
+  getLibraries(
+    filter: string = '',
+    reload: boolean = true,
+    max?: number
+  ): void {
+    this.partService.getLibraries(filter, reload, max ? max : this.maxItems);
   }
 
-  getSymbols(): void {
-    this.libraryService.getSymbols();
+  getSymbols(filter: string = '', reload: boolean = true, max?: number): void {
+    this.libraryService.getSymbols(filter, reload, max ? max : this.maxItems);
   }
 
-  getFootprints(): void {
-    this.libraryService.getFootprints();
+  getFootprints(
+    filter: string = '',
+    reload: boolean = true,
+    max?: number
+  ): void {
+    this.libraryService.getFootprints(
+      filter,
+      reload,
+      max ? max : this.maxItems
+    );
   }
 
   initForm(): void {
@@ -231,52 +250,63 @@ export class PartDetailComponent implements OnInit {
       customFields: customFieldsGroup
     });
 
-    this.filteredLibraries$ = this.partForm.controls[
-      'library'
-    ].valueChanges.pipe(
-      startWith(this.part.library),
-      // wait 300ms after each keystroke before considering the term
-      debounceTime(300),
-      // To lower case and trim
-      map((value: string) => value.toUpperCase().trim()),
-      // ignore new term if same as previous term
-      distinctUntilChanged(),
-      // filter
-      map((value: string) =>
-        this.libraries.filter(library => library.toUpperCase().includes(value))
-      )
+    this.subscription.add(
+      this.partForm.controls['library'].valueChanges
+        .pipe(
+          startWith(this.part.library),
+          // wait 300ms after each keystroke before considering the term
+          debounceTime(300),
+          // To lower case and trim
+          map((value: string) => value.toUpperCase().trim()),
+          // ignore new term if same as previous term
+          distinctUntilChanged(),
+          // filter
+          map((value: string) =>
+            this.libraries.filter(library =>
+              library.toUpperCase().includes(value)
+            )
+          )
+        )
+        .subscribe()
     );
 
-    this.filteredSymbols$ = this.partForm.controls['symbol'].valueChanges.pipe(
-      startWith(this.part.symbol),
-      // wait 300ms after each keystroke before considering the term
-      debounceTime(300),
-      // To lower case and trim
-      map((value: string) => value.toUpperCase().trim()),
-      // ignore new term if same as previous term
-      distinctUntilChanged(),
-      // filter
-      map((value: string) =>
-        this.symbols.filter(symbol => symbol.toUpperCase().includes(value))
-      )
+    this.subscription.add(
+      this.partForm.controls['symbol'].valueChanges
+        .pipe(
+          startWith(this.part.symbol),
+          // wait 300ms after each keystroke before considering the term
+          debounceTime(300),
+          // To lower case and trim
+          map((value: string) => value.toUpperCase().trim()),
+          // ignore new term if same as previous term
+          distinctUntilChanged(),
+          // filter
+          map((value: string) =>
+            this.symbols.filter(symbol => symbol.toUpperCase().includes(value))
+          )
+        )
+        .subscribe()
     );
-
-    this.filteredFootprints$ = this.partForm.controls[
-      'footprint'
-    ].valueChanges.pipe(
-      startWith(this.part.footprint),
-      // wait 300ms after each keystroke before considering the term
-      debounceTime(300),
-      // To lower case and trim
-      map((value: string) => value.toUpperCase().trim()),
-      // ignore new term if same as previous term
-      distinctUntilChanged(),
-      // filter
+    this.subscription.add(
+      this.partForm.controls['footprint'].valueChanges
+        .pipe(
+          startWith(this.part.footprint),
+          // wait 300ms after each keystroke before considering the term
+          debounceTime(300),
+          // trim
+          map((value: string) => value.trim()),
+          // ignore new term if same as previous term
+          distinctUntilChanged(),
+          // filter
+          tap((x: string) => this.getFootprints(x, false))
+          /*
       map((value: string) =>
         this.footprints.filter(footprint =>
           footprint.toUpperCase().includes(value)
         )
-      )
+      )*/
+        )
+        .subscribe()
     );
 
     console.log(this.partForm.value);

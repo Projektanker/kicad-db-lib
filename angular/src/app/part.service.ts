@@ -154,10 +154,15 @@ export class PartService {
     }
   }
 
-  getLibraries() {
+  getLibraries(filter: string, reload: boolean, max?: number) {
     console.log('getLibraries()');
     if (this.electronService.isElectronApp) {
-      this.electronService.ipcRenderer.send('part.getLibraries');
+      this.electronService.ipcRenderer.send(
+        'part.getLibraries',
+        filter,
+        reload,
+        max
+      );
     } else {
       this.http
         .get<string[]>(this.librariesUrl)

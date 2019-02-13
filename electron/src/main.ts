@@ -8,6 +8,9 @@ import { LibraryService } from './library/library.service';
 import { fs } from './fs';
 
 let mainWindow: Electron.BrowserWindow;
+let settingsService = new SettingsService();
+let partService = new PartService();
+let libraryService = new LibraryService();
 
 function createWindow() {
   console.log(__dirname);
@@ -79,8 +82,6 @@ ipcMain.on('settings.get', (event: any) => {
 
   var file = path.join(__dirname, '/settings.json');
   console.log(`getSettings(${file})`);
-
-  var settingsService = new SettingsService();
   var promise = settingsService.getSettings();
   promise
     .then(settings => {
@@ -93,7 +94,6 @@ ipcMain.on('settings.get', (event: any) => {
 console.log('on: settings.update');
 ipcMain.on('settings.update', (event: any, arg: Settings) => {
   console.log('ipcMain: settings.update');
-  var settingsService = new SettingsService();
   var promise = settingsService.updateSettings(arg);
   promise
     .then(settings => console.log('settings.update: then'))
@@ -104,7 +104,6 @@ console.log('on: part.getParts');
 ipcMain.on('part.getParts', (event: any) => {
   console.log('ipcMain: part.getParts');
 
-  var partService = new PartService();
   var promise = partService.getParts();
   promise
     .then(parts => {
@@ -118,7 +117,6 @@ console.log('on: part.getPart');
 ipcMain.on('part.getPart', (event: any, arg: number) => {
   console.log(`ipcMain: part.getPart arg: ${arg}`);
 
-  var partService = new PartService();
   var promise = partService.getPart(arg);
   promise
     .then(part => {
@@ -133,7 +131,6 @@ ipcMain.on('part.addPart', (event: any, arg: Part) => {
   console.log('ipcMain: part.addPart arg:');
   console.log(arg);
 
-  var partService = new PartService();
   var promise = partService.addPart(arg);
   promise
     .then(part => {
@@ -147,7 +144,6 @@ ipcMain.on('part.updatePart', (event: any, arg: Part) => {
   console.log('ipcMain: part.updatePart arg:');
   console.log(arg);
 
-  var partService = new PartService();
   var promise = partService.updatePart(arg);
   promise
     .then(part => {
@@ -161,7 +157,6 @@ ipcMain.on('part.deletePart', (event: any, arg: Part) => {
   console.log('ipcMain: part.deletePart arg:');
   console.log(arg);
 
-  var partService = new PartService();
   var promise = partService.deletePart(arg);
   promise
     .then(part => {
@@ -171,49 +166,56 @@ ipcMain.on('part.deletePart', (event: any, arg: Part) => {
 });
 
 console.log('on: part.getLibraries');
-ipcMain.on('part.getLibraries', (event: any, arg: string) => {
-  console.log('ipcMain: part.getLibraries arg:');
-  console.log(arg);
+ipcMain.on(
+  'part.getLibraries',
+  (event: any, filter: string, reload: boolean, max?: number) => {
+    console.log(`ipcMain: part.getLibraries(${filter}, ${reload}, ${max}):`);
 
-  var partService = new PartService();
-  var promise = partService.getLibraries();
-  promise
-    .then(libraries => {
-      console.log('part.getLibraries: then');
-      event.sender.send('part.getLibraries', libraries);
-    })
-    .catch(error => console.error(error));
-});
+    var promise = partService.getLibraries(filter, reload, max);
+    promise
+      .then(libraries => {
+        console.log('part.getLibraries: then');
+        event.sender.send('part.getLibraries', libraries);
+      })
+      .catch(error => console.error(error));
+  }
+);
 
 console.log('on: library.getSymbols');
-ipcMain.on('library.getSymbols', (event: any, arg: string) => {
-  console.log('ipcMain: library.getSymbols:');
-  console.log(arg);
+ipcMain.on(
+  'library.getSymbols',
+  (event: any, filter: string, reload: boolean, max?: number) => {
+    console.log(`ipcMain: library.getSymbols(${filter}, ${reload}, ${max}):`);
 
-  var libraryService = new LibraryService();
-  var promise = libraryService.getSymbols();
-  promise
-    .then(symbols => {
-      console.log('library.getSymbols: then');
-      event.sender.send('library.getSymbols', symbols);
-    })
-    .catch(error => console.error(error));
-});
+    var promise = libraryService.getSymbols(filter, reload, max);
+    promise
+      .then(symbols => {
+        console.log('library.getSymbols: then');
+        event.sender.send('library.getSymbols', symbols);
+      })
+      .catch(error => console.error(error));
+  }
+);
 
 console.log('on: library.getFootprints');
-ipcMain.on('library.getFootprints', (event: any, arg: string) => {
-  console.log('ipcMain: library.getFootprints:');
-  console.log(arg);
+ipcMain.on(
+  'library.getFootprints',
+  (event: any, filter: string, reload: boolean, max?: number) => {
+    console.log(
+      `ipcMain: library.getFootprints(${filter}, ${reload}, ${max}):`
+    );
+    console.log(filter);
+    console.log(reload);
 
-  var libraryService = new LibraryService();
-  var promise = libraryService.getFootprints();
-  promise
-    .then(footprints => {
-      console.log('library.getFootprints: then');
-      event.sender.send('library.getFootprints', footprints);
-    })
-    .catch(error => console.error(error));
-});
+    var promise = libraryService.getFootprints(filter, reload, max);
+    promise
+      .then(footprints => {
+        console.log('library.getFootprints: then');
+        event.sender.send('library.getFootprints', footprints);
+      })
+      .catch(error => console.error(error));
+  }
+);
 
 console.log('on: test');
 ipcMain.on('test', (event: any) => {

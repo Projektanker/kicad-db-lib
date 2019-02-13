@@ -10,6 +10,9 @@ export class LibraryService {
   private builder: KiCadLibraryBuilder;
   private reader: KiCadLibraryReader;
 
+  symbols: string[] = null;
+  footprints: string[] = null;
+
   constructor() {
     this.settingsService = new SettingsService();
     this.partService = new PartService();
@@ -53,27 +56,47 @@ export class LibraryService {
     }
   }
 
-  public async getSymbols(filter: string = ''): Promise<string[]> {
+  public async getSymbols(
+    filter: string,
+    reload: boolean,
+    max?: number
+  ): Promise<string[]> {
     try {
-      var settings = await this.settingsService.getSettings();
-      var directory = settings.paths.symbol;
-      var symbols = await this.reader.getSymbolsFromDirectoryAsync(directory);
-      symbols = symbols.filter(s => s.includes(filter));
-      return Promise.resolve(symbols);
+      if (!this.symbols || reload) {
+        var settings = await this.settingsService.getSettings();
+        var directory = settings.paths.symbol;
+        this.symbols = await this.reader.getSymbolsFromDirectoryAsync(
+          directory
+        );
+      }
+
+      var filtered = this.symbols
+        .filter(s => s.toLowerCase().includes(filter.toLowerCase()))
+        .slice(0, max);
+      return Promise.resolve(filtered);
     } catch (error) {
       return Promise.reject(error);
     }
   }
 
-  public async getFootprints(filter: string = ''): Promise<string[]> {
+  public async getFootprints(
+    filter: string,
+    reload: boolean,
+    max?: number
+  ): Promise<string[]> {
     try {
-      var settings = await this.settingsService.getSettings();
-      var directory = settings.paths.footprint;
-      var footprint = await this.reader.getFootprintsFromDirectoryAsync(
-        directory
-      );
-      footprint = footprint.filter(s => s.includes(filter));
-      return Promise.resolve(footprint);
+      if (!this.footprints || reload) {
+        var settings = await this.settingsService.getSettings();
+        var directory = settings.paths.footprint;
+        this.footprints = await this.reader.getFootprintsFromDirectoryAsync(
+          directory
+        );
+      }
+
+      var filtered = this.footprints
+        .filter(s => s.toLowerCase().includes(filter.toLowerCase()))
+        .slice(0, max);
+      return Promise.resolve(filtered);
     } catch (error) {
       return Promise.reject(error);
     }
