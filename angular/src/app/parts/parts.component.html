@@ -27,7 +27,9 @@
     aria-label="Elements"
   >
     <ng-container *ngFor="let col of displayedColumns" matColumnDef="{{ col }}">
-      <th mat-header-cell *matHeaderCellDef>{{ col | uppercase }}</th>
+      <th mat-header-cell *matHeaderCellDef>
+        {{ col | uppercase }}
+      </th>
       <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
     </ng-container>
 
