@@ -2,8 +2,6 @@
   width: 100%;
 }
 
-mat-spinner {
-  position: fixed;
-  left: 16px;
-  bottom: 16px;
+td.mat-cell {
+  padding-right: 20px;
 }

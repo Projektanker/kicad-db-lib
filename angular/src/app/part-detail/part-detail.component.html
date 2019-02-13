@@ -46,13 +46,16 @@
         <mat-form-field *ngIf="!(isLast || isFirst)" class="full-width">
           <input
             matInput
-            placeholder="{{ field | uppercase }}*"
+            placeholder="{{ field | uppercase }}{{ i > 6 ? '' : '*' }}"
             [formControlName]="field"
             [readonly]="isFirst"
             [matAutocomplete]="auto"
           />
           <mat-error *ngIf="partForm.controls[field].hasError('required')">
             {{ field | uppercase }} is <strong>required</strong>
+          </mat-error>
+          <mat-error *ngIf="partForm.controls[field].hasError('pattern')">
+            {{ field | uppercase }} contains <strong>invalid characters</strong>
           </mat-error>
           <mat-autocomplete
             autoActiveFirstOption

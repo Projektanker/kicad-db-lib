@@ -232,6 +232,9 @@ export class PartDetailComponent implements OnInit {
     //if (!this.footprints) return;
     //if (!this.symbols) return;
 
+    var pattern_default = '^[a-zA-Z0-9_\\-\\.:]*$';
+    var patter_value = '^[a-zA-Z0-9_\\-\\.]*$';
+
     const customFieldsGroup: FormGroup = new FormGroup({});
     this.settings.customFields.forEach(field => {
       customFieldsGroup.addControl(field, new FormControl(''));
@@ -239,14 +242,29 @@ export class PartDetailComponent implements OnInit {
 
     this.partForm = new FormGroup({
       id: new FormControl(null),
-      library: new FormControl('', Validators.required),
-      reference: new FormControl('', Validators.required),
-      value: new FormControl('', Validators.required),
-      symbol: new FormControl('', Validators.required),
-      footprint: new FormControl('', Validators.required),
+      library: new FormControl('', [
+        Validators.required,
+        Validators.pattern(pattern_default)
+      ]),
+      reference: new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[A-Z]*$')
+      ]),
+      value: new FormControl('', [
+        Validators.required,
+        Validators.pattern(patter_value)
+      ]),
+      symbol: new FormControl('', [
+        Validators.required,
+        Validators.pattern(pattern_default)
+      ]),
+      footprint: new FormControl('', [
+        Validators.required,
+        Validators.pattern(pattern_default)
+      ]),
       description: new FormControl('', Validators.required),
-      datasheet: new FormControl('', Validators.required),
-      keywords: new FormControl('', Validators.required),
+      keywords: new FormControl(''),
+      datasheet: new FormControl(''),
       customFields: customFieldsGroup
     });
 
