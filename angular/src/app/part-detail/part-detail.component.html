@@ -98,21 +98,8 @@
             [placeholder]="field | uppercase"
             [formControlName]="field"
           />
-          <mat-error
-            *ngIf="
-              partForm.controls['customFields'].controls[field].hasError(
-                'required'
-              )
-            "
-          >
-            {{ field | uppercase }} is <strong>required</strong>
-          </mat-error>
         </mat-form-field>
       </div>
     </form>
   </div>
-
-  <p *ngIf="part">{{ part | json }}</p>
-  <p *ngIf="partForm">{{ partForm.value | json }}</p>
-  <p *ngIf="partForm">{{ partForm.status | json }}</p>
 </section>

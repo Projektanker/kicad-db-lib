@@ -5,3 +5,7 @@
 td.mat-cell {
   padding-right: 20px;
 }
+
+th.mat-header-cell {
+  padding-right: 20px;
+}
