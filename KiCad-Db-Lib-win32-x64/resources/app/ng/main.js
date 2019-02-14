@@ -41,7 +41,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<section class=\"mat-typography\">\r\n  <mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n    <button type=\"button\" aria-label=\"back\" mat-icon-button (click)=\"goBack()\">\r\n      <mat-icon aria-label=\"back icon\">arrow_back</mat-icon>\r\n    </button>\r\n    <span>About</span>\r\n  </mat-toolbar>\r\n  <div class=\"global-content\">\r\n    <h2>KiCad Database Library</h2>\r\n    <mat-list>\r\n      <h3 matSubheader>Info</h3>\r\n      <mat-list-item>\r\n        Version 1.0.0\r\n      </mat-list-item>\r\n      <mat-list-item>\r\n        Licence: MIT\r\n      </mat-list-item>\r\n      <mat-list-item *ngIf=\"userData\">\r\n        Your user data is stored here: {{ userData }}</mat-list-item\r\n      >\r\n      <h3 matSubheader>Contact</h3>\r\n      <mat-list-item\r\n        (click)=\"externalLink('https://github.com/Projektanker/kicad-db-lib')\"\r\n      >\r\n        <mat-icon>launch</mat-icon>\r\n        <span>GitHub</span>\r\n      </mat-list-item>\r\n    </mat-list>\r\n  </div>\r\n</section>\r\n"
+module.exports = "<section class=\"mat-typography\">\r\n  <mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n    <button type=\"button\" aria-label=\"back\" mat-icon-button (click)=\"goBack()\">\r\n      <mat-icon aria-label=\"back icon\">arrow_back</mat-icon>\r\n    </button>\r\n    <span>About</span>\r\n  </mat-toolbar>\r\n  <div class=\"global-content\">\r\n    <h2>KiCad Database Library</h2>\r\n    <mat-list>\r\n      <h3 matSubheader>Info</h3>\r\n      <mat-list-item>\r\n        Version 1.1.0\r\n      </mat-list-item>\r\n      <mat-list-item>\r\n        Licence: MIT\r\n      </mat-list-item>\r\n      <mat-list-item *ngIf=\"userData\">\r\n        Your user data is stored here: {{ userData }}</mat-list-item\r\n      >\r\n      <h3 matSubheader>Contact</h3>\r\n      <mat-list-item\r\n        (click)=\"externalLink('https://github.com/Projektanker/kicad-db-lib')\"\r\n      >\r\n        <mat-icon>launch</mat-icon>\r\n        <span>GitHub</span>\r\n      </mat-list-item>\r\n    </mat-list>\r\n  </div>\r\n</section>\r\n"
 
 /***/ }),
 
@@ -1990,6 +1990,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_cdk_collections__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/cdk/collections */ "./node_modules/@angular/cdk/esm5/collections.es5.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _part_part__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../part/part */ "./src/app/part/part.ts");
+
 
 
 
@@ -2005,6 +2007,8 @@ var PartsDataSource = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.partService = partService;
         _this.data = { length: 0 };
+        /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
+        _this.displayedColumns = Object.keys(new _part_part__WEBPACK_IMPORTED_MODULE_4__["Part"]()).slice(0, -1);
         _this.subscription = new rxjs__WEBPACK_IMPORTED_MODULE_3__["Subscription"]();
         _this.partsSubject = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"]([]
         /*[
@@ -2040,7 +2044,7 @@ var PartsDataSource = /** @class */ (function (_super) {
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["catchError"])(function (error) {
             console.error(error);
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])([]);
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["tap"])(function (parts) {
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["map"])(function (parts) { return parts.map(function (part) { return _this.mapPart(part); }); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["tap"])(function (parts) {
             console.log("tap: " + parts.length);
             _this.data.length = parts.length;
             _this.loadingSubject.next(false);
@@ -2051,6 +2055,32 @@ var PartsDataSource = /** @class */ (function (_super) {
         });
         this.subscription.add(sub);
         return this.partsSubject.asObservable();
+    };
+    PartsDataSource.prototype.mapPart = function (part) {
+        if (part.datasheet) {
+            var start = part.datasheet.indexOf('\\') >= 0 ? '..\\' : '../';
+            part.datasheet = start + part.datasheet.split(/(\\|\/)/g).pop();
+        }
+        var item = {};
+        for (var key in part) {
+            if (part.hasOwnProperty(key)) {
+                if (key !== 'customFields') {
+                    item[key] = part[key];
+                }
+                else {
+                    for (var customField in part.customFields) {
+                        if (part.customFields.hasOwnProperty(customField)) {
+                            item[customField] = part.customFields[customField];
+                            // add to displayed columns
+                            if (this.displayedColumns.indexOf(customField) < 0) {
+                                this.displayedColumns = this.displayedColumns.concat([customField]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return item;
     };
     PartsDataSource.prototype.loadParts = function () {
         this.loadingSubject.next(true);
@@ -2090,7 +2120,7 @@ module.exports = ".full-width-table {\r\n  width: 100%;\r\n}\r\n\r\ntd.mat-cell 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n  <mat-toolbar-row>\r\n    <span>Parts</span> <span class=\"spacer\"></span>\r\n    <button type=\"button\" aria-label=\"add\" mat-icon-button (click)=\"addPart()\">\r\n      <mat-icon aria-label=\"add icon\">add</mat-icon>\r\n    </button>\r\n    <button\r\n      type=\"button\"\r\n      aria-label=\"settings\"\r\n      mat-icon-button\r\n      routerLink=\"/settings\"\r\n    >\r\n      <mat-icon aria-label=\"settings icon\">settings</mat-icon>\r\n    </button>\r\n    <button mat-icon-button [matMenuTriggerFor]=\"menu\">\r\n      <mat-icon>more_vert</mat-icon>\r\n    </button>\r\n    <mat-menu #menu=\"matMenu\">\r\n      <button mat-menu-item (click)=\"refresh()\">\r\n        <mat-icon>refresh</mat-icon>\r\n        <span>Refresh</span>\r\n      </button>\r\n      <button mat-menu-item (click)=\"build()\">\r\n        <mat-icon>build</mat-icon>\r\n        <span>Build</span>\r\n      </button>\r\n      <button mat-menu-item routerLink=\"/about\">\r\n        <mat-icon>info</mat-icon>\r\n        <span>About</span>\r\n      </button>\r\n    </mat-menu>\r\n  </mat-toolbar-row>\r\n</mat-toolbar>\r\n<div *ngIf=\"(dataSource.loading$ | async)\">\r\n  <mat-progress-bar color=\"accent\" mode=\"indeterminate\"></mat-progress-bar>\r\n</div>\r\n\r\n<div class=\"global-content\">\r\n  <table\r\n    mat-table\r\n    class=\"full-width-table\"\r\n    [dataSource]=\"dataSource\"\r\n    matSort\r\n    aria-label=\"Elements\"\r\n  >\r\n    <ng-container *ngFor=\"let col of displayedColumns\" matColumnDef=\"{{ col }}\">\r\n      <th mat-header-cell *matHeaderCellDef>\r\n        {{ col | uppercase }}\r\n      </th>\r\n      <td mat-cell *matCellDef=\"let element\">{{ element[col] }}</td>\r\n    </ng-container>\r\n\r\n    <tr mat-header-row *matHeaderRowDef=\"displayedColumns\"></tr>\r\n    <tr\r\n      mat-row\r\n      *matRowDef=\"let row; columns: displayedColumns\"\r\n      (click)=\"onRowClicked(row)\"\r\n    ></tr>\r\n  </table>\r\n</div>\r\n"
+module.exports = "<mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n  <mat-toolbar-row>\r\n    <span>Parts</span> <span class=\"spacer\"></span>\r\n    <button type=\"button\" aria-label=\"add\" mat-icon-button (click)=\"addPart()\">\r\n      <mat-icon aria-label=\"add icon\">add</mat-icon>\r\n    </button>\r\n    <button\r\n      type=\"button\"\r\n      aria-label=\"settings\"\r\n      mat-icon-button\r\n      routerLink=\"/settings\"\r\n    >\r\n      <mat-icon aria-label=\"settings icon\">settings</mat-icon>\r\n    </button>\r\n    <button mat-icon-button [matMenuTriggerFor]=\"menu\">\r\n      <mat-icon>more_vert</mat-icon>\r\n    </button>\r\n    <mat-menu #menu=\"matMenu\">\r\n      <button mat-menu-item (click)=\"refresh()\">\r\n        <mat-icon>refresh</mat-icon>\r\n        <span>Refresh</span>\r\n      </button>\r\n      <button mat-menu-item (click)=\"build()\">\r\n        <mat-icon>build</mat-icon>\r\n        <span>Build</span>\r\n      </button>\r\n      <button mat-menu-item routerLink=\"/about\">\r\n        <mat-icon>info</mat-icon>\r\n        <span>About</span>\r\n      </button>\r\n    </mat-menu>\r\n  </mat-toolbar-row>\r\n</mat-toolbar>\r\n<div *ngIf=\"(dataSource.loading$ | async)\">\r\n  <mat-progress-bar color=\"accent\" mode=\"indeterminate\"></mat-progress-bar>\r\n</div>\r\n\r\n<div class=\"global-content\">\r\n  <table\r\n    mat-table\r\n    class=\"full-width-table\"\r\n    [dataSource]=\"dataSource\"\r\n    matSort\r\n    aria-label=\"Elements\"\r\n  >\r\n    <ng-container\r\n      *ngFor=\"let col of dataSource.displayedColumns\"\r\n      matColumnDef=\"{{ col }}\"\r\n    >\r\n      <th mat-header-cell *matHeaderCellDef>\r\n        {{ col | uppercase }}\r\n      </th>\r\n      <td mat-cell *matCellDef=\"let element\">{{ element[col] }}</td>\r\n    </ng-container>\r\n\r\n    <tr mat-header-row *matHeaderRowDef=\"dataSource.displayedColumns\"></tr>\r\n    <tr\r\n      mat-row\r\n      *matRowDef=\"let row; columns: dataSource.displayedColumns\"\r\n      (click)=\"onRowClicked(row)\"\r\n    ></tr>\r\n  </table>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -2109,11 +2139,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 /* harmony import */ var _parts_datasource__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./parts-datasource */ "./src/app/parts/parts-datasource.ts");
 /* harmony import */ var _part_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../part.service */ "./src/app/part.service.ts");
-/* harmony import */ var _part_part__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../part/part */ "./src/app/part/part.ts");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _library_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../library.service */ "./src/app/library.service.ts");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _library_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../library.service */ "./src/app/library.service.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 
 
 
@@ -2128,9 +2156,7 @@ var PartsComponent = /** @class */ (function () {
         this.libraryService = libraryService;
         this.router = router;
         this.snackBar = snackBar;
-        /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-        this.displayedColumns = Object.keys(new _part_part__WEBPACK_IMPORTED_MODULE_5__["Part"]()).slice(0, -1);
-        this.subscription = new rxjs__WEBPACK_IMPORTED_MODULE_8__["Subscription"]();
+        this.subscription = new rxjs__WEBPACK_IMPORTED_MODULE_7__["Subscription"]();
     }
     PartsComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -2228,8 +2254,8 @@ var PartsComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./parts.component.css */ "./src/app/parts/parts.component.css")]
         }),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_part_service__WEBPACK_IMPORTED_MODULE_4__["PartService"],
-            _library_service__WEBPACK_IMPORTED_MODULE_7__["LibraryService"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"],
+            _library_service__WEBPACK_IMPORTED_MODULE_6__["LibraryService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"],
             _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatSnackBar"]])
     ], PartsComponent);
     return PartsComponent;
