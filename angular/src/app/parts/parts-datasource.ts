@@ -24,12 +24,13 @@ import { PartService } from '../part.service';
  * encapsulate all logic for fetching and manipulating the displayed data
  * (including sorting, pagination, and filtering).
  */
-export class PartsDataSource extends DataSource<Part> {
+export class PartsDataSource extends DataSource<{ [name: string]: string }> {
   data = { length: 0 };
-
+  /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
+  displayedColumns = Object.keys(new Part()).slice(0, -1);
   private subscription: Subscription = new Subscription();
 
-  private partsSubject = new BehaviorSubject<Part[]>(
+  private partsSubject = new BehaviorSubject<{ [name: string]: string }[]>(
     []
     /*[
     {
@@ -62,13 +63,14 @@ export class PartsDataSource extends DataSource<Part> {
    * the returned stream emits new items.
    * @returns A stream of the items to be rendered.
    */
-  connect(): Observable<Part[]> {
+  connect(): Observable<{ [name: string]: string }[]> {
     var sub = this.partService.onPartsChanged
       .pipe(
         catchError(error => {
           console.error(error);
           return of([]);
         }),
+        map((parts: Part[]) => parts.map((part: Part) => this.mapPart(part))),
         tap(parts => {
           console.log(`tap: ${parts.length}`);
           this.data.length = parts.length;
@@ -82,6 +84,32 @@ export class PartsDataSource extends DataSource<Part> {
 
     this.subscription.add(sub);
     return this.partsSubject.asObservable();
+  }
+
+  mapPart(part: Part): { [name: string]: string } {
+    if (part.datasheet) {
+      var start = part.datasheet.indexOf('\\') >= 0 ? '..\\' : '../';
+      part.datasheet = start + part.datasheet.split(/(\\|\/)/g).pop();
+    }
+    var item: { [name: string]: string } = {};
+    for (const key in part) {
+      if (part.hasOwnProperty(key)) {
+        if (key !== 'customFields') {
+          item[key] = part[key];
+        } else {
+          for (const customField in part.customFields) {
+            if (part.customFields.hasOwnProperty(customField)) {
+              item[customField] = part.customFields[customField];
+              // add to displayed columns
+              if (this.displayedColumns.indexOf(customField) < 0) {
+                this.displayedColumns = [...this.displayedColumns, customField];
+              }
+            }
+          }
+        }
+      }
+    }
+    return item;
   }
 
   loadParts() {
