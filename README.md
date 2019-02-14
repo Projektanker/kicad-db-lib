@@ -24,10 +24,12 @@ Created with Angular and Electron KiCadDbLib can be used on Windows, Linux and M
 
 ## Next steps:
 
-- Remove footprint list
+- [ ] Remove footprint list
 
   > `$FPLIST`  
   > `DIP?14*`  
   > `$ENDFPLIST`
 
-  from the symbol templeate as well
+  from the symbol template as well
+
+- [ ] configure electron packager for Linux and Mac OS
