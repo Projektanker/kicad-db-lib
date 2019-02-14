@@ -230,6 +230,12 @@ ipcMain.on(
   }
 );
 
+console.log('on: library.build');
+ipcMain.on('library.build', (event: any, arg: any) => {
+  console.log('ipcMain: library.getFootprints:');
+  buildLibrary(event);
+});
+
 console.log('on: test');
 ipcMain.on('test', (event: any) => {
   console.log('ipcMain: test');

@@ -12,6 +12,23 @@
     >
       <mat-icon aria-label="settings icon">settings</mat-icon>
     </button>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="refresh()">
+        <mat-icon>refresh</mat-icon>
+        <span>Refresh</span>
+      </button>
+      <button mat-menu-item (click)="build()">
+        <mat-icon>build</mat-icon>
+        <span>Build</span>
+      </button>
+      <button mat-menu-item routerLink="/about">
+        <mat-icon>info</mat-icon>
+        <span>About</span>
+      </button>
+    </mat-menu>
   </mat-toolbar-row>
 </mat-toolbar>
 <div *ngIf="(dataSource.loading$ | async)">

@@ -44,7 +44,7 @@ export class PartDetailComponent implements OnInit {
 
   private readonly maxItems = 100;
 
-  subscription: Subscription = new Subscription();
+  private subscription: Subscription = new Subscription();
 
   partForm: FormGroup;
 
