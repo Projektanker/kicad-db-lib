@@ -9,13 +9,18 @@ import { Router } from '@angular/router';
   styleUrls: ['./about.component.css']
 })
 export class AboutComponent implements OnInit {
+  userData: string;
   constructor(
     private location: Location,
     private router: Router,
     private electronService: ElectronService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.electronService.isElectronApp) {
+      this.userData = this.electronService.remote.app.getPath('userData');
+    }
+  }
 
   goBack() {
     this.location.back();

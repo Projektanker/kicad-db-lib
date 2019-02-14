@@ -1,13 +1,19 @@
 import { Settings } from './settings';
 import * as path from 'path';
 import { fs } from '../fs';
+import { app } from 'electron';
 
 export class SettingsService {
+  private file: string;
+
+  constructor() {
+    this.file = path.join(app.getPath('userData'), 'settings.json');
+  }
+
   async getSettings(): Promise<Settings> {
     var settings: Settings;
-    var file = path.join(__dirname, '/settings.json');
     try {
-      var data = await fs.readFile(file, 'utf8');
+      var data = await fs.readFile(this.file, 'utf8');
       settings = JSON.parse(data);
     } catch (error) {
       settings = new Settings();
@@ -21,8 +27,7 @@ export class SettingsService {
   }
 
   async updateSettings(settings: Settings) {
-    var file = path.join(__dirname, '/settings.json');
     var data = JSON.stringify(settings);
-    fs.writeFile(file, data, 'utf8');
+    fs.writeFile(this.file, data, 'utf8');
   }
 }

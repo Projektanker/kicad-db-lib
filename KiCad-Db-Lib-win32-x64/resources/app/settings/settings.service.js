@@ -38,25 +38,24 @@ exports.__esModule = true;
 var settings_1 = require("./settings");
 var path = require("path");
 var fs_1 = require("../fs");
+var electron_1 = require("electron");
 var SettingsService = /** @class */ (function () {
     function SettingsService() {
+        this.file = path.join(electron_1.app.getPath('userData'), 'settings.json');
     }
     SettingsService.prototype.getSettings = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var settings, file, data, error_1;
+            var settings, data, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        file = path.join(__dirname, '/settings.json');
-                        _a.label = 1;
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, fs_1.fs.readFile(this.file, 'utf8')];
                     case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, fs_1.fs.readFile(file, 'utf8')];
-                    case 2:
                         data = _a.sent();
                         settings = JSON.parse(data);
-                        return [3 /*break*/, 4];
-                    case 3:
+                        return [3 /*break*/, 3];
+                    case 2:
                         error_1 = _a.sent();
                         settings = new settings_1.Settings();
                         settings.customFields = ['OC_FARNELL', 'OC_MOUSER'];
@@ -64,19 +63,18 @@ var SettingsService = /** @class */ (function () {
                         settings.paths.output = 'output';
                         settings.paths.parts = 'parts';
                         settings.paths.symbol = 'symbol';
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/, Promise.resolve(settings)];
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/, Promise.resolve(settings)];
                 }
             });
         });
     };
     SettingsService.prototype.updateSettings = function (settings) {
         return __awaiter(this, void 0, void 0, function () {
-            var file, data;
+            var data;
             return __generator(this, function (_a) {
-                file = path.join(__dirname, '/settings.json');
                 data = JSON.stringify(settings);
-                fs_1.fs.writeFile(file, data, 'utf8');
+                fs_1.fs.writeFile(this.file, data, 'utf8');
                 return [2 /*return*/];
             });
         });

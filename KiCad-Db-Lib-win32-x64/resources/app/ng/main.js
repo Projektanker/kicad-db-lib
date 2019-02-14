@@ -41,7 +41,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<section class=\"mat-typography\">\r\n  <mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n    <button type=\"button\" aria-label=\"back\" mat-icon-button (click)=\"goBack()\">\r\n      <mat-icon aria-label=\"back icon\">arrow_back</mat-icon>\r\n    </button>\r\n    <span>About</span>\r\n  </mat-toolbar>\r\n  <div class=\"global-content\">\r\n    <h2>KiCad Database Library</h2>\r\n    <mat-list>\r\n      <h3 matSubheader>Info</h3>\r\n      <mat-list-item>\r\n        Version 1.0.0\r\n      </mat-list-item>\r\n      <mat-list-item>\r\n        Licence: MIT\r\n      </mat-list-item>\r\n      <h3 matSubheader>Contact</h3>\r\n      <mat-list-item\r\n        (click)=\"externalLink('https://github.com/Projektanker/kicad-db-lib')\"\r\n      >\r\n        <mat-icon>launch</mat-icon>\r\n        <span>GitHub</span>\r\n      </mat-list-item>\r\n    </mat-list>\r\n  </div>\r\n</section>\r\n"
+module.exports = "<section class=\"mat-typography\">\r\n  <mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n    <button type=\"button\" aria-label=\"back\" mat-icon-button (click)=\"goBack()\">\r\n      <mat-icon aria-label=\"back icon\">arrow_back</mat-icon>\r\n    </button>\r\n    <span>About</span>\r\n  </mat-toolbar>\r\n  <div class=\"global-content\">\r\n    <h2>KiCad Database Library</h2>\r\n    <mat-list>\r\n      <h3 matSubheader>Info</h3>\r\n      <mat-list-item>\r\n        Version 1.0.0\r\n      </mat-list-item>\r\n      <mat-list-item>\r\n        Licence: MIT\r\n      </mat-list-item>\r\n      <mat-list-item *ngIf=\"userData\">\r\n        Your user data is stored here: {{ userData }}</mat-list-item\r\n      >\r\n      <h3 matSubheader>Contact</h3>\r\n      <mat-list-item\r\n        (click)=\"externalLink('https://github.com/Projektanker/kicad-db-lib')\"\r\n      >\r\n        <mat-icon>launch</mat-icon>\r\n        <span>GitHub</span>\r\n      </mat-list-item>\r\n    </mat-list>\r\n  </div>\r\n</section>\r\n"
 
 /***/ }),
 
@@ -71,7 +71,11 @@ var AboutComponent = /** @class */ (function () {
         this.router = router;
         this.electronService = electronService;
     }
-    AboutComponent.prototype.ngOnInit = function () { };
+    AboutComponent.prototype.ngOnInit = function () {
+        if (this.electronService.isElectronApp) {
+            this.userData = this.electronService.remote.app.getPath('userData');
+        }
+    };
     AboutComponent.prototype.goBack = function () {
         this.location.back();
     };
