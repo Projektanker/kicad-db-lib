@@ -4,7 +4,8 @@
   "description": "KiCad Database Library Tool",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cd angular && npm run electron:build && cd ../electron && npm start"
+    "start": "cd electron && npm run clean && npm start",
+    "pack:win": "cd ./electron/ && npm run clean && npm run build:all && cp ./src/package.json ./dist/package.json -f && cd .. && electron-packager ./electron/dist KiCad-Db-Lib --platform=win32 --overwrite"
   },
   "repository": {
     "type": "git",
