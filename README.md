@@ -5,8 +5,10 @@
   - [Next steps:](#next-steps)
 
 ## About
+
 Inspired by Altium, KiCadDbLib creates one or KiCad Symbol Libraries based on your database.  
-Create and maintain a database for your electric components with 
+Create and maintain a database for your electric components with
+
 - symbol reference
 - footprint reference
 - value
@@ -18,15 +20,14 @@ Create and maintain a database for your electric components with
 
 inside of KiCadDbLib.
 
-Written in C# using .NET Core and [Avalonia UI](https://github.com/AvaloniaUI/Avalonia) KiCadDbLib can be used on Windows, Linux and MacOS.
+Created with Angular and Electron KiCadDbLib can be used on Windows, Linux and MacOS.
 
 ## Next steps:
-- Remove footprint list  
+
+- Remove footprint list
+
   > `$FPLIST`  
   > `DIP?14*`  
-  > `$ENDFPLIST`  
-  
-  the symbol templeate as well
+  > `$ENDFPLIST`
 
-- Basic UI to add, modify and delete parts
-- Load selected *.lib-files and *.pretty-folders into tree view, so that user can select symbol and footprint instead typing in manually
+  from the symbol templeate as well
