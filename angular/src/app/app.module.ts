@@ -45,6 +45,7 @@ import { SettingsFieldsComponent } from './settings-fields/settings-fields.compo
 import { DiscardChangesDialogComponent } from './discard-changes-dialog/discard-changes-dialog.component';
 import { SettingsPathsComponent } from './settings-paths/settings-paths.component';
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
     SettingsFieldsComponent,
     DiscardChangesDialogComponent,
     SettingsPathsComponent,
-    DeleteDialogComponent
+    DeleteDialogComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,
