@@ -24,9 +24,6 @@ export class PartsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   dataSource: PartsDataSource;
 
-  /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = Object.keys(new Part()).slice(0, -1);
-
   private buildSnackBar?: MatSnackBarRef<SimpleSnackBar>;
   private subscription: Subscription = new Subscription();
 
