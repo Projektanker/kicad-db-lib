@@ -27,10 +27,15 @@ inside of KiCadDbLib.
 
 Created with Angular and Electron KiCad-Db-Lib can be used on Windows, Linux and MacOS.
 
+<<<<<<< HEAD
 ![Screenshot](documentation/screenshot-parts.png 'Screenshot')
 
 ## Usage
 
+=======
+## Usage
+
+>>>>>>> origin/master
 On Windows, download the `KiCad-Db-Lib-win32-x64` and run the `KiCad-Db-Lib.exe`.
 At first startup you have to go to the ![Settings][settings] settings and configure your custom fields and your paths.
 
