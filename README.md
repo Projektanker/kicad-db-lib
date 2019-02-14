@@ -11,7 +11,7 @@
 
 ## About
 
-Inspired by Altium, KiCadDbLib creates one or KiCad Symbol Libraries based on your database.  
+Inspired by Altium, `KiCad-Db-Lib` creates one or more KiCad Symbol Libraries with atomic parts based on your database.  
 Create and maintain a database for your electric components with
 
 - symbol reference
@@ -23,7 +23,7 @@ Create and maintain a database for your electric components with
 - keywords
 - and your custom fields (manufacturer, order codes etc.)
 
-inside of KiCadDbLib.
+inside of `KiCad-Db-Lib`.
 
 Created with Angular and Electron KiCad-Db-Lib can be used on Windows, Linux and MacOS.
 
