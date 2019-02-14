@@ -1,5 +1,5 @@
 import { fs } from '../fs';
-import { Part } from './part';
+import { Part } from '../part/part';
 import * as path from 'path';
 import { SettingsService } from '../settings/settings.service';
 

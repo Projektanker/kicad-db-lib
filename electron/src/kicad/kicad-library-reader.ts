@@ -1,5 +1,5 @@
 import { fs } from '../fs';
-import { Part } from '../parts/part';
+import { Part } from '../part/part';
 import * as path from 'path';
 
 export class KiCadLibraryReader {

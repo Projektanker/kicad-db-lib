@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { SettingsService } from '../settings.service';
-import { Settings } from '../../../../shared/settings/settings';
 import { Subscription } from 'rxjs';
+import { Settings } from './settings';
 
 @Component({
   selector: 'app-settings',

@@ -1,5 +1,5 @@
 import { KiCadLibraryReader } from './kicad-library-reader';
-import { Part } from '../parts/part';
+import { Part } from '../part/part';
 import { fs } from '../fs';
 import * as path from 'path';
 

@@ -10,7 +10,7 @@ import { Location } from '@angular/common';
 import { PartService } from '../part.service';
 import { Part } from '../part/part';
 import { SettingsService } from '../settings.service';
-import { Settings } from '../../../../shared/settings/settings';
+import { Settings } from '../settings/settings';
 import { MatDialog } from '@angular/material';
 import { DiscardChangesDialogComponent } from '../discard-changes-dialog/discard-changes-dialog.component';
 import { MessageService } from '../message.service';

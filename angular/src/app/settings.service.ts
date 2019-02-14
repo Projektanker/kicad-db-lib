@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Settings } from '../../../shared/settings/settings';
+import { Settings } from './settings/settings';
 import { Observable, of, Subject } from 'rxjs';
 import { MessageService } from './message.service';
 import { ElectronService } from 'ngx-electron';

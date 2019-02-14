@@ -1,11 +1,11 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import { SettingsService } from './settings/settings.service';
-import { Settings } from '../../shared/settings/settings';
 import { PartService } from './parts/part.service';
-import { Part } from './parts/part';
+import { Part } from './part/part';
 import { LibraryService } from './library/library.service';
 import { fs } from './fs';
+import { Settings } from './settings/settings';
 
 let mainWindow: Electron.BrowserWindow;
 let settingsService = new SettingsService();
@@ -23,10 +23,13 @@ function createWindow() {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, '../../ng/index.html'));
+  mainWindow.loadFile(path.join(__dirname, 'ng/index.html'));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
+
+  // Remove menu
+  mainWindow.setMenu(null);
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
@@ -42,18 +45,6 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
   createWindow();
-  return;
-  var lib = new LibraryService();
-  console.log('build');
-  lib
-    .build()
-    .then(() => {
-      console.log('build done!');
-    })
-    .catch(error => {
-      console.log('build error:');
-      console.error(error);
-    });
 });
 
 // Quit when all windows are closed.

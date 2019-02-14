@@ -7,7 +7,7 @@
     "watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "build:all": "cd ../angular && npm run electron:build && cd ../electron && npm run electron",
-    "electron": "electron ./dist/electron/src/main.js",
+    "electron": "electron ./dist/main.js",
     "start": "npm run build && npm run electron"
   },
   "repository": "https://github.com/electron/electron-quick-start-typescript",

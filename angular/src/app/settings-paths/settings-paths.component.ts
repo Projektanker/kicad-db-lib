@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SettingsService } from '../settings.service';
 import { Location } from '@angular/common';
-import { Settings } from '../../../../shared/settings/settings';
+import { Settings } from '../settings/settings';
 import { Subscription } from 'rxjs';
 
 @Component({

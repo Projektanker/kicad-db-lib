@@ -1,4 +1,4 @@
-import { Settings } from '../../../shared/settings/settings';
+import { Settings } from './settings';
 import * as path from 'path';
 import { fs } from '../fs';
 
