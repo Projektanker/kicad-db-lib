@@ -1,0 +1,22 @@
+{
+  "name": "kicad-db-lib",
+  "version": "1.0.2",
+  "main": "main.js",
+  "license": "MIT",
+  "description": "KiCad Database Library Tool",
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "angular": "cd ../angular/ && ng build --baseHref=./ --outputPath=../electron-packager/dist/ng && cd ../electron-packager",
+    "electron": "cd ../electron/ && tsc --outDir=../electron-packager/dist && cd ../electron-packager",
+    "pack": "electron-packager . KiCad-Db-Lib --overwrite",
+    "pack:win": "npm run clean && npm run angular && npm run electron && npm run pack --platform=win32 "
+  },
+  "keywords": [
+    "KiCad",
+    "Library",
+    "Database",
+    "Angular",
+    "Electron"
+  ],
+  "author": "SebastianRumohr"
+}

@@ -6,7 +6,6 @@
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json",
-    "clean": "rm -rf ./dist",
     "build:all": "cd ../angular && npm run electron:build && cd ../electron && npm run build",
     "electron": "electron ./dist/main.js",
     "start": "npm run build && npm run electron"
