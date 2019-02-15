@@ -6,7 +6,6 @@
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json",
-    "clean": "rm -rf ./dist",
     "build:all": "cd ../angular && npm run electron:build && cd ../electron && npm run build",
     "electron": "electron ./dist/main.js",
     "start": "npm run build && npm run electron"
@@ -24,7 +23,6 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^4.0.4",
-    "electron-packager": "^13.0.1",
     "tslint": "^5.12.1",
     "typescript": "^3.1.6"
   },

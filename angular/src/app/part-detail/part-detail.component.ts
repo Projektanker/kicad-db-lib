@@ -258,11 +258,8 @@ export class PartDetailComponent implements OnInit {
         Validators.required,
         Validators.pattern(pattern_default)
       ]),
-      footprint: new FormControl('', [
-        Validators.required,
-        Validators.pattern(pattern_default)
-      ]),
-      description: new FormControl('', Validators.required),
+      footprint: new FormControl('', Validators.pattern(pattern_default)),
+      description: new FormControl(''),
       keywords: new FormControl(''),
       datasheet: new FormControl(''),
       customFields: customFieldsGroup

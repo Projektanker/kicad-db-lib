@@ -46,7 +46,7 @@
         <mat-form-field *ngIf="!(isLast || isFirst)" class="full-width">
           <input
             matInput
-            placeholder="{{ field | uppercase }}{{ i > 6 ? '' : '*' }}"
+            placeholder="{{ field | uppercase }}{{ i > 4 ? '' : '*' }}"
             [formControlName]="field"
             [readonly]="isFirst"
             [matAutocomplete]="auto"
