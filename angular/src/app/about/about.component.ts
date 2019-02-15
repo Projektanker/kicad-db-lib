@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 })
 export class AboutComponent implements OnInit {
   userData: string;
+  version: string;
+
   constructor(
     private location: Location,
     private router: Router,
@@ -19,6 +21,7 @@ export class AboutComponent implements OnInit {
   ngOnInit() {
     if (this.electronService.isElectronApp) {
       this.userData = this.electronService.remote.app.getPath('userData');
+      this.version = this.electronService.remote.app.getVersion();
     }
   }
 
