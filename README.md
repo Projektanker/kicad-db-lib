@@ -31,7 +31,7 @@ Created with Angular and Electron KiCad-Db-Lib can be used on Windows, Linux and
 
 ## Usage
 
-On Windows, download the `KiCad-Db-Lib-win32-x64` and run the `KiCad-Db-Lib.exe`.
+On Windows, download the `electron-packager/kicad-db-lib-win32-x64` folder and run the `kicad-db-lib.exe`.
 At first startup you have to go to the ![Settings][settings] settings and configure your custom fields and your paths.
 
 ### Settings
