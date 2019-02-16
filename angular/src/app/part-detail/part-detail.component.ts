@@ -232,7 +232,7 @@ export class PartDetailComponent implements OnInit {
     //if (!this.footprints) return;
     //if (!this.symbols) return;
 
-    var pattern_default = '^[a-zA-Z0-9_\\-\\.:]*$';
+    var pattern_default = '^[a-zA-Z0-9_\\-\\.:~]*$';
     var patter_value = '^[a-zA-Z0-9_\\-\\.]*$';
 
     const customFieldsGroup: FormGroup = new FormGroup({});
