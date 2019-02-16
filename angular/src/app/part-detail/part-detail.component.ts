@@ -248,7 +248,7 @@ export class PartDetailComponent implements OnInit {
       ]),
       reference: new FormControl('', [
         Validators.required,
-        Validators.pattern('^[A-Z]*$')
+        Validators.pattern('^[A-Z#]*$')
       ]),
       value: new FormControl('', [
         Validators.required,
