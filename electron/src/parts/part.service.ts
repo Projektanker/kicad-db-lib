@@ -20,6 +20,8 @@ export class PartService {
         console.log(part);
         parts.push(part);
       }
+      // sort parts by id
+      parts.sort((a, b) => a.id - b.id);
       return Promise.resolve(parts);
     } catch (error) {
       console.error(error);
