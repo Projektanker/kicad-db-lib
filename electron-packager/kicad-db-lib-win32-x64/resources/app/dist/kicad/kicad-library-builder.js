@@ -142,6 +142,8 @@ var KiCadLibraryBuilder = /** @class */ (function () {
                     case 8: return [4 /*yield*/, this._reader.getSymbolTemplateAsync(part)];
                     case 9:
                         template = _a.sent();
+                        // Fill part and remove empty lines
+                        part.customFields['ID'] = part.id.toString();
                         values = [
                             part.value,
                             part.reference,
