@@ -68,8 +68,8 @@ export class LibraryService {
     var exp =
       '^' +
       this.regExpEscape(s)
-        .replace('\\*', '.*?')
-        .replace('\\?', '.?');
+        .replace(/\\\*/g, '.*?')
+        .replace(/\\\?/g, '.?');
 
     return exp;
   }

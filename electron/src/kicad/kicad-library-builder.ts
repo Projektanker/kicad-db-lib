@@ -111,7 +111,7 @@ export class KiCadLibraryBuilder {
           var find = new RegExp(`\\{${i}\\}`, 'g'); // resolves in: /\{0\}/g
           partString = partString.replace(find, value);
         }
-        partString = partString.replace('\n\n', '\n');
+        partString = partString.replace(/\n\n/g, '\n');
 
         // Write .lib file
         lib.push(partString);
