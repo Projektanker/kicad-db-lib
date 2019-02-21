@@ -342,6 +342,14 @@ export class PartDetailComponent implements OnInit {
     });
   }
 
+  duplicate(): void {
+    console.log('duplicate()');
+    this.add = true;
+    this.part = null;
+    this.partForm.controls['id'].setValue(null);
+    this.partForm.markAsDirty();
+  }
+
   goBack(): void {
     if (!this.partForm.dirty) {
       this.location.back();

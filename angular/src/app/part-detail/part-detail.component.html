@@ -12,6 +12,7 @@
     <button
       type="button"
       aria-label="submit"
+      matTooltip="Submit"
       mat-icon-button
       [disabled]="!partForm?.valid"
       (click)="onSubmit()"
@@ -21,11 +22,22 @@
     <button
       type="button"
       aria-label="delete"
+      matTooltip="Delete part"
       mat-icon-button
       [disabled]="add"
       (click)="delete()"
     >
-      <mat-icon aria-label="submit icon">delete</mat-icon>
+      <mat-icon aria-label="delete icon">delete</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      matTooltip="Duplicate part"
+      type="button"
+      aria-label="duplicate"
+      [disabled]="add"
+      (click)="duplicate()"
+    >
+      <mat-icon aria-label="duplicate icon">file_copy</mat-icon>
     </button>
   </mat-toolbar>
   <div *ngIf="!partForm">
