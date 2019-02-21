@@ -98,6 +98,7 @@ export class KiCadLibraryBuilder {
         var template = await this._reader.getSymbolTemplateAsync(part);
 
         // Fill part and remove empty lines
+        part.customFields['ID'] = part.id.toString();
         var values = [
           part.value,
           part.reference,
