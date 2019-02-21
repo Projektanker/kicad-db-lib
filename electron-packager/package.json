@@ -9,7 +9,7 @@
     "angular": "cd ../angular/ && ng build --baseHref=./ --outputPath=../electron-packager/dist/ng && cd ../electron-packager",
     "electron": "cd ../electron/ && tsc --outDir ../electron-packager/dist && cd ../electron-packager",
     "prepare": "npm run clean && npm run angular && npm run electron",
-    "pack": " electron-packager . --overwrite",
+    "pack": " electron-packager . --overwrite --ignore=\"\\.git(ignore|modules)\"",
     "pack:win": "npm run pack --platform=win32 "
   },
   "keywords": [
