@@ -70,8 +70,8 @@ After creating some parts with `KiCad-Db-Lib` you can use the library files from
 
 - [ ] Add sort functionality to parts data table
 - [ ] Add filter functionality to parts data table
-- [ ] Function to duplicate part
-- [ ] Add pard id to created library
+- [x] Function to duplicate part
+- [x] Add pard id to created library
 - [ ] Validate parts (unique value per library)
 - [ ] Remove footprint list
 
@@ -80,6 +80,7 @@ After creating some parts with `KiCad-Db-Lib` you can use the library files from
   > `$ENDFPLIST`
 
   from the symbol template as well
+
 - [ ] Configure electron packager for Linux and Mac OS
 - [ ] Setup guide on first application usage
 
