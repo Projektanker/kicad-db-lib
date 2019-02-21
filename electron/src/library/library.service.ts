@@ -56,6 +56,24 @@ export class LibraryService {
     }
   }
 
+  private regExpEscape(s: string): string {
+    /*
+    Source:
+    https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript/3561711#3561711
+     */
+    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  }
+
+  private wildCardToRegExp(s: string): string {
+    var exp =
+      '^' +
+      this.regExpEscape(s)
+        .replace(/\\\*/g, '.*?')
+        .replace(/\\\?/g, '.?');
+
+    return exp;
+  }
+
   public async getSymbols(
     filter: string,
     reload: boolean,
@@ -69,9 +87,9 @@ export class LibraryService {
           directory
         );
       }
-
+      var regex = this.wildCardToRegExp(filter.toLowerCase().trim());
       var filtered = this.symbols
-        .filter(s => s.toLowerCase().includes(filter.toLowerCase()))
+        .filter(s => s.toLowerCase().match(regex))
         .slice(0, max);
       return Promise.resolve(filtered);
     } catch (error) {
@@ -92,9 +110,9 @@ export class LibraryService {
           directory
         );
       }
-
+      var regex = this.wildCardToRegExp(filter.toLowerCase().trim());
       var filtered = this.footprints
-        .filter(s => s.toLowerCase().includes(filter.toLowerCase()))
+        .filter(s => s.toLowerCase().match(regex))
         .slice(0, max);
       return Promise.resolve(filtered);
     } catch (error) {

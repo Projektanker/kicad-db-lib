@@ -232,7 +232,8 @@ export class PartDetailComponent implements OnInit {
     //if (!this.footprints) return;
     //if (!this.symbols) return;
 
-    var pattern_default = '^[a-zA-Z0-9_\\-\\.:]*$';
+    var pattern_library = '^[a-zA-Z0-9_\\-\\.:]*$';
+    var pattern_default = '^[a-zA-Z0-9_\\-\\.:\\~\\*\\?]*$';
     var patter_value = '^[a-zA-Z0-9_\\-\\.]*$';
 
     const customFieldsGroup: FormGroup = new FormGroup({});
@@ -244,11 +245,11 @@ export class PartDetailComponent implements OnInit {
       id: new FormControl(null),
       library: new FormControl('', [
         Validators.required,
-        Validators.pattern(pattern_default)
+        Validators.pattern(pattern_library)
       ]),
       reference: new FormControl('', [
         Validators.required,
-        Validators.pattern('^[A-Z]*$')
+        Validators.pattern('^[A-Z#]*$')
       ]),
       value: new FormControl('', [
         Validators.required,
@@ -272,7 +273,7 @@ export class PartDetailComponent implements OnInit {
           // wait 300ms after each keystroke before considering the term
           debounceTime(300),
           // To lower case and trim
-          map((value: string) => value.toUpperCase().trim()),
+          map((value: string) => value.toLowerCase().trim()),
           // ignore new term if same as previous term
           distinctUntilChanged(),
           // filter
@@ -339,6 +340,14 @@ export class PartDetailComponent implements OnInit {
         this.location.back();
       }
     });
+  }
+
+  duplicate(): void {
+    console.log('duplicate()');
+    this.add = true;
+    this.part = null;
+    this.partForm.controls['id'].setValue(null);
+    this.partForm.markAsDirty();
   }
 
   goBack(): void {

@@ -34,7 +34,8 @@ import {
   MatProgressBarModule,
   MatAutocompleteModule,
   MatMenuModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatTooltipModule
 } from '@angular/material';
 import { NavComponent } from './nav/nav.component';
 import { PartsComponent } from './parts/parts.component';
@@ -99,6 +100,7 @@ import { AboutComponent } from './about/about.component';
     MatAutocompleteModule,
     MatMenuModule,
     MatSnackBarModule,
+    MatTooltipModule,
     ReactiveFormsModule
   ],
   entryComponents: [DiscardChangesDialogComponent, DeleteDialogComponent],

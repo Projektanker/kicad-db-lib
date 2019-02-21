@@ -26,7 +26,7 @@ export class KiCadLibraryReader {
       } else {
         console.log(`fs.readFile(${library}, 'utf8')`);
         var text = await fs.readFile(library, 'utf8');
-        lines = text.replace('\r\n', '\n').split('\n');
+        lines = text.replace(/\r\n/g, '\n').split('\n');
         this._getSymbol_library = bufferLibrary ? library : null;
         this._getSymbol_lines = bufferLibrary ? lines : null;
       }
@@ -99,7 +99,7 @@ export class KiCadLibraryReader {
 
       // Normalize new line, split on new line and remove empty lines
       var lines = template
-        .replace('\r\n', '\n')
+        .replace(/\r\n/g, '\n')
         .split('\n')
         .filter(l => {
           return l;
@@ -223,7 +223,7 @@ export class KiCadLibraryReader {
 
       var symbols = [];
       var text = await fs.readFile(library, 'utf8');
-      var lines = text.replace('\r\n', '\n').split('\n');
+      var lines = text.replace(/\r\n/g, '\n').split('\n');
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         if (!line.startsWith('DEF')) continue;

@@ -98,6 +98,7 @@ export class KiCadLibraryBuilder {
         var template = await this._reader.getSymbolTemplateAsync(part);
 
         // Fill part and remove empty lines
+        part.customFields['ID'] = part.id.toString();
         var values = [
           part.value,
           part.reference,
@@ -111,7 +112,7 @@ export class KiCadLibraryBuilder {
           var find = new RegExp(`\\{${i}\\}`, 'g'); // resolves in: /\{0\}/g
           partString = partString.replace(find, value);
         }
-        partString = partString.replace('\n\n', '\n');
+        partString = partString.replace(/\n\n/g, '\n');
 
         // Write .lib file
         lib.push(partString);
