@@ -41,7 +41,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<section class=\"mat-typography\">\r\n  <mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n    <button type=\"button\" aria-label=\"back\" mat-icon-button (click)=\"goBack()\">\r\n      <mat-icon aria-label=\"back icon\">arrow_back</mat-icon>\r\n    </button>\r\n    <span>About</span>\r\n  </mat-toolbar>\r\n  <div class=\"global-content\">\r\n    <h2>KiCad Database Library</h2>\r\n    <mat-list>\r\n      <h3 matSubheader>Info</h3>\r\n      <mat-list-item> Version {{ version }} </mat-list-item>\r\n      <mat-list-item>\r\n        Licence: MIT\r\n      </mat-list-item>\r\n      <mat-list-item *ngIf=\"userData\">\r\n        Your user data is stored here: {{ userData }}</mat-list-item\r\n      >\r\n      <h3 matSubheader>Contact</h3>\r\n      <mat-list-item\r\n        (click)=\"externalLink('https://github.com/Projektanker/kicad-db-lib')\"\r\n      >\r\n        <mat-icon>launch</mat-icon>\r\n        <span>GitHub</span>\r\n      </mat-list-item>\r\n    </mat-list>\r\n  </div>\r\n</section>\r\n"
+module.exports = "<section class=\"mat-typography\">\r\n  <div class=\"global\">\r\n    <mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n      <button\r\n        type=\"button\"\r\n        aria-label=\"back\"\r\n        mat-icon-button\r\n        (click)=\"goBack()\"\r\n      >\r\n        <mat-icon aria-label=\"back icon\">arrow_back</mat-icon>\r\n      </button>\r\n      <span>About</span>\r\n    </mat-toolbar>\r\n    <div class=\"global-content\">\r\n      <h2>KiCad Database Library</h2>\r\n      <mat-list>\r\n        <h3 matSubheader>Info</h3>\r\n        <mat-list-item> Version {{ version }} </mat-list-item>\r\n        <mat-list-item>\r\n          Licence: MIT\r\n        </mat-list-item>\r\n        <mat-list-item *ngIf=\"userData\">\r\n          Your user data is stored here: {{ userData }}</mat-list-item\r\n        >\r\n        <h3 matSubheader>Contact</h3>\r\n        <mat-list-item\r\n          (click)=\"externalLink('https://github.com/Projektanker/kicad-db-lib')\"\r\n        >\r\n          <mat-icon>launch</mat-icon>\r\n          <span>GitHub</span>\r\n        </mat-list-item>\r\n      </mat-list>\r\n    </div>\r\n  </div>\r\n</section>\r\n"
 
 /***/ }),
 
@@ -118,18 +118,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _heroes_heroes_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./heroes/heroes.component */ "./src/app/heroes/heroes.component.ts");
-/* harmony import */ var _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./dashboard/dashboard.component */ "./src/app/dashboard/dashboard.component.ts");
-/* harmony import */ var _hero_detail_hero_detail_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./hero-detail/hero-detail.component */ "./src/app/hero-detail/hero-detail.component.ts");
-/* harmony import */ var _parts_parts_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./parts/parts.component */ "./src/app/parts/parts.component.ts");
-/* harmony import */ var _part_detail_part_detail_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./part-detail/part-detail.component */ "./src/app/part-detail/part-detail.component.ts");
-/* harmony import */ var _settings_settings_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./settings/settings.component */ "./src/app/settings/settings.component.ts");
-/* harmony import */ var _settings_fields_settings_fields_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./settings-fields/settings-fields.component */ "./src/app/settings-fields/settings-fields.component.ts");
-/* harmony import */ var _settings_paths_settings_paths_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./settings-paths/settings-paths.component */ "./src/app/settings-paths/settings-paths.component.ts");
-/* harmony import */ var _about_about_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./about/about.component */ "./src/app/about/about.component.ts");
-
-
-
+/* harmony import */ var _parts_parts_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./parts/parts.component */ "./src/app/parts/parts.component.ts");
+/* harmony import */ var _part_detail_part_detail_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./part-detail/part-detail.component */ "./src/app/part-detail/part-detail.component.ts");
+/* harmony import */ var _settings_settings_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./settings/settings.component */ "./src/app/settings/settings.component.ts");
+/* harmony import */ var _settings_fields_settings_fields_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./settings-fields/settings-fields.component */ "./src/app/settings-fields/settings-fields.component.ts");
+/* harmony import */ var _settings_paths_settings_paths_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./settings-paths/settings-paths.component */ "./src/app/settings-paths/settings-paths.component.ts");
+/* harmony import */ var _about_about_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./about/about.component */ "./src/app/about/about.component.ts");
 
 
 
@@ -141,16 +135,12 @@ __webpack_require__.r(__webpack_exports__);
 
 var routes = [
     { path: '', redirectTo: '/parts', pathMatch: 'full' },
-    { path: 'dashboard', component: _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_4__["DashboardComponent"] },
-    { path: 'heroes', component: _heroes_heroes_component__WEBPACK_IMPORTED_MODULE_3__["HeroesComponent"] },
-    { path: 'detail/:id', component: _hero_detail_hero_detail_component__WEBPACK_IMPORTED_MODULE_5__["HeroDetailComponent"] },
-    { path: 'hero/:id', component: _hero_detail_hero_detail_component__WEBPACK_IMPORTED_MODULE_5__["HeroDetailComponent"] },
-    { path: 'parts', component: _parts_parts_component__WEBPACK_IMPORTED_MODULE_6__["PartsComponent"] },
-    { path: 'part/:id', component: _part_detail_part_detail_component__WEBPACK_IMPORTED_MODULE_7__["PartDetailComponent"] },
-    { path: 'settings', component: _settings_settings_component__WEBPACK_IMPORTED_MODULE_8__["SettingsComponent"] },
-    { path: 'settings/fields', component: _settings_fields_settings_fields_component__WEBPACK_IMPORTED_MODULE_9__["SettingsFieldsComponent"] },
-    { path: 'settings/paths', component: _settings_paths_settings_paths_component__WEBPACK_IMPORTED_MODULE_10__["SettingsPathsComponent"] },
-    { path: 'about', component: _about_about_component__WEBPACK_IMPORTED_MODULE_11__["AboutComponent"] }
+    { path: 'parts', component: _parts_parts_component__WEBPACK_IMPORTED_MODULE_3__["PartsComponent"] },
+    { path: 'part/:id', component: _part_detail_part_detail_component__WEBPACK_IMPORTED_MODULE_4__["PartDetailComponent"] },
+    { path: 'settings', component: _settings_settings_component__WEBPACK_IMPORTED_MODULE_5__["SettingsComponent"] },
+    { path: 'settings/fields', component: _settings_fields_settings_fields_component__WEBPACK_IMPORTED_MODULE_6__["SettingsFieldsComponent"] },
+    { path: 'settings/paths', component: _settings_paths_settings_paths_component__WEBPACK_IMPORTED_MODULE_7__["SettingsPathsComponent"] },
+    { path: 'about', component: _about_about_component__WEBPACK_IMPORTED_MODULE_8__["AboutComponent"] }
 ];
 var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
@@ -250,35 +240,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var angular_in_memory_web_api__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! angular-in-memory-web-api */ "./node_modules/angular-in-memory-web-api/index.js");
 /* harmony import */ var _in_memory_data_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./in-memory-data.service */ "./src/app/in-memory-data.service.ts");
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
-/* harmony import */ var _heroes_heroes_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./heroes/heroes.component */ "./src/app/heroes/heroes.component.ts");
-/* harmony import */ var _hero_detail_hero_detail_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./hero-detail/hero-detail.component */ "./src/app/hero-detail/hero-detail.component.ts");
-/* harmony import */ var _messages_messages_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./messages/messages.component */ "./src/app/messages/messages.component.ts");
-/* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
-/* harmony import */ var _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./dashboard/dashboard.component */ "./src/app/dashboard/dashboard.component.ts");
-/* harmony import */ var _hero_search_hero_search_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./hero-search/hero-search.component */ "./src/app/hero-search/hero-search.component.ts");
-/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/platform-browser/animations */ "./node_modules/@angular/platform-browser/fesm5/animations.js");
-/* harmony import */ var _angular_cdk_layout__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/cdk/layout */ "./node_modules/@angular/cdk/esm5/layout.es5.js");
-/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var _nav_nav_component__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./nav/nav.component */ "./src/app/nav/nav.component.ts");
-/* harmony import */ var _parts_parts_component__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./parts/parts.component */ "./src/app/parts/parts.component.ts");
-/* harmony import */ var _part_detail_part_detail_component__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./part-detail/part-detail.component */ "./src/app/part-detail/part-detail.component.ts");
-/* harmony import */ var _settings_settings_component__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./settings/settings.component */ "./src/app/settings/settings.component.ts");
-/* harmony import */ var _keys_pipe__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./keys.pipe */ "./src/app/keys.pipe.ts");
-/* harmony import */ var _settings_fields_settings_fields_component__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./settings-fields/settings-fields.component */ "./src/app/settings-fields/settings-fields.component.ts");
-/* harmony import */ var _discard_changes_dialog_discard_changes_dialog_component__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./discard-changes-dialog/discard-changes-dialog.component */ "./src/app/discard-changes-dialog/discard-changes-dialog.component.ts");
-/* harmony import */ var _settings_paths_settings_paths_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./settings-paths/settings-paths.component */ "./src/app/settings-paths/settings-paths.component.ts");
-/* harmony import */ var _delete_dialog_delete_dialog_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./delete-dialog/delete-dialog.component */ "./src/app/delete-dialog/delete-dialog.component.ts");
-/* harmony import */ var _about_about_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./about/about.component */ "./src/app/about/about.component.ts");
+/* harmony import */ var _messages_messages_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./messages/messages.component */ "./src/app/messages/messages.component.ts");
+/* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
+/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/platform-browser/animations */ "./node_modules/@angular/platform-browser/fesm5/animations.js");
+/* harmony import */ var _angular_cdk_layout__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/cdk/layout */ "./node_modules/@angular/cdk/esm5/layout.es5.js");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var _parts_parts_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./parts/parts.component */ "./src/app/parts/parts.component.ts");
+/* harmony import */ var _part_detail_part_detail_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./part-detail/part-detail.component */ "./src/app/part-detail/part-detail.component.ts");
+/* harmony import */ var _settings_settings_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./settings/settings.component */ "./src/app/settings/settings.component.ts");
+/* harmony import */ var _keys_pipe__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./keys.pipe */ "./src/app/keys.pipe.ts");
+/* harmony import */ var _settings_fields_settings_fields_component__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./settings-fields/settings-fields.component */ "./src/app/settings-fields/settings-fields.component.ts");
+/* harmony import */ var _discard_changes_dialog_discard_changes_dialog_component__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./discard-changes-dialog/discard-changes-dialog.component */ "./src/app/discard-changes-dialog/discard-changes-dialog.component.ts");
+/* harmony import */ var _settings_paths_settings_paths_component__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./settings-paths/settings-paths.component */ "./src/app/settings-paths/settings-paths.component.ts");
+/* harmony import */ var _delete_dialog_delete_dialog_component__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./delete-dialog/delete-dialog.component */ "./src/app/delete-dialog/delete-dialog.component.ts");
+/* harmony import */ var _about_about_component__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./about/about.component */ "./src/app/about/about.component.ts");
 
 
 
 
  // < -- NgModel lives here
-
-
-
-
-
 
 
 
@@ -304,27 +284,22 @@ var AppModule = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["NgModule"])({
             declarations: [
                 _app_component__WEBPACK_IMPORTED_MODULE_8__["AppComponent"],
-                _heroes_heroes_component__WEBPACK_IMPORTED_MODULE_9__["HeroesComponent"],
-                _hero_detail_hero_detail_component__WEBPACK_IMPORTED_MODULE_10__["HeroDetailComponent"],
-                _messages_messages_component__WEBPACK_IMPORTED_MODULE_11__["MessagesComponent"],
-                _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_13__["DashboardComponent"],
-                _hero_search_hero_search_component__WEBPACK_IMPORTED_MODULE_14__["HeroSearchComponent"],
-                _nav_nav_component__WEBPACK_IMPORTED_MODULE_18__["NavComponent"],
-                _parts_parts_component__WEBPACK_IMPORTED_MODULE_19__["PartsComponent"],
-                _part_detail_part_detail_component__WEBPACK_IMPORTED_MODULE_20__["PartDetailComponent"],
-                _settings_settings_component__WEBPACK_IMPORTED_MODULE_21__["SettingsComponent"],
-                _keys_pipe__WEBPACK_IMPORTED_MODULE_22__["KeysPipe"],
-                _settings_fields_settings_fields_component__WEBPACK_IMPORTED_MODULE_23__["SettingsFieldsComponent"],
-                _discard_changes_dialog_discard_changes_dialog_component__WEBPACK_IMPORTED_MODULE_24__["DiscardChangesDialogComponent"],
-                _settings_paths_settings_paths_component__WEBPACK_IMPORTED_MODULE_25__["SettingsPathsComponent"],
-                _delete_dialog_delete_dialog_component__WEBPACK_IMPORTED_MODULE_26__["DeleteDialogComponent"],
-                _about_about_component__WEBPACK_IMPORTED_MODULE_27__["AboutComponent"]
+                _messages_messages_component__WEBPACK_IMPORTED_MODULE_9__["MessagesComponent"],
+                _parts_parts_component__WEBPACK_IMPORTED_MODULE_14__["PartsComponent"],
+                _part_detail_part_detail_component__WEBPACK_IMPORTED_MODULE_15__["PartDetailComponent"],
+                _settings_settings_component__WEBPACK_IMPORTED_MODULE_16__["SettingsComponent"],
+                _keys_pipe__WEBPACK_IMPORTED_MODULE_17__["KeysPipe"],
+                _settings_fields_settings_fields_component__WEBPACK_IMPORTED_MODULE_18__["SettingsFieldsComponent"],
+                _discard_changes_dialog_discard_changes_dialog_component__WEBPACK_IMPORTED_MODULE_19__["DiscardChangesDialogComponent"],
+                _settings_paths_settings_paths_component__WEBPACK_IMPORTED_MODULE_20__["SettingsPathsComponent"],
+                _delete_dialog_delete_dialog_component__WEBPACK_IMPORTED_MODULE_21__["DeleteDialogComponent"],
+                _about_about_component__WEBPACK_IMPORTED_MODULE_22__["AboutComponent"]
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
                 ngx_electron__WEBPACK_IMPORTED_MODULE_3__["NgxElectronModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormsModule"],
-                _app_routing_module__WEBPACK_IMPORTED_MODULE_12__["AppRoutingModule"],
+                _app_routing_module__WEBPACK_IMPORTED_MODULE_10__["AppRoutingModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HttpClientModule"],
                 // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
                 // and returns simulated server responses.
@@ -332,102 +307,36 @@ var AppModule = /** @class */ (function () {
                 angular_in_memory_web_api__WEBPACK_IMPORTED_MODULE_6__["HttpClientInMemoryWebApiModule"].forRoot(_in_memory_data_service__WEBPACK_IMPORTED_MODULE_7__["InMemoryDataService"], {
                     dataEncapsulation: false
                 }),
-                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_15__["BrowserAnimationsModule"],
-                _angular_cdk_layout__WEBPACK_IMPORTED_MODULE_16__["LayoutModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatToolbarModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatButtonModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatSidenavModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatIconModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatListModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatTableModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatPaginatorModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatSortModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatInputModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatSelectModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatRadioModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatCardModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatExpansionModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatDialogModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatProgressSpinnerModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatProgressBarModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatAutocompleteModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatMenuModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatSnackBarModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_17__["MatTooltipModule"],
+                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_11__["BrowserAnimationsModule"],
+                _angular_cdk_layout__WEBPACK_IMPORTED_MODULE_12__["LayoutModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatToolbarModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatButtonModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatSidenavModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatIconModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatListModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatTableModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatPaginatorModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatSortModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatInputModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatSelectModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatRadioModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatCardModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatExpansionModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatDialogModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatProgressSpinnerModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatProgressBarModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatAutocompleteModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatMenuModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatSnackBarModule"],
+                _angular_material__WEBPACK_IMPORTED_MODULE_13__["MatTooltipModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_4__["ReactiveFormsModule"]
             ],
-            entryComponents: [_discard_changes_dialog_discard_changes_dialog_component__WEBPACK_IMPORTED_MODULE_24__["DiscardChangesDialogComponent"], _delete_dialog_delete_dialog_component__WEBPACK_IMPORTED_MODULE_26__["DeleteDialogComponent"]],
+            entryComponents: [_discard_changes_dialog_discard_changes_dialog_component__WEBPACK_IMPORTED_MODULE_19__["DiscardChangesDialogComponent"], _delete_dialog_delete_dialog_component__WEBPACK_IMPORTED_MODULE_21__["DeleteDialogComponent"]],
             providers: [],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_8__["AppComponent"]]
         })
     ], AppModule);
     return AppModule;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/dashboard/dashboard.component.css":
-/*!***************************************************!*\
-  !*** ./src/app/dashboard/dashboard.component.css ***!
-  \***************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "/* DashboardComponent's private CSS styles */\r\n[class*='col-'] {\r\n  float: left;\r\n  padding-right: 20px;\r\n  padding-bottom: 20px;\r\n}\r\n[class*='col-']:last-of-type {\r\n  padding-right: 0;\r\n}\r\na {\r\n  text-decoration: none;\r\n}\r\n*,\r\n*:after,\r\n*:before {\r\n  box-sizing: border-box;\r\n}\r\nh3 {\r\n  text-align: center;\r\n  margin-bottom: 0;\r\n}\r\nh4 {\r\n  position: relative;\r\n}\r\n.grid {\r\n  margin: 0;\r\n}\r\n.col-1-4 {\r\n  width: 25%;\r\n}\r\n.module {\r\n  padding: 20px;\r\n  text-align: center;\r\n  color: #eee;\r\n  max-height: 120px;\r\n  min-width: 120px;\r\n  background-color: #607d8b;\r\n  border-radius: 2px;\r\n}\r\n.module:hover {\r\n  background-color: #eee;\r\n  cursor: pointer;\r\n  color: #607d8b;\r\n}\r\n.grid-pad {\r\n  padding: 10px 0;\r\n}\r\n.grid-pad>[class*='col-']:last-of-type {\r\n  padding-right: 20px;\r\n}\r\n@media (max-width: 600px) {\r\n  .module {\r\n    font-size: 10px;\r\n    max-height: 75px;\r\n  }\r\n}\r\n@media (max-width: 1024px) {\r\n  .grid {\r\n    margin: 0;\r\n  }\r\n\r\n  .module {\r\n    min-width: 60px;\r\n  }\r\n}\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvZGFzaGJvYXJkL2Rhc2hib2FyZC5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLDRDQUE0QztBQUM1QztFQUNFLFdBQVc7RUFDWCxtQkFBbUI7RUFDbkIsb0JBQW9CO0FBQ3RCO0FBRUE7RUFDRSxnQkFBZ0I7QUFDbEI7QUFFQTtFQUNFLHFCQUFxQjtBQUN2QjtBQUVBOzs7RUFLRSxzQkFBc0I7QUFDeEI7QUFFQTtFQUNFLGtCQUFrQjtFQUNsQixnQkFBZ0I7QUFDbEI7QUFFQTtFQUNFLGtCQUFrQjtBQUNwQjtBQUVBO0VBQ0UsU0FBUztBQUNYO0FBRUE7RUFDRSxVQUFVO0FBQ1o7QUFFQTtFQUNFLGFBQWE7RUFDYixrQkFBa0I7RUFDbEIsV0FBVztFQUNYLGlCQUFpQjtFQUNqQixnQkFBZ0I7RUFDaEIseUJBQXlCO0VBQ3pCLGtCQUFrQjtBQUNwQjtBQUVBO0VBQ0Usc0JBQXNCO0VBQ3RCLGVBQWU7RUFDZixjQUFjO0FBQ2hCO0FBRUE7RUFDRSxlQUFlO0FBQ2pCO0FBRUE7RUFDRSxtQkFBbUI7QUFDckI7QUFFQTtFQUNFO0lBQ0UsZUFBZTtJQUNmLGdCQUFnQjtFQUNsQjtBQUNGO0FBRUE7RUFDRTtJQUNFLFNBQVM7RUFDWDs7RUFFQTtJQUNFLGVBQWU7RUFDakI7QUFDRiIsImZpbGUiOiJzcmMvYXBwL2Rhc2hib2FyZC9kYXNoYm9hcmQuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi8qIERhc2hib2FyZENvbXBvbmVudCdzIHByaXZhdGUgQ1NTIHN0eWxlcyAqL1xyXG5bY2xhc3MqPSdjb2wtJ10ge1xyXG4gIGZsb2F0OiBsZWZ0O1xyXG4gIHBhZGRpbmctcmlnaHQ6IDIwcHg7XHJcbiAgcGFkZGluZy1ib3R0b206IDIwcHg7XHJcbn1cclxuXHJcbltjbGFzcyo9J2NvbC0nXTpsYXN0LW9mLXR5cGUge1xyXG4gIHBhZGRpbmctcmlnaHQ6IDA7XHJcbn1cclxuXHJcbmEge1xyXG4gIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcclxufVxyXG5cclxuKixcclxuKjphZnRlcixcclxuKjpiZWZvcmUge1xyXG4gIC13ZWJraXQtYm94LXNpemluZzogYm9yZGVyLWJveDtcclxuICAtbW96LWJveC1zaXppbmc6IGJvcmRlci1ib3g7XHJcbiAgYm94LXNpemluZzogYm9yZGVyLWJveDtcclxufVxyXG5cclxuaDMge1xyXG4gIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICBtYXJnaW4tYm90dG9tOiAwO1xyXG59XHJcblxyXG5oNCB7XHJcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG59XHJcblxyXG4uZ3JpZCB7XHJcbiAgbWFyZ2luOiAwO1xyXG59XHJcblxyXG4uY29sLTEtNCB7XHJcbiAgd2lkdGg6IDI1JTtcclxufVxyXG5cclxuLm1vZHVsZSB7XHJcbiAgcGFkZGluZzogMjBweDtcclxuICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgY29sb3I6ICNlZWU7XHJcbiAgbWF4LWhlaWdodDogMTIwcHg7XHJcbiAgbWluLXdpZHRoOiAxMjBweDtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjNjA3ZDhiO1xyXG4gIGJvcmRlci1yYWRpdXM6IDJweDtcclxufVxyXG5cclxuLm1vZHVsZTpob3ZlciB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogI2VlZTtcclxuICBjdXJzb3I6IHBvaW50ZXI7XHJcbiAgY29sb3I6ICM2MDdkOGI7XHJcbn1cclxuXHJcbi5ncmlkLXBhZCB7XHJcbiAgcGFkZGluZzogMTBweCAwO1xyXG59XHJcblxyXG4uZ3JpZC1wYWQ+W2NsYXNzKj0nY29sLSddOmxhc3Qtb2YtdHlwZSB7XHJcbiAgcGFkZGluZy1yaWdodDogMjBweDtcclxufVxyXG5cclxuQG1lZGlhIChtYXgtd2lkdGg6IDYwMHB4KSB7XHJcbiAgLm1vZHVsZSB7XHJcbiAgICBmb250LXNpemU6IDEwcHg7XHJcbiAgICBtYXgtaGVpZ2h0OiA3NXB4O1xyXG4gIH1cclxufVxyXG5cclxuQG1lZGlhIChtYXgtd2lkdGg6IDEwMjRweCkge1xyXG4gIC5ncmlkIHtcclxuICAgIG1hcmdpbjogMDtcclxuICB9XHJcblxyXG4gIC5tb2R1bGUge1xyXG4gICAgbWluLXdpZHRoOiA2MHB4O1xyXG4gIH1cclxufVxyXG4iXX0= */"
-
-/***/ }),
-
-/***/ "./src/app/dashboard/dashboard.component.html":
-/*!****************************************************!*\
-  !*** ./src/app/dashboard/dashboard.component.html ***!
-  \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "<h3>Top Heroes</h3>\r\n<div class=\"grid grid-pad\">\r\n  <a *ngFor=\"let hero of heroes\" class=\"col-1-4\" routerLink=\"/detail/{{hero.id}}\">\r\n    <div class=\"module hero\">\r\n      <h4>{{hero.name}}</h4>\r\n    </div>\r\n  </a>\r\n</div>\r\n\r\n<app-hero-search></app-hero-search>\r\n"
-
-/***/ }),
-
-/***/ "./src/app/dashboard/dashboard.component.ts":
-/*!**************************************************!*\
-  !*** ./src/app/dashboard/dashboard.component.ts ***!
-  \**************************************************/
-/*! exports provided: DashboardComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DashboardComponent", function() { return DashboardComponent; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _hero_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../hero.service */ "./src/app/hero.service.ts");
-
-
-
-var DashboardComponent = /** @class */ (function () {
-    function DashboardComponent(heroService) {
-        this.heroService = heroService;
-        this.heroes = [];
-    }
-    DashboardComponent.prototype.ngOnInit = function () {
-        this.getHeroes();
-    };
-    DashboardComponent.prototype.getHeroes = function () {
-        var _this = this;
-        this.heroService.getHeroes()
-            .subscribe(function (heroes) { return _this.heroes = heroes.slice(1, 5); });
-    };
-    DashboardComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-dashboard',
-            template: __webpack_require__(/*! ./dashboard.component.html */ "./src/app/dashboard/dashboard.component.html"),
-            styles: [__webpack_require__(/*! ./dashboard.component.css */ "./src/app/dashboard/dashboard.component.css")]
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_hero_service__WEBPACK_IMPORTED_MODULE_2__["HeroService"]])
-    ], DashboardComponent);
-    return DashboardComponent;
 }());
 
 
@@ -540,375 +449,6 @@ var DiscardChangesDialogComponent = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
     ], DiscardChangesDialogComponent);
     return DiscardChangesDialogComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/hero-detail/hero-detail.component.css":
-/*!*******************************************************!*\
-  !*** ./src/app/hero-detail/hero-detail.component.css ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "/* HeroDetailComponent's private CSS styles */\r\nlabel {\r\n  display: inline-block;\r\n  width: 3em;\r\n  margin: .5em 0;\r\n  color: #607D8B;\r\n  font-weight: bold;\r\n}\r\ninput {\r\n  height: 2em;\r\n  font-size: 1em;\r\n  padding-left: .4em;\r\n}\r\nbutton {\r\n  margin-top: 20px;\r\n  font-family: Arial;\r\n  background-color: #eee;\r\n  border: none;\r\n  padding: 5px 10px;\r\n  border-radius: 4px;\r\n  cursor: pointer;\r\n  cursor: hand;\r\n}\r\nbutton:hover {\r\n  background-color: #cfd8dc;\r\n}\r\nbutton:disabled {\r\n  background-color: #eee;\r\n  color: #ccc;\r\n  cursor: auto;\r\n}\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaGVyby1kZXRhaWwvaGVyby1kZXRhaWwuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSw2Q0FBNkM7QUFDN0M7RUFDRSxxQkFBcUI7RUFDckIsVUFBVTtFQUNWLGNBQWM7RUFDZCxjQUFjO0VBQ2QsaUJBQWlCO0FBQ25CO0FBRUE7RUFDRSxXQUFXO0VBQ1gsY0FBYztFQUNkLGtCQUFrQjtBQUNwQjtBQUVBO0VBQ0UsZ0JBQWdCO0VBQ2hCLGtCQUFrQjtFQUNsQixzQkFBc0I7RUFDdEIsWUFBWTtFQUNaLGlCQUFpQjtFQUNqQixrQkFBa0I7RUFDbEIsZUFBZTtFQUNmLFlBQVk7QUFDZDtBQUVBO0VBQ0UseUJBQXlCO0FBQzNCO0FBRUE7RUFDRSxzQkFBc0I7RUFDdEIsV0FBVztFQUNYLFlBQVk7QUFDZCIsImZpbGUiOiJzcmMvYXBwL2hlcm8tZGV0YWlsL2hlcm8tZGV0YWlsLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIvKiBIZXJvRGV0YWlsQ29tcG9uZW50J3MgcHJpdmF0ZSBDU1Mgc3R5bGVzICovXHJcbmxhYmVsIHtcclxuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XHJcbiAgd2lkdGg6IDNlbTtcclxuICBtYXJnaW46IC41ZW0gMDtcclxuICBjb2xvcjogIzYwN0Q4QjtcclxuICBmb250LXdlaWdodDogYm9sZDtcclxufVxyXG5cclxuaW5wdXQge1xyXG4gIGhlaWdodDogMmVtO1xyXG4gIGZvbnQtc2l6ZTogMWVtO1xyXG4gIHBhZGRpbmctbGVmdDogLjRlbTtcclxufVxyXG5cclxuYnV0dG9uIHtcclxuICBtYXJnaW4tdG9wOiAyMHB4O1xyXG4gIGZvbnQtZmFtaWx5OiBBcmlhbDtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZWVlO1xyXG4gIGJvcmRlcjogbm9uZTtcclxuICBwYWRkaW5nOiA1cHggMTBweDtcclxuICBib3JkZXItcmFkaXVzOiA0cHg7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG4gIGN1cnNvcjogaGFuZDtcclxufVxyXG5cclxuYnV0dG9uOmhvdmVyIHtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjY2ZkOGRjO1xyXG59XHJcblxyXG5idXR0b246ZGlzYWJsZWQge1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICNlZWU7XHJcbiAgY29sb3I6ICNjY2M7XHJcbiAgY3Vyc29yOiBhdXRvO1xyXG59XHJcbiJdfQ== */"
-
-/***/ }),
-
-/***/ "./src/app/hero-detail/hero-detail.component.html":
-/*!********************************************************!*\
-  !*** ./src/app/hero-detail/hero-detail.component.html ***!
-  \********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "<div *ngIf=\"hero\">\r\n  <h2>{{hero.name | uppercase}} Details</h2> <!-- | uppercase is a pipe-->\r\n  <div><span>id: </span>{{hero.id}}</div>\r\n  <div>\r\n    <label>name:\r\n      <input [(ngModel)]=\"hero.name\" placeholder=\"name\">\r\n    </label>\r\n  </div>\r\n</div>\r\n<button (click)=\"save()\">save</button>\r\n<button (click)=\"goBack()\">go back</button>\r\n"
-
-/***/ }),
-
-/***/ "./src/app/hero-detail/hero-detail.component.ts":
-/*!******************************************************!*\
-  !*** ./src/app/hero-detail/hero-detail.component.ts ***!
-  \******************************************************/
-/*! exports provided: HeroDetailComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HeroDetailComponent", function() { return HeroDetailComponent; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
-/* harmony import */ var _hero__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../hero */ "./src/app/hero.ts");
-/* harmony import */ var _hero_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../hero.service */ "./src/app/hero.service.ts");
-
-
-
-
-
-
-var HeroDetailComponent = /** @class */ (function () {
-    function HeroDetailComponent(route, heroService, location) {
-        this.route = route;
-        this.heroService = heroService;
-        this.location = location;
-    }
-    HeroDetailComponent.prototype.ngOnInit = function () {
-        this.getHero();
-    };
-    HeroDetailComponent.prototype.getHero = function () {
-        var _this = this;
-        var id = +this.route.snapshot.paramMap.get('id');
-        this.heroService.getHero(id)
-            .subscribe(function (hero) { return _this.hero = hero; });
-    };
-    HeroDetailComponent.prototype.save = function () {
-        var _this = this;
-        this.heroService.updateHero(this.hero)
-            .subscribe(function () { return _this.goBack(); });
-    };
-    HeroDetailComponent.prototype.goBack = function () {
-        this.location.back();
-    };
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _hero__WEBPACK_IMPORTED_MODULE_4__["Hero"])
-    ], HeroDetailComponent.prototype, "hero", void 0);
-    HeroDetailComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-hero-detail',
-            template: __webpack_require__(/*! ./hero-detail.component.html */ "./src/app/hero-detail/hero-detail.component.html"),
-            styles: [__webpack_require__(/*! ./hero-detail.component.css */ "./src/app/hero-detail/hero-detail.component.css")]
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
-            _hero_service__WEBPACK_IMPORTED_MODULE_5__["HeroService"],
-            _angular_common__WEBPACK_IMPORTED_MODULE_3__["Location"]])
-    ], HeroDetailComponent);
-    return HeroDetailComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/hero-search/hero-search.component.css":
-/*!*******************************************************!*\
-  !*** ./src/app/hero-search/hero-search.component.css ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "/* HeroSearch private styles */\r\n.search-result li {\r\n  border-bottom: 1px solid gray;\r\n  border-left: 1px solid gray;\r\n  border-right: 1px solid gray;\r\n  width: 195px;\r\n  height: 16px;\r\n  padding: 5px;\r\n  background-color: white;\r\n  cursor: pointer;\r\n  list-style-type: none;\r\n}\r\n.search-result li:hover {\r\n  background-color: #607D8B;\r\n}\r\n.search-result li a {\r\n  color: #888;\r\n  display: block;\r\n  text-decoration: none;\r\n}\r\n.search-result li a:hover {\r\n  color: white;\r\n}\r\n.search-result li a:active {\r\n  color: white;\r\n}\r\n#search-box {\r\n  width: 200px;\r\n  height: 20px;\r\n}\r\nul.search-result {\r\n  margin-top: 0;\r\n  padding-left: 0;\r\n}\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaGVyby1zZWFyY2gvaGVyby1zZWFyY2guY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSw4QkFBOEI7QUFDOUI7RUFDRSw2QkFBNkI7RUFDN0IsMkJBQTJCO0VBQzNCLDRCQUE0QjtFQUM1QixZQUFZO0VBQ1osWUFBWTtFQUNaLFlBQVk7RUFDWix1QkFBdUI7RUFDdkIsZUFBZTtFQUNmLHFCQUFxQjtBQUN2QjtBQUVBO0VBQ0UseUJBQXlCO0FBQzNCO0FBRUE7RUFDRSxXQUFXO0VBQ1gsY0FBYztFQUNkLHFCQUFxQjtBQUN2QjtBQUVBO0VBQ0UsWUFBWTtBQUNkO0FBRUE7RUFDRSxZQUFZO0FBQ2Q7QUFFQTtFQUNFLFlBQVk7RUFDWixZQUFZO0FBQ2Q7QUFHQTtFQUNFLGFBQWE7RUFDYixlQUFlO0FBQ2pCIiwiZmlsZSI6InNyYy9hcHAvaGVyby1zZWFyY2gvaGVyby1zZWFyY2guY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi8qIEhlcm9TZWFyY2ggcHJpdmF0ZSBzdHlsZXMgKi9cclxuLnNlYXJjaC1yZXN1bHQgbGkge1xyXG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCBncmF5O1xyXG4gIGJvcmRlci1sZWZ0OiAxcHggc29saWQgZ3JheTtcclxuICBib3JkZXItcmlnaHQ6IDFweCBzb2xpZCBncmF5O1xyXG4gIHdpZHRoOiAxOTVweDtcclxuICBoZWlnaHQ6IDE2cHg7XHJcbiAgcGFkZGluZzogNXB4O1xyXG4gIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxuICBsaXN0LXN0eWxlLXR5cGU6IG5vbmU7XHJcbn1cclxuXHJcbi5zZWFyY2gtcmVzdWx0IGxpOmhvdmVyIHtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjNjA3RDhCO1xyXG59XHJcblxyXG4uc2VhcmNoLXJlc3VsdCBsaSBhIHtcclxuICBjb2xvcjogIzg4ODtcclxuICBkaXNwbGF5OiBibG9jaztcclxuICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XHJcbn1cclxuXHJcbi5zZWFyY2gtcmVzdWx0IGxpIGE6aG92ZXIge1xyXG4gIGNvbG9yOiB3aGl0ZTtcclxufVxyXG5cclxuLnNlYXJjaC1yZXN1bHQgbGkgYTphY3RpdmUge1xyXG4gIGNvbG9yOiB3aGl0ZTtcclxufVxyXG5cclxuI3NlYXJjaC1ib3gge1xyXG4gIHdpZHRoOiAyMDBweDtcclxuICBoZWlnaHQ6IDIwcHg7XHJcbn1cclxuXHJcblxyXG51bC5zZWFyY2gtcmVzdWx0IHtcclxuICBtYXJnaW4tdG9wOiAwO1xyXG4gIHBhZGRpbmctbGVmdDogMDtcclxufVxyXG4iXX0= */"
-
-/***/ }),
-
-/***/ "./src/app/hero-search/hero-search.component.html":
-/*!********************************************************!*\
-  !*** ./src/app/hero-search/hero-search.component.html ***!
-  \********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "<div id=\"search-component\">\r\n  <h4>Hero Search</h4>\r\n\r\n  <input #searchBox id=\"search-box\" (input)=\"search(searchBox.value)\" />\r\n\r\n  <ul class=\"search-result\">\r\n    <li *ngFor=\"let hero of heroes$ | async\">\r\n      <a routerLink=\"/detail/{{hero.id}}\">\r\n        {{hero.name}}\r\n      </a>\r\n    </li>\r\n  </ul>\r\n</div>\r\n"
-
-/***/ }),
-
-/***/ "./src/app/hero-search/hero-search.component.ts":
-/*!******************************************************!*\
-  !*** ./src/app/hero-search/hero-search.component.ts ***!
-  \******************************************************/
-/*! exports provided: HeroSearchComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HeroSearchComponent", function() { return HeroSearchComponent; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var _hero_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../hero.service */ "./src/app/hero.service.ts");
-
-
-
-
-
-var HeroSearchComponent = /** @class */ (function () {
-    function HeroSearchComponent(heroService) {
-        this.heroService = heroService;
-        this.searchTerms = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
-    }
-    // Push a search term into the observable stream.
-    HeroSearchComponent.prototype.search = function (term) {
-        this.searchTerms.next(term);
-    };
-    HeroSearchComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.heroes$ = this.searchTerms.pipe(
-        // wait 300ms after each keystroke before considering the term
-        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["debounceTime"])(300), 
-        // ignore new term if same as previous term
-        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["distinctUntilChanged"])(), 
-        // switch to new search observable each time the term changes
-        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["switchMap"])(function (term) { return _this.heroService.searchHeroes(term); }));
-    };
-    HeroSearchComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-hero-search',
-            template: __webpack_require__(/*! ./hero-search.component.html */ "./src/app/hero-search/hero-search.component.html"),
-            styles: [__webpack_require__(/*! ./hero-search.component.css */ "./src/app/hero-search/hero-search.component.css")]
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_hero_service__WEBPACK_IMPORTED_MODULE_4__["HeroService"]])
-    ], HeroSearchComponent);
-    return HeroSearchComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/hero.service.ts":
-/*!*********************************!*\
-  !*** ./src/app/hero.service.ts ***!
-  \*********************************/
-/*! exports provided: HeroService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HeroService", function() { return HeroService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var _message_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./message.service */ "./src/app/message.service.ts");
-
-
-
-
-
-
-var httpOptions = {
-    headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({ 'Content-Type': 'application/json' })
-};
-var HeroService = /** @class */ (function () {
-    function HeroService(http, messageService) {
-        this.http = http;
-        this.messageService = messageService;
-        this.heroesUrl = 'api/heroes'; // URL to web api
-    }
-    /** Log a HeroService message with the MessageService */
-    HeroService.prototype.log = function (message) {
-        this.messageService.add("HeroService: " + message);
-    };
-    HeroService.prototype.getHeroes = function () {
-        var _this = this;
-        this.log('HeroService: fetched heroes');
-        return this.http.get(this.heroesUrl)
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function (_) { return _this.log('fetched heroes'); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('getHeroes', [])));
-    };
-    /** GET hero by id. Will 404 if id not found */
-    HeroService.prototype.getHero = function (id) {
-        var _this = this;
-        var url = this.heroesUrl + "/" + id;
-        return this.http.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function (_) { return _this.log("fetched hero id=" + id); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError("getHero id=" + id)));
-    };
-    /** PUT: update the hero on the server */
-    HeroService.prototype.updateHero = function (hero) {
-        var _this = this;
-        return this.http.put(this.heroesUrl, hero, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function (_) { return _this.log("updated hero id=" + hero.id); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('updateHero')));
-    };
-    /** POST: add a new hero to the server */
-    HeroService.prototype.addHero = function (hero) {
-        var _this = this;
-        return this.http.post(this.heroesUrl, hero, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function (addedHero) { return _this.log("added hero w/ id=" + addedHero.id); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('addHero')));
-    };
-    /** DELETE: delete the hero from the server */
-    HeroService.prototype.deleteHero = function (hero) {
-        var _this = this;
-        var id = typeof hero === 'number' ? hero : hero.id;
-        var url = this.heroesUrl + "/" + id;
-        return this.http.delete(url, httpOptions).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function (_) { return _this.log("deleted hero id=" + id); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('deleteHero')));
-    };
-    /* GET heroes whose name contains search term */
-    HeroService.prototype.searchHeroes = function (term) {
-        var _this = this;
-        if (!term.trim()) {
-            // if not search term, return empty hero array.
-            return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])([]);
-        }
-        return this.http.get(this.heroesUrl + "/?name=" + term).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["tap"])(function (_) { return _this.log("found heroes matching \"" + term + "\""); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError('searchHeroes', [])));
-    };
-    /**
-   * Handle Http operation that failed.
-   * Let the app continue.
-   * @param operation - name of the operation that failed
-   * @param result - optional value to return as the observable result
-   */
-    HeroService.prototype.handleError = function (operation, result) {
-        var _this = this;
-        if (operation === void 0) { operation = 'operation'; }
-        return function (error) {
-            // TODO: send the error to remote logging infrastructure
-            console.error(error); // log to console instead
-            // TODO: better job of transforming error for user consumption
-            _this.log(operation + " failed: " + error.message);
-            // Let the app keep running by returning an empty result.
-            return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["of"])(result);
-        };
-    };
-    HeroService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
-            providedIn: 'root'
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"],
-            _message_service__WEBPACK_IMPORTED_MODULE_5__["MessageService"]])
-    ], HeroService);
-    return HeroService;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/hero.ts":
-/*!*************************!*\
-  !*** ./src/app/hero.ts ***!
-  \*************************/
-/*! exports provided: Hero */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Hero", function() { return Hero; });
-var Hero = /** @class */ (function () {
-    function Hero() {
-    }
-    return Hero;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/heroes/heroes.component.css":
-/*!*********************************************!*\
-  !*** ./src/app/heroes/heroes.component.css ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "/* HeroesComponent's private CSS styles */\r\n.heroes {\r\n  margin: 0 0 2em 0;\r\n  list-style-type: none;\r\n  padding: 0;\r\n  width: 15em;\r\n}\r\n.heroes li {\r\n  position: relative;\r\n  cursor: pointer;\r\n  background-color: #EEE;\r\n  margin: .5em;\r\n  padding: .3em 0;\r\n  height: 1.6em;\r\n  border-radius: 4px;\r\n}\r\n.heroes li:hover {\r\n  color: #607D8B;\r\n  background-color: #DDD;\r\n  left: .1em;\r\n}\r\n.heroes a {\r\n  color: #888;\r\n  text-decoration: none;\r\n  position: relative;\r\n  display: block;\r\n  width: 250px;\r\n}\r\n.heroes a:hover {\r\n  color: #607D8B;\r\n}\r\n.heroes .badge {\r\n  display: inline-block;\r\n  font-size: small;\r\n  color: white;\r\n  padding: 0.8em 0.7em 0 0.7em;\r\n  background-color: #607D8B;\r\n  line-height: 1em;\r\n  position: relative;\r\n  left: -1px;\r\n  top: -4px;\r\n  height: 1.8em;\r\n  min-width: 16px;\r\n  text-align: right;\r\n  margin-right: .8em;\r\n  border-radius: 4px 0 0 4px;\r\n}\r\nbutton {\r\n  background-color: #eee;\r\n  border: none;\r\n  padding: 5px 10px;\r\n  border-radius: 4px;\r\n  cursor: pointer;\r\n  cursor: hand;\r\n  font-family: Arial;\r\n}\r\nbutton:hover {\r\n  background-color: #cfd8dc;\r\n}\r\nbutton.delete {\r\n  position: relative;\r\n  left: 194px;\r\n  top: -32px;\r\n  background-color: gray !important;\r\n  color: white;\r\n}\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaGVyb2VzL2hlcm9lcy5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLHlDQUF5QztBQUN6QztFQUNFLGlCQUFpQjtFQUNqQixxQkFBcUI7RUFDckIsVUFBVTtFQUNWLFdBQVc7QUFDYjtBQUVBO0VBQ0Usa0JBQWtCO0VBQ2xCLGVBQWU7RUFDZixzQkFBc0I7RUFDdEIsWUFBWTtFQUNaLGVBQWU7RUFDZixhQUFhO0VBQ2Isa0JBQWtCO0FBQ3BCO0FBRUE7RUFDRSxjQUFjO0VBQ2Qsc0JBQXNCO0VBQ3RCLFVBQVU7QUFDWjtBQUVBO0VBQ0UsV0FBVztFQUNYLHFCQUFxQjtFQUNyQixrQkFBa0I7RUFDbEIsY0FBYztFQUNkLFlBQVk7QUFDZDtBQUVBO0VBQ0UsY0FBYztBQUNoQjtBQUVBO0VBQ0UscUJBQXFCO0VBQ3JCLGdCQUFnQjtFQUNoQixZQUFZO0VBQ1osNEJBQTRCO0VBQzVCLHlCQUF5QjtFQUN6QixnQkFBZ0I7RUFDaEIsa0JBQWtCO0VBQ2xCLFVBQVU7RUFDVixTQUFTO0VBQ1QsYUFBYTtFQUNiLGVBQWU7RUFDZixpQkFBaUI7RUFDakIsa0JBQWtCO0VBQ2xCLDBCQUEwQjtBQUM1QjtBQUVBO0VBQ0Usc0JBQXNCO0VBQ3RCLFlBQVk7RUFDWixpQkFBaUI7RUFDakIsa0JBQWtCO0VBQ2xCLGVBQWU7RUFDZixZQUFZO0VBQ1osa0JBQWtCO0FBQ3BCO0FBRUE7RUFDRSx5QkFBeUI7QUFDM0I7QUFFQTtFQUNFLGtCQUFrQjtFQUNsQixXQUFXO0VBQ1gsVUFBVTtFQUNWLGlDQUFpQztFQUNqQyxZQUFZO0FBQ2QiLCJmaWxlIjoic3JjL2FwcC9oZXJvZXMvaGVyb2VzLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIvKiBIZXJvZXNDb21wb25lbnQncyBwcml2YXRlIENTUyBzdHlsZXMgKi9cclxuLmhlcm9lcyB7XHJcbiAgbWFyZ2luOiAwIDAgMmVtIDA7XHJcbiAgbGlzdC1zdHlsZS10eXBlOiBub25lO1xyXG4gIHBhZGRpbmc6IDA7XHJcbiAgd2lkdGg6IDE1ZW07XHJcbn1cclxuXHJcbi5oZXJvZXMgbGkge1xyXG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICBjdXJzb3I6IHBvaW50ZXI7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogI0VFRTtcclxuICBtYXJnaW46IC41ZW07XHJcbiAgcGFkZGluZzogLjNlbSAwO1xyXG4gIGhlaWdodDogMS42ZW07XHJcbiAgYm9yZGVyLXJhZGl1czogNHB4O1xyXG59XHJcblxyXG4uaGVyb2VzIGxpOmhvdmVyIHtcclxuICBjb2xvcjogIzYwN0Q4QjtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjREREO1xyXG4gIGxlZnQ6IC4xZW07XHJcbn1cclxuXHJcbi5oZXJvZXMgYSB7XHJcbiAgY29sb3I6ICM4ODg7XHJcbiAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xyXG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICBkaXNwbGF5OiBibG9jaztcclxuICB3aWR0aDogMjUwcHg7XHJcbn1cclxuXHJcbi5oZXJvZXMgYTpob3ZlciB7XHJcbiAgY29sb3I6ICM2MDdEOEI7XHJcbn1cclxuXHJcbi5oZXJvZXMgLmJhZGdlIHtcclxuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XHJcbiAgZm9udC1zaXplOiBzbWFsbDtcclxuICBjb2xvcjogd2hpdGU7XHJcbiAgcGFkZGluZzogMC44ZW0gMC43ZW0gMCAwLjdlbTtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjNjA3RDhCO1xyXG4gIGxpbmUtaGVpZ2h0OiAxZW07XHJcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gIGxlZnQ6IC0xcHg7XHJcbiAgdG9wOiAtNHB4O1xyXG4gIGhlaWdodDogMS44ZW07XHJcbiAgbWluLXdpZHRoOiAxNnB4O1xyXG4gIHRleHQtYWxpZ246IHJpZ2h0O1xyXG4gIG1hcmdpbi1yaWdodDogLjhlbTtcclxuICBib3JkZXItcmFkaXVzOiA0cHggMCAwIDRweDtcclxufVxyXG5cclxuYnV0dG9uIHtcclxuICBiYWNrZ3JvdW5kLWNvbG9yOiAjZWVlO1xyXG4gIGJvcmRlcjogbm9uZTtcclxuICBwYWRkaW5nOiA1cHggMTBweDtcclxuICBib3JkZXItcmFkaXVzOiA0cHg7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG4gIGN1cnNvcjogaGFuZDtcclxuICBmb250LWZhbWlseTogQXJpYWw7XHJcbn1cclxuXHJcbmJ1dHRvbjpob3ZlciB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogI2NmZDhkYztcclxufVxyXG5cclxuYnV0dG9uLmRlbGV0ZSB7XHJcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gIGxlZnQ6IDE5NHB4O1xyXG4gIHRvcDogLTMycHg7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogZ3JheSAhaW1wb3J0YW50O1xyXG4gIGNvbG9yOiB3aGl0ZTtcclxufVxyXG4iXX0= */"
-
-/***/ }),
-
-/***/ "./src/app/heroes/heroes.component.html":
-/*!**********************************************!*\
-  !*** ./src/app/heroes/heroes.component.html ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "<h2>My Heroes</h2>\r\n<ul class=\"heroes\">\r\n  <li *ngFor=\"let hero of heroes\">\r\n    <a routerLink=\"/detail/{{hero.id}}\">\r\n      <span class=\"badge\">{{hero.id}}</span> {{hero.name}}\r\n    </a>\r\n    <button class=\"delete\" title=\"delete hero\" (click)=\"delete(hero)\">x</button>\r\n  </li>\r\n</ul>\r\n<div>\r\n  <label>Hero name:\r\n    <input #heroName />\r\n  </label>\r\n  <!-- (click) passes input value to add() and then clears the input -->\r\n  <button (click)=\"add(heroName.value); heroName.value=''\">\r\n    add\r\n  </button>\r\n</div>\r\n"
-
-/***/ }),
-
-/***/ "./src/app/heroes/heroes.component.ts":
-/*!********************************************!*\
-  !*** ./src/app/heroes/heroes.component.ts ***!
-  \********************************************/
-/*! exports provided: HeroesComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HeroesComponent", function() { return HeroesComponent; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _hero_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../hero.service */ "./src/app/hero.service.ts");
-
-
-
-var HeroesComponent = /** @class */ (function () {
-    function HeroesComponent(heroService) {
-        this.heroService = heroService;
-    }
-    HeroesComponent.prototype.ngOnInit = function () {
-        this.getHeroes();
-    };
-    HeroesComponent.prototype.getHeroes = function () {
-        var _this = this;
-        this.heroService.getHeroes()
-            .subscribe(function (heroes) { return _this.heroes = heroes; });
-    };
-    HeroesComponent.prototype.add = function (name) {
-        var _this = this;
-        name = name.trim();
-        if (!name) {
-            return;
-        }
-        this.heroService.addHero({ name: name })
-            .subscribe(function (hero) {
-            _this.heroes.push(hero);
-        });
-    };
-    HeroesComponent.prototype.delete = function (hero) {
-        this.heroes = this.heroes.filter(function (h) { return h !== hero; });
-        this.heroService.deleteHero(hero).subscribe();
-    };
-    HeroesComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-heroes',
-            template: __webpack_require__(/*! ./heroes.component.html */ "./src/app/heroes/heroes.component.html"),
-            styles: [__webpack_require__(/*! ./heroes.component.css */ "./src/app/heroes/heroes.component.css")]
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_hero_service__WEBPACK_IMPORTED_MODULE_2__["HeroService"]])
-    ], HeroesComponent);
-    return HeroesComponent;
 }());
 
 
@@ -1349,67 +889,6 @@ var MessagesComponent = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/nav/nav.component.css":
-/*!***************************************!*\
-  !*** ./src/app/nav/nav.component.css ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = ".sidenav-container {\r\n  height: 100%;\r\n}\r\n\r\n.sidenav {\r\n  width: 200px;\r\n}\r\n\r\n.sidenav .mat-toolbar {\r\n  background: inherit;\r\n}\r\n\r\n.mat-toolbar.mat-primary {\r\n  position: -webkit-sticky;\r\n  position: sticky;\r\n  top: 0;\r\n  z-index: 1;\r\n}\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbmF2L25hdi5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsWUFBWTtBQUNkOztBQUVBO0VBQ0UsWUFBWTtBQUNkOztBQUVBO0VBQ0UsbUJBQW1CO0FBQ3JCOztBQUVBO0VBQ0Usd0JBQWdCO0VBQWhCLGdCQUFnQjtFQUNoQixNQUFNO0VBQ04sVUFBVTtBQUNaIiwiZmlsZSI6InNyYy9hcHAvbmF2L25hdi5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLnNpZGVuYXYtY29udGFpbmVyIHtcclxuICBoZWlnaHQ6IDEwMCU7XHJcbn1cclxuXHJcbi5zaWRlbmF2IHtcclxuICB3aWR0aDogMjAwcHg7XHJcbn1cclxuXHJcbi5zaWRlbmF2IC5tYXQtdG9vbGJhciB7XHJcbiAgYmFja2dyb3VuZDogaW5oZXJpdDtcclxufVxyXG5cclxuLm1hdC10b29sYmFyLm1hdC1wcmltYXJ5IHtcclxuICBwb3NpdGlvbjogc3RpY2t5O1xyXG4gIHRvcDogMDtcclxuICB6LWluZGV4OiAxO1xyXG59XHJcbiJdfQ== */"
-
-/***/ }),
-
-/***/ "./src/app/nav/nav.component.html":
-/*!****************************************!*\
-  !*** ./src/app/nav/nav.component.html ***!
-  \****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "<mat-sidenav-container class=\"sidenav-container\">\r\n  <mat-sidenav #drawer class=\"sidenav\" fixedInViewport=\"true\" [attr.role]=\"(isHandset$ | async) ? 'dialog' : 'navigation'\"\r\n    [mode]=\"(isHandset$ | async) ? 'over' : 'side'\" [opened]=\"!(isHandset$ | async)\">\r\n    <mat-toolbar>Menu</mat-toolbar>\r\n    <mat-nav-list>\r\n      <a mat-list-item routerLink=\"/dashboard\">Dashboard</a>\r\n      <a mat-list-item routerLink=\"/heroes\">Heroes</a>\r\n      <a mat-list-item routerLink=\"/parts\">Parts</a>\r\n      <a mat-list-item routerLink=\"/settings\">Settings</a>\r\n    </mat-nav-list>\r\n  </mat-sidenav>\r\n  <mat-sidenav-content>\r\n    <mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n      <button type=\"button\" aria-label=\"Toggle sidenav\" mat-icon-button (click)=\"drawer.toggle()\" *ngIf=\"isHandset$ | async\">\r\n        <mat-icon aria-label=\"Side nav toggle icon\">menu</mat-icon>\r\n      </button>\r\n      <span>angular-tour-of-heroes</span>\r\n    </mat-toolbar>\r\n    <router-outlet></router-outlet>\r\n    <app-messages></app-messages>\r\n  </mat-sidenav-content>\r\n</mat-sidenav-container>\r\n"
-
-/***/ }),
-
-/***/ "./src/app/nav/nav.component.ts":
-/*!**************************************!*\
-  !*** ./src/app/nav/nav.component.ts ***!
-  \**************************************/
-/*! exports provided: NavComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NavComponent", function() { return NavComponent; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_cdk_layout__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/cdk/layout */ "./node_modules/@angular/cdk/esm5/layout.es5.js");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-
-
-
-
-var NavComponent = /** @class */ (function () {
-    function NavComponent(breakpointObserver) {
-        this.breakpointObserver = breakpointObserver;
-        this.isHandset$ = this.breakpointObserver.observe(_angular_cdk_layout__WEBPACK_IMPORTED_MODULE_2__["Breakpoints"].Handset)
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (result) { return result.matches; }));
-    }
-    NavComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-nav',
-            template: __webpack_require__(/*! ./nav.component.html */ "./src/app/nav/nav.component.html"),
-            styles: [__webpack_require__(/*! ./nav.component.css */ "./src/app/nav/nav.component.css")]
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_cdk_layout__WEBPACK_IMPORTED_MODULE_2__["BreakpointObserver"]])
-    ], NavComponent);
-    return NavComponent;
-}());
-
-
-
-/***/ }),
-
 /***/ "./src/app/part-detail/part-detail.component.css":
 /*!*******************************************************!*\
   !*** ./src/app/part-detail/part-detail.component.css ***!
@@ -1428,7 +907,7 @@ module.exports = ".full-width {\r\n  width: 100%;\r\n}\r\n\r\n.part-card {\r\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<section class=\"mat-typography\">\r\n  <mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n    <button type=\"button\" aria-label=\"back\" mat-icon-button (click)=\"goBack()\">\r\n      <mat-icon aria-label=\"back icon\">arrow_back</mat-icon>\r\n    </button>\r\n    <span>Part</span>\r\n    <span *ngIf=\"part\">\r\n      <span *ngIf=\"part.id\">&nbsp;{{ part.id }}</span>\r\n      <span *ngIf=\"part.value != ''\"> - {{ part.value }}</span>\r\n    </span>\r\n    <span class=\"spacer\"></span>\r\n    <button\r\n      type=\"button\"\r\n      aria-label=\"submit\"\r\n      matTooltip=\"Submit\"\r\n      mat-icon-button\r\n      [disabled]=\"!partForm?.valid\"\r\n      (click)=\"onSubmit()\"\r\n    >\r\n      <mat-icon aria-label=\"submit icon\">done</mat-icon>\r\n    </button>\r\n    <button\r\n      type=\"button\"\r\n      aria-label=\"delete\"\r\n      matTooltip=\"Delete part\"\r\n      mat-icon-button\r\n      [disabled]=\"add\"\r\n      (click)=\"delete()\"\r\n    >\r\n      <mat-icon aria-label=\"delete icon\">delete</mat-icon>\r\n    </button>\r\n    <button\r\n      mat-icon-button\r\n      matTooltip=\"Duplicate part\"\r\n      type=\"button\"\r\n      aria-label=\"duplicate\"\r\n      [disabled]=\"add\"\r\n      (click)=\"duplicate()\"\r\n    >\r\n      <mat-icon aria-label=\"duplicate icon\">file_copy</mat-icon>\r\n    </button>\r\n  </mat-toolbar>\r\n  <div class=\"global-progress-container\">\r\n    <mat-progress-bar\r\n      *ngIf=\"!partForm\"\r\n      color=\"accent\"\r\n      mode=\"indeterminate\"\r\n    ></mat-progress-bar>\r\n  </div>\r\n  <div class=\"global-content\">\r\n    <form *ngIf=\"partForm\" [formGroup]=\"partForm\" (ngSubmit)=\"onSubmit()\">\r\n      <mat-divider></mat-divider>\r\n      <h3>Basic fields</h3>\r\n      <div\r\n        *ngFor=\"\r\n          let field of (partForm.controls | keys);\r\n          first as isFirst;\r\n          last as isLast;\r\n          index as i\r\n        \"\r\n      >\r\n        <mat-form-field *ngIf=\"!(isLast || isFirst)\" class=\"full-width\">\r\n          <input\r\n            matInput\r\n            placeholder=\"{{ field | uppercase }}{{ i > 4 ? '' : '*' }}\"\r\n            [formControlName]=\"field\"\r\n            [readonly]=\"isFirst\"\r\n            [matAutocomplete]=\"auto\"\r\n          />\r\n          <mat-error *ngIf=\"partForm.controls[field].hasError('required')\">\r\n            {{ field | uppercase }} is <strong>required</strong>\r\n          </mat-error>\r\n          <mat-error *ngIf=\"partForm.controls[field].hasError('pattern')\">\r\n            {{ field | uppercase }} contains <strong>invalid characters</strong>\r\n          </mat-error>\r\n          <mat-autocomplete\r\n            autoActiveFirstOption\r\n            #auto=\"matAutocomplete\"\r\n            [ngSwitch]=\"field\"\r\n          >\r\n            <ng-container *ngSwitchCase=\"'library'\">\r\n              <mat-option *ngFor=\"let x of libraries\" [value]=\"x\">\r\n                {{ x }}\r\n              </mat-option>\r\n            </ng-container>\r\n            <ng-container *ngSwitchCase=\"'symbol'\">\r\n              <mat-option *ngFor=\"let x of symbols\" [value]=\"x\">\r\n                {{ x }}\r\n              </mat-option>\r\n            </ng-container>\r\n            <ng-container *ngSwitchCase=\"'footprint'\">\r\n              <mat-option *ngFor=\"let x of footprints\" [value]=\"x\">\r\n                {{ x }}\r\n              </mat-option>\r\n            </ng-container>\r\n            <ng-container *ngSwitchDefault> </ng-container>\r\n          </mat-autocomplete>\r\n        </mat-form-field>\r\n      </div>\r\n\r\n      <mat-divider></mat-divider>\r\n\r\n      <h3>Custom Fields</h3>\r\n      <div\r\n        *ngFor=\"\r\n          let field of (partForm.get('customFields').controls | keys);\r\n          first as isFirst;\r\n          last as isLast\r\n        \"\r\n      >\r\n        <mat-form-field formGroupName=\"customFields\" class=\"full-width\">\r\n          <input\r\n            matInput\r\n            [placeholder]=\"field | uppercase\"\r\n            [formControlName]=\"field\"\r\n          />\r\n        </mat-form-field>\r\n      </div>\r\n    </form>\r\n  </div>\r\n</section>\r\n"
+module.exports = "<section class=\"mat-typography\">\r\n  <div class=\"global\">\r\n    <mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n      <button\r\n        type=\"button\"\r\n        aria-label=\"back\"\r\n        mat-icon-button\r\n        (click)=\"goBack()\"\r\n      >\r\n        <mat-icon aria-label=\"back icon\">arrow_back</mat-icon>\r\n      </button>\r\n      <span>Part</span>\r\n      <span *ngIf=\"part\">\r\n        <span *ngIf=\"part.id\">&nbsp;{{ part.id }}</span>\r\n        <span *ngIf=\"part.value != ''\"> - {{ part.value }}</span>\r\n      </span>\r\n      <span class=\"spacer\"></span>\r\n      <button\r\n        type=\"button\"\r\n        aria-label=\"submit\"\r\n        matTooltip=\"Submit\"\r\n        mat-icon-button\r\n        [disabled]=\"!partForm?.valid\"\r\n        (click)=\"onSubmit()\"\r\n      >\r\n        <mat-icon aria-label=\"submit icon\">done</mat-icon>\r\n      </button>\r\n      <button\r\n        type=\"button\"\r\n        aria-label=\"delete\"\r\n        matTooltip=\"Delete part\"\r\n        mat-icon-button\r\n        [disabled]=\"add\"\r\n        (click)=\"delete()\"\r\n      >\r\n        <mat-icon aria-label=\"delete icon\">delete</mat-icon>\r\n      </button>\r\n      <button\r\n        mat-icon-button\r\n        matTooltip=\"Duplicate part\"\r\n        type=\"button\"\r\n        aria-label=\"duplicate\"\r\n        [disabled]=\"add\"\r\n        (click)=\"duplicate()\"\r\n      >\r\n        <mat-icon aria-label=\"duplicate icon\">control_point_duplicate</mat-icon>\r\n      </button>\r\n    </mat-toolbar>\r\n    <div class=\"global-progress-container\">\r\n      <mat-progress-bar\r\n        *ngIf=\"!partForm\"\r\n        color=\"accent\"\r\n        mode=\"indeterminate\"\r\n      ></mat-progress-bar>\r\n    </div>\r\n    <div class=\"global-content\">\r\n      <form *ngIf=\"partForm\" [formGroup]=\"partForm\" (ngSubmit)=\"onSubmit()\">\r\n        <mat-divider></mat-divider>\r\n        <h3>Basic fields</h3>\r\n        <div\r\n          *ngFor=\"\r\n            let field of (partForm.controls | keys);\r\n            first as isFirst;\r\n            last as isLast;\r\n            index as i\r\n          \"\r\n        >\r\n          <mat-form-field *ngIf=\"!(isLast || isFirst)\" class=\"full-width\">\r\n            <input\r\n              matInput\r\n              placeholder=\"{{ field | uppercase }}{{ i > 4 ? '' : '*' }}\"\r\n              [formControlName]=\"field\"\r\n              [readonly]=\"isFirst\"\r\n              [matAutocomplete]=\"auto\"\r\n            />\r\n            <mat-error *ngIf=\"partForm.controls[field].hasError('required')\">\r\n              {{ field | uppercase }} is <strong>required</strong>\r\n            </mat-error>\r\n            <mat-error *ngIf=\"partForm.controls[field].hasError('pattern')\">\r\n              {{ field | uppercase }} contains\r\n              <strong>invalid characters</strong>\r\n            </mat-error>\r\n            <mat-autocomplete\r\n              autoActiveFirstOption\r\n              #auto=\"matAutocomplete\"\r\n              [ngSwitch]=\"field\"\r\n            >\r\n              <ng-container *ngSwitchCase=\"'library'\">\r\n                <mat-option *ngFor=\"let x of libraries\" [value]=\"x\">\r\n                  {{ x }}\r\n                </mat-option>\r\n              </ng-container>\r\n              <ng-container *ngSwitchCase=\"'symbol'\">\r\n                <mat-option *ngFor=\"let x of symbols\" [value]=\"x\">\r\n                  {{ x }}\r\n                </mat-option>\r\n              </ng-container>\r\n              <ng-container *ngSwitchCase=\"'footprint'\">\r\n                <mat-option *ngFor=\"let x of footprints\" [value]=\"x\">\r\n                  {{ x }}\r\n                </mat-option>\r\n              </ng-container>\r\n              <ng-container *ngSwitchDefault> </ng-container>\r\n            </mat-autocomplete>\r\n          </mat-form-field>\r\n        </div>\r\n\r\n        <mat-divider></mat-divider>\r\n\r\n        <h3>Custom Fields</h3>\r\n        <div\r\n          *ngFor=\"\r\n            let field of (partForm.get('customFields').controls | keys);\r\n            first as isFirst;\r\n            last as isLast\r\n          \"\r\n        >\r\n          <mat-form-field formGroupName=\"customFields\" class=\"full-width\">\r\n            <input\r\n              matInput\r\n              [placeholder]=\"field | uppercase\"\r\n              [formControlName]=\"field\"\r\n            />\r\n          </mat-form-field>\r\n        </div>\r\n      </form>\r\n    </div>\r\n  </div>\r\n</section>\r\n"
 
 /***/ }),
 
@@ -2122,7 +1601,7 @@ var PartsDataSource = /** @class */ (function (_super) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".full-width-table {\r\n  width: 100%;\r\n}\r\n\r\ntd.mat-cell {\r\n  padding-right: 20px;\r\n}\r\n\r\nth.mat-header-cell {\r\n  padding-right: 20px;\r\n}\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcGFydHMvcGFydHMuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLFdBQVc7QUFDYjs7QUFFQTtFQUNFLG1CQUFtQjtBQUNyQjs7QUFFQTtFQUNFLG1CQUFtQjtBQUNyQiIsImZpbGUiOiJzcmMvYXBwL3BhcnRzL3BhcnRzLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuZnVsbC13aWR0aC10YWJsZSB7XHJcbiAgd2lkdGg6IDEwMCU7XHJcbn1cclxuXHJcbnRkLm1hdC1jZWxsIHtcclxuICBwYWRkaW5nLXJpZ2h0OiAyMHB4O1xyXG59XHJcblxyXG50aC5tYXQtaGVhZGVyLWNlbGwge1xyXG4gIHBhZGRpbmctcmlnaHQ6IDIwcHg7XHJcbn1cclxuIl19 */"
+module.exports = ".full-width-table {\r\n  width: 100%;\r\n  margin-top: 20px;\r\n  margin-bottom: 20px;\r\n}\r\n\r\ntd.mat-cell {\r\n  padding-right: 20px;\r\n}\r\n\r\nth.mat-header-cell {\r\n  padding-right: 20px;\r\n}\r\n\r\n.content {\r\n  padding: 0px;\r\n}\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcGFydHMvcGFydHMuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLFdBQVc7RUFDWCxnQkFBZ0I7RUFDaEIsbUJBQW1CO0FBQ3JCOztBQUVBO0VBQ0UsbUJBQW1CO0FBQ3JCOztBQUVBO0VBQ0UsbUJBQW1CO0FBQ3JCOztBQUVBO0VBQ0UsWUFBWTtBQUNkIiwiZmlsZSI6InNyYy9hcHAvcGFydHMvcGFydHMuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi5mdWxsLXdpZHRoLXRhYmxlIHtcclxuICB3aWR0aDogMTAwJTtcclxuICBtYXJnaW4tdG9wOiAyMHB4O1xyXG4gIG1hcmdpbi1ib3R0b206IDIwcHg7XHJcbn1cclxuXHJcbnRkLm1hdC1jZWxsIHtcclxuICBwYWRkaW5nLXJpZ2h0OiAyMHB4O1xyXG59XHJcblxyXG50aC5tYXQtaGVhZGVyLWNlbGwge1xyXG4gIHBhZGRpbmctcmlnaHQ6IDIwcHg7XHJcbn1cclxuXHJcbi5jb250ZW50IHtcclxuICBwYWRkaW5nOiAwcHg7XHJcbn1cclxuIl19 */"
 
 /***/ }),
 
@@ -2133,7 +1612,7 @@ module.exports = ".full-width-table {\r\n  width: 100%;\r\n}\r\n\r\ntd.mat-cell 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n  <mat-toolbar-row>\r\n    <span>Parts</span> <span class=\"spacer\"></span>\r\n    <button type=\"button\" aria-label=\"add\" mat-icon-button (click)=\"addPart()\">\r\n      <mat-icon aria-label=\"add icon\">add</mat-icon>\r\n    </button>\r\n    <button\r\n      type=\"button\"\r\n      aria-label=\"settings\"\r\n      mat-icon-button\r\n      routerLink=\"/settings\"\r\n    >\r\n      <mat-icon aria-label=\"settings icon\">settings</mat-icon>\r\n    </button>\r\n    <button mat-icon-button [matMenuTriggerFor]=\"menu\">\r\n      <mat-icon>more_vert</mat-icon>\r\n    </button>\r\n    <mat-menu #menu=\"matMenu\">\r\n      <button mat-menu-item (click)=\"refresh()\">\r\n        <mat-icon>refresh</mat-icon>\r\n        <span>Refresh</span>\r\n      </button>\r\n      <button mat-menu-item (click)=\"build()\">\r\n        <mat-icon>build</mat-icon>\r\n        <span>Build</span>\r\n      </button>\r\n      <button mat-menu-item routerLink=\"/about\">\r\n        <mat-icon>info</mat-icon>\r\n        <span>About</span>\r\n      </button>\r\n    </mat-menu>\r\n  </mat-toolbar-row>\r\n</mat-toolbar>\r\n<div class=\"global-progress-container\">\r\n  <mat-progress-bar\r\n    *ngIf=\"(dataSource.loading$ | async)\"\r\n    color=\"accent\"\r\n    mode=\"indeterminate\"\r\n  ></mat-progress-bar>\r\n</div>\r\n\r\n<div class=\"global-content\">\r\n  <table\r\n    mat-table\r\n    class=\"full-width-table\"\r\n    [dataSource]=\"dataSource\"\r\n    matSort\r\n    [matSortDirection]=\"sortDirection\"\r\n    [matSortActive]=\"sortActive\"\r\n    aria-label=\"Elements\"\r\n  >\r\n    <ng-container\r\n      *ngFor=\"let col of dataSource.displayedColumns\"\r\n      matColumnDef=\"{{ col }}\"\r\n    >\r\n      <th mat-header-cell *matHeaderCellDef mat-sort-header>\r\n        {{ col | uppercase }}\r\n      </th>\r\n      <td mat-cell *matCellDef=\"let element\">{{ element[col] }}</td>\r\n    </ng-container>\r\n\r\n    <tr mat-header-row *matHeaderRowDef=\"dataSource.displayedColumns\"></tr>\r\n    <tr\r\n      mat-row\r\n      *matRowDef=\"let row; columns: dataSource.displayedColumns\"\r\n      (click)=\"onRowClicked(row)\"\r\n    ></tr>\r\n  </table>\r\n</div>\r\n"
+module.exports = "<div class=\"global\">\r\n  <mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n    <mat-toolbar-row>\r\n      <span>Parts</span> <span class=\"spacer\"></span>\r\n      <button\r\n        type=\"button\"\r\n        aria-label=\"add\"\r\n        mat-icon-button\r\n        (click)=\"addPart()\"\r\n      >\r\n        <mat-icon aria-label=\"add icon\">add</mat-icon>\r\n      </button>\r\n      <button\r\n        type=\"button\"\r\n        aria-label=\"settings\"\r\n        mat-icon-button\r\n        routerLink=\"/settings\"\r\n      >\r\n        <mat-icon aria-label=\"settings icon\">settings</mat-icon>\r\n      </button>\r\n      <button mat-icon-button [matMenuTriggerFor]=\"menu\">\r\n        <mat-icon>more_vert</mat-icon>\r\n      </button>\r\n      <mat-menu #menu=\"matMenu\">\r\n        <button mat-menu-item (click)=\"refresh()\">\r\n          <mat-icon>refresh</mat-icon>\r\n          <span>Refresh</span>\r\n        </button>\r\n        <button mat-menu-item (click)=\"build()\">\r\n          <mat-icon>build</mat-icon>\r\n          <span>Build</span>\r\n        </button>\r\n        <button mat-menu-item routerLink=\"/about\">\r\n          <mat-icon>info</mat-icon>\r\n          <span>About</span>\r\n        </button>\r\n      </mat-menu>\r\n    </mat-toolbar-row>\r\n  </mat-toolbar>\r\n  <div class=\"global-progress-container\">\r\n    <mat-progress-bar\r\n      *ngIf=\"(dataSource.loading$ | async)\"\r\n      color=\"accent\"\r\n      mode=\"indeterminate\"\r\n    ></mat-progress-bar>\r\n  </div>\r\n  <div class=\"global-content content\">\r\n    <table\r\n      mat-table\r\n      class=\"full-width-table\"\r\n      [dataSource]=\"dataSource\"\r\n      matSort\r\n      [matSortDirection]=\"sortDirection\"\r\n      [matSortActive]=\"sortActive\"\r\n      aria-label=\"Elements\"\r\n    >\r\n      <ng-container\r\n        *ngFor=\"let col of dataSource.displayedColumns\"\r\n        matColumnDef=\"{{ col }}\"\r\n      >\r\n        <th mat-header-cell *matHeaderCellDef mat-sort-header>\r\n          {{ col | uppercase }}\r\n        </th>\r\n        <td mat-cell *matCellDef=\"let element\">{{ element[col] }}</td>\r\n      </ng-container>\r\n\r\n      <tr\r\n        mat-header-row\r\n        *matHeaderRowDef=\"dataSource.displayedColumns; sticky: true\"\r\n      ></tr>\r\n      <tr\r\n        mat-row\r\n        *matRowDef=\"let row; columns: dataSource.displayedColumns\"\r\n        (click)=\"onRowClicked(row)\"\r\n      ></tr>\r\n    </table>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -2309,7 +1788,7 @@ module.exports = ".full-width {\r\n  width: 100%;\r\n}\r\n\r\n.global-content {\
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n  <mat-toolbar-row>\r\n    <button\r\n      type=\"submit\"\r\n      aria-label=\"submit\"\r\n      mat-icon-button\r\n      [disabled]=\"!settingsForm?.valid\"\r\n      (click)=\"onSubmit()\"\r\n    >\r\n      <mat-icon aria-label=\"submit icon\">arrow_back</mat-icon>\r\n    </button>\r\n    <span>Fields</span>\r\n    <span class=\"spacer\"></span>\r\n    <button\r\n      type=\"button\"\r\n      aria-label=\"add\"\r\n      mat-icon-button\r\n      (click)=\"addCustomField()\"\r\n    >\r\n      <mat-icon aria-label=\"add icon\">add</mat-icon>\r\n    </button>\r\n  </mat-toolbar-row>\r\n</mat-toolbar>\r\n<div class=\"global-progress-container\">\r\n  <mat-progress-bar\r\n    *ngIf=\"!settingsForm\"\r\n    color=\"accent\"\r\n    mode=\"indeterminate\"\r\n  ></mat-progress-bar>\r\n</div>\r\n<div class=\"global-content\">\r\n  <form *ngIf=\"settingsForm\" [formGroup]=\"settingsForm\" (ngSubmit)=\"onSubmit()\">\r\n    <mat-form-field\r\n      *ngFor=\"let field of customFields.controls; index as i\"\r\n      formArrayName=\"customFields\"\r\n      class=\"full-width\"\r\n    >\r\n      <input\r\n        matInput\r\n        placeholder=\"Custom field {{ i + 1 }}\"\r\n        [formControlName]=\"i\"\r\n      />\r\n      <button\r\n        mat-icon-button\r\n        matSuffix\r\n        aria-label=\"Delete\"\r\n        type=\"button\"\r\n        (click)=\"removeCustomField(i)\"\r\n      >\r\n        <mat-icon>delete</mat-icon>\r\n      </button>\r\n      <mat-error\r\n        *ngIf=\"\r\n          settingsForm\r\n            .get('customFields')\r\n            .at(i)\r\n            .hasError('required')\r\n        \"\r\n      >\r\n        Value is <strong>required</strong>\r\n      </mat-error>\r\n    </mat-form-field>\r\n  </form>\r\n</div>\r\n"
+module.exports = "<div class=\"div\">\r\n  <mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n    <mat-toolbar-row>\r\n      <button\r\n        type=\"submit\"\r\n        aria-label=\"submit\"\r\n        mat-icon-button\r\n        [disabled]=\"!settingsForm?.valid\"\r\n        (click)=\"onSubmit()\"\r\n      >\r\n        <mat-icon aria-label=\"submit icon\">arrow_back</mat-icon>\r\n      </button>\r\n      <span>Fields</span>\r\n      <span class=\"spacer\"></span>\r\n      <button\r\n        type=\"button\"\r\n        aria-label=\"add\"\r\n        mat-icon-button\r\n        (click)=\"addCustomField()\"\r\n      >\r\n        <mat-icon aria-label=\"add icon\">add</mat-icon>\r\n      </button>\r\n    </mat-toolbar-row>\r\n  </mat-toolbar>\r\n  <div class=\"global-progress-container\">\r\n    <mat-progress-bar\r\n      *ngIf=\"!settingsForm\"\r\n      color=\"accent\"\r\n      mode=\"indeterminate\"\r\n    ></mat-progress-bar>\r\n  </div>\r\n  <div class=\"global-content\">\r\n    <form\r\n      *ngIf=\"settingsForm\"\r\n      [formGroup]=\"settingsForm\"\r\n      (ngSubmit)=\"onSubmit()\"\r\n    >\r\n      <mat-form-field\r\n        *ngFor=\"let field of customFields.controls; index as i\"\r\n        formArrayName=\"customFields\"\r\n        class=\"full-width\"\r\n      >\r\n        <input\r\n          matInput\r\n          placeholder=\"Custom field {{ i + 1 }}\"\r\n          [formControlName]=\"i\"\r\n        />\r\n        <button\r\n          mat-icon-button\r\n          matSuffix\r\n          aria-label=\"Delete\"\r\n          type=\"button\"\r\n          (click)=\"removeCustomField(i)\"\r\n        >\r\n          <mat-icon>delete</mat-icon>\r\n        </button>\r\n        <mat-error\r\n          *ngIf=\"\r\n            settingsForm\r\n              .get('customFields')\r\n              .at(i)\r\n              .hasError('required')\r\n          \"\r\n        >\r\n          Value is <strong>required</strong>\r\n        </mat-error>\r\n      </mat-form-field>\r\n    </form>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -2441,7 +1920,7 @@ module.exports = ".full-width {\r\n  width: 100%;\r\n}\r\n\r\n/*# sourceMappingU
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n  <mat-toolbar-row>\r\n    <button\r\n      type=\"submit\"\r\n      aria-label=\"submit\"\r\n      mat-icon-button\r\n      [disabled]=\"!settingsForm?.valid\"\r\n      (click)=\"onSubmit()\"\r\n    >\r\n      <mat-icon aria-label=\"submit icon\">arrow_back</mat-icon>\r\n    </button>\r\n    <span>Paths</span>\r\n  </mat-toolbar-row>\r\n</mat-toolbar>\r\n<div class=\"global-progress-container\">\r\n  <mat-progress-bar\r\n    *ngIf=\"!settingsForm\"\r\n    color=\"accent\"\r\n    mode=\"indeterminate\"\r\n  ></mat-progress-bar>\r\n</div>\r\n<div class=\"global-content\">\r\n  <form *ngIf=\"settingsForm\" [formGroup]=\"settingsForm\" (ngSubmit)=\"onSubmit()\">\r\n    <div\r\n      *ngFor=\"\r\n        let field of (settingsForm.controls | keys);\r\n        first as isFirst;\r\n        last as isLast\r\n      \"\r\n    >\r\n      <mat-form-field class=\"full-width\">\r\n        <input\r\n          matInput\r\n          [placeholder]=\"field | uppercase\"\r\n          [formControlName]=\"field\"\r\n        />\r\n        <button\r\n          mat-icon-button\r\n          matSuffix\r\n          aria-label=\"folder open\"\r\n          type=\"button\"\r\n          (click)=\"setPath(field)\"\r\n        >\r\n          <mat-icon>folder_open</mat-icon>\r\n        </button>\r\n        <mat-error *ngIf=\"settingsForm.controls[field].hasError('required')\">\r\n          {{ field | uppercase }} is <strong>required</strong>\r\n        </mat-error>\r\n      </mat-form-field>\r\n    </div>\r\n  </form>\r\n</div>\r\n"
+module.exports = "<div class=\"global\">\r\n  <mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n    <mat-toolbar-row>\r\n      <button\r\n        type=\"submit\"\r\n        aria-label=\"submit\"\r\n        mat-icon-button\r\n        [disabled]=\"!settingsForm?.valid\"\r\n        (click)=\"onSubmit()\"\r\n      >\r\n        <mat-icon aria-label=\"submit icon\">arrow_back</mat-icon>\r\n      </button>\r\n      <span>Paths</span>\r\n    </mat-toolbar-row>\r\n  </mat-toolbar>\r\n  <div class=\"global-progress-container\">\r\n    <mat-progress-bar\r\n      *ngIf=\"!settingsForm\"\r\n      color=\"accent\"\r\n      mode=\"indeterminate\"\r\n    ></mat-progress-bar>\r\n  </div>\r\n  <div class=\"global-content\">\r\n    <form\r\n      *ngIf=\"settingsForm\"\r\n      [formGroup]=\"settingsForm\"\r\n      (ngSubmit)=\"onSubmit()\"\r\n    >\r\n      <div\r\n        *ngFor=\"\r\n          let field of (settingsForm.controls | keys);\r\n          first as isFirst;\r\n          last as isLast\r\n        \"\r\n      >\r\n        <mat-form-field class=\"full-width\">\r\n          <input\r\n            matInput\r\n            [placeholder]=\"field | uppercase\"\r\n            [formControlName]=\"field\"\r\n          />\r\n          <button\r\n            mat-icon-button\r\n            matSuffix\r\n            aria-label=\"folder open\"\r\n            type=\"button\"\r\n            (click)=\"setPath(field)\"\r\n          >\r\n            <mat-icon>folder_open</mat-icon>\r\n          </button>\r\n          <mat-error *ngIf=\"settingsForm.controls[field].hasError('required')\">\r\n            {{ field | uppercase }} is <strong>required</strong>\r\n          </mat-error>\r\n        </mat-form-field>\r\n      </div>\r\n    </form>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -2638,7 +2117,7 @@ module.exports = ".full-width {\r\n  width: 100%;\r\n}\r\n\r\n.settings-card {\r
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n  <button type=\"button\" aria-label=\"back\" mat-icon-button (click)=\"goBack()\">\r\n    <mat-icon aria-label=\"back icon\">arrow_back</mat-icon>\r\n  </button>\r\n  <span>Settings</span>\r\n</mat-toolbar>\r\n<div class=\"global-content\">\r\n  <mat-nav-list>\r\n    <a mat-list-item routerLink=\"/settings/fields\">Fields</a>\r\n    <mat-divider></mat-divider>\r\n    <a mat-list-item routerLink=\"/settings/paths\">Paths</a>\r\n    <mat-divider></mat-divider>\r\n  </mat-nav-list>\r\n</div>\r\n"
+module.exports = "<div class=\"global\">\r\n  <mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n    <button type=\"button\" aria-label=\"back\" mat-icon-button (click)=\"goBack()\">\r\n      <mat-icon aria-label=\"back icon\">arrow_back</mat-icon>\r\n    </button>\r\n    <span>Settings</span>\r\n  </mat-toolbar>\r\n  <div class=\"global-content\">\r\n    <mat-nav-list>\r\n      <a mat-list-item routerLink=\"/settings/fields\">Fields</a>\r\n      <mat-divider></mat-divider>\r\n      <a mat-list-item routerLink=\"/settings/paths\">Paths</a>\r\n      <mat-divider></mat-divider>\r\n    </mat-nav-list>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
