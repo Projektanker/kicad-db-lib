@@ -31,8 +31,12 @@
     </mat-menu>
   </mat-toolbar-row>
 </mat-toolbar>
-<div *ngIf="(dataSource.loading$ | async)">
-  <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+<div class="global-progress-container">
+  <mat-progress-bar
+    *ngIf="(dataSource.loading$ | async)"
+    color="accent"
+    mode="indeterminate"
+  ></mat-progress-bar>
 </div>
 
 <div class="global-content">
@@ -41,6 +45,8 @@
     class="full-width-table"
     [dataSource]="dataSource"
     matSort
+    [matSortDirection]="sortDirection"
+    [matSortActive]="sortActive"
     aria-label="Elements"
   >
     <ng-container

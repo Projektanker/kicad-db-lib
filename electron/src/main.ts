@@ -100,17 +100,19 @@ ipcMain.on('settings.update', (event: any, arg: Settings) => {
 });
 
 console.log('on: part.getParts');
-ipcMain.on('part.getParts', (event: any) => {
-  console.log('ipcMain: part.getParts');
-
-  var promise = partService.getParts();
-  promise
-    .then(parts => {
-      console.log('part.getParts: then');
-      event.sender.send('part.partsChanged', parts);
-    })
-    .catch(error => console.error(error));
-});
+ipcMain.on(
+  'part.getParts',
+  (event: any, sortActive: string, sortDirection: string) => {
+    console.log(`ipcMain: part.getParts('${sortActive}','${sortDirection}')`);
+    var promise = partService.getParts(sortActive, sortDirection);
+    promise
+      .then(parts => {
+        console.log('part.getParts: then');
+        event.sender.send('part.partsChanged', parts);
+      })
+      .catch(error => console.error(error));
+  }
+);
 
 console.log('on: part.getPart');
 ipcMain.on('part.getPart', (event: any, arg: number) => {

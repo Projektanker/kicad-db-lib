@@ -30,3 +30,7 @@ body {
 .global-content {
   margin: 20px;
 }
+
+.global-progress-container {
+  height: 4px;
+}

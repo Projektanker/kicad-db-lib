@@ -116,7 +116,7 @@ export class PartsDataSource extends DataSource<{ [name: string]: string }> {
     console.log(`sort active: ${sortActive}`);
     console.log(`sort direction: ${sortDirection}`);
     this.loadingSubject.next(true);
-    this.partService.getParts();
+    this.partService.getParts(sortActive, sortDirection);
   }
 
   /**

@@ -27,6 +27,8 @@ export class PartsComponent implements OnInit, AfterViewInit {
   dataSource: PartsDataSource;
   private static sortActive: string;
   private static sortDirection: string;
+  sortActive: string;
+  sortDirection: string;
 
   private buildSnackBar?: MatSnackBarRef<SimpleSnackBar>;
   private subscription: Subscription = new Subscription();
@@ -36,12 +38,15 @@ export class PartsComponent implements OnInit, AfterViewInit {
     private libraryService: LibraryService,
     private router: Router,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    this.sortActive = PartsComponent.sortActive;
+    this.sortDirection = PartsComponent.sortDirection;
+  }
 
   ngOnInit() {
     console.log('ngOnInit');
     this.dataSource = new PartsDataSource(this.partService);
-    this.dataSource.loadParts();
+    this.refresh();
 
     this.subscription.add(
       this.libraryService.onBuildRunning.subscribe(
@@ -88,6 +93,8 @@ export class PartsComponent implements OnInit, AfterViewInit {
 
   ngOnDestroy() {
     console.log('ngOnDestroy');
+    PartsComponent.sortActive = this.sortActive;
+    PartsComponent.sortDirection = this.sortDirection;
     this.subscription.unsubscribe();
   }
 
@@ -95,8 +102,8 @@ export class PartsComponent implements OnInit, AfterViewInit {
     this.sort.sortChange
       .pipe(
         tap(() => {
-          PartsComponent.sortActive = this.sort.active;
-          PartsComponent.sortDirection = this.sort.direction;
+          this.sortActive = this.sort.active;
+          this.sortDirection = this.sort.direction;
         }),
         tap(() => this.refresh())
       )
@@ -153,10 +160,7 @@ export class PartsComponent implements OnInit, AfterViewInit {
   }
 
   refresh() {
-    this.dataSource.loadParts(
-      PartsComponent.sortActive,
-      PartsComponent.sortDirection
-    );
+    this.dataSource.loadParts(this.sortActive, this.sortDirection);
   }
 
   build() {
