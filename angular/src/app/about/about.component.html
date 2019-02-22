@@ -1,28 +1,35 @@
 <section class="mat-typography">
-  <mat-toolbar class="mat-elevation-z6" color="primary">
-    <button type="button" aria-label="back" mat-icon-button (click)="goBack()">
-      <mat-icon aria-label="back icon">arrow_back</mat-icon>
-    </button>
-    <span>About</span>
-  </mat-toolbar>
-  <div class="global-content">
-    <h2>KiCad Database Library</h2>
-    <mat-list>
-      <h3 matSubheader>Info</h3>
-      <mat-list-item> Version {{ version }} </mat-list-item>
-      <mat-list-item>
-        Licence: MIT
-      </mat-list-item>
-      <mat-list-item *ngIf="userData">
-        Your user data is stored here: {{ userData }}</mat-list-item
+  <div class="global">
+    <mat-toolbar class="mat-elevation-z6" color="primary">
+      <button
+        type="button"
+        aria-label="back"
+        mat-icon-button
+        (click)="goBack()"
       >
-      <h3 matSubheader>Contact</h3>
-      <mat-list-item
-        (click)="externalLink('https://github.com/Projektanker/kicad-db-lib')"
-      >
-        <mat-icon>launch</mat-icon>
-        <span>GitHub</span>
-      </mat-list-item>
-    </mat-list>
+        <mat-icon aria-label="back icon">arrow_back</mat-icon>
+      </button>
+      <span>About</span>
+    </mat-toolbar>
+    <div class="global-content">
+      <h2>KiCad Database Library</h2>
+      <mat-list>
+        <h3 matSubheader>Info</h3>
+        <mat-list-item> Version {{ version }} </mat-list-item>
+        <mat-list-item>
+          Licence: MIT
+        </mat-list-item>
+        <mat-list-item *ngIf="userData">
+          Your user data is stored here: {{ userData }}</mat-list-item
+        >
+        <h3 matSubheader>Contact</h3>
+        <mat-list-item
+          (click)="externalLink('https://github.com/Projektanker/kicad-db-lib')"
+        >
+          <mat-icon>launch</mat-icon>
+          <span>GitHub</span>
+        </mat-list-item>
+      </mat-list>
+    </div>
   </div>
 </section>

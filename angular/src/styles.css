@@ -26,9 +26,15 @@ body {
   left: 16px;
   top: 100px;
 }
-
+.global {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
 .global-content {
-  margin: 20px;
+  flex-grow: 1;
+  padding: 20px;
+  overflow-x: auto;
 }
 
 .global-progress-container {

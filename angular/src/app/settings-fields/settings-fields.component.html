@@ -1,64 +1,70 @@
-<mat-toolbar class="mat-elevation-z6" color="primary">
-  <mat-toolbar-row>
-    <button
-      type="submit"
-      aria-label="submit"
-      mat-icon-button
-      [disabled]="!settingsForm?.valid"
-      (click)="onSubmit()"
-    >
-      <mat-icon aria-label="submit icon">arrow_back</mat-icon>
-    </button>
-    <span>Fields</span>
-    <span class="spacer"></span>
-    <button
-      type="button"
-      aria-label="add"
-      mat-icon-button
-      (click)="addCustomField()"
-    >
-      <mat-icon aria-label="add icon">add</mat-icon>
-    </button>
-  </mat-toolbar-row>
-</mat-toolbar>
-<div class="global-progress-container">
-  <mat-progress-bar
-    *ngIf="!settingsForm"
-    color="accent"
-    mode="indeterminate"
-  ></mat-progress-bar>
-</div>
-<div class="global-content">
-  <form *ngIf="settingsForm" [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
-    <mat-form-field
-      *ngFor="let field of customFields.controls; index as i"
-      formArrayName="customFields"
-      class="full-width"
-    >
-      <input
-        matInput
-        placeholder="Custom field {{ i + 1 }}"
-        [formControlName]="i"
-      />
+<div class="div">
+  <mat-toolbar class="mat-elevation-z6" color="primary">
+    <mat-toolbar-row>
       <button
+        type="submit"
+        aria-label="submit"
         mat-icon-button
-        matSuffix
-        aria-label="Delete"
-        type="button"
-        (click)="removeCustomField(i)"
+        [disabled]="!settingsForm?.valid"
+        (click)="onSubmit()"
       >
-        <mat-icon>delete</mat-icon>
+        <mat-icon aria-label="submit icon">arrow_back</mat-icon>
       </button>
-      <mat-error
-        *ngIf="
-          settingsForm
-            .get('customFields')
-            .at(i)
-            .hasError('required')
-        "
+      <span>Fields</span>
+      <span class="spacer"></span>
+      <button
+        type="button"
+        aria-label="add"
+        mat-icon-button
+        (click)="addCustomField()"
       >
-        Value is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
-  </form>
+        <mat-icon aria-label="add icon">add</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <div class="global-progress-container">
+    <mat-progress-bar
+      *ngIf="!settingsForm"
+      color="accent"
+      mode="indeterminate"
+    ></mat-progress-bar>
+  </div>
+  <div class="global-content">
+    <form
+      *ngIf="settingsForm"
+      [formGroup]="settingsForm"
+      (ngSubmit)="onSubmit()"
+    >
+      <mat-form-field
+        *ngFor="let field of customFields.controls; index as i"
+        formArrayName="customFields"
+        class="full-width"
+      >
+        <input
+          matInput
+          placeholder="Custom field {{ i + 1 }}"
+          [formControlName]="i"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          aria-label="Delete"
+          type="button"
+          (click)="removeCustomField(i)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+        <mat-error
+          *ngIf="
+            settingsForm
+              .get('customFields')
+              .at(i)
+              .hasError('required')
+          "
+        >
+          Value is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </div>
 </div>

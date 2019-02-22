@@ -1,121 +1,129 @@
 <section class="mat-typography">
-  <mat-toolbar class="mat-elevation-z6" color="primary">
-    <button type="button" aria-label="back" mat-icon-button (click)="goBack()">
-      <mat-icon aria-label="back icon">arrow_back</mat-icon>
-    </button>
-    <span>Part</span>
-    <span *ngIf="part">
-      <span *ngIf="part.id">&nbsp;{{ part.id }}</span>
-      <span *ngIf="part.value != ''"> - {{ part.value }}</span>
-    </span>
-    <span class="spacer"></span>
-    <button
-      type="button"
-      aria-label="submit"
-      matTooltip="Submit"
-      mat-icon-button
-      [disabled]="!partForm?.valid"
-      (click)="onSubmit()"
-    >
-      <mat-icon aria-label="submit icon">done</mat-icon>
-    </button>
-    <button
-      type="button"
-      aria-label="delete"
-      matTooltip="Delete part"
-      mat-icon-button
-      [disabled]="add"
-      (click)="delete()"
-    >
-      <mat-icon aria-label="delete icon">delete</mat-icon>
-    </button>
-    <button
-      mat-icon-button
-      matTooltip="Duplicate part"
-      type="button"
-      aria-label="duplicate"
-      [disabled]="add"
-      (click)="duplicate()"
-    >
-      <mat-icon aria-label="duplicate icon">file_copy</mat-icon>
-    </button>
-  </mat-toolbar>
-  <div class="global-progress-container">
-    <mat-progress-bar
-      *ngIf="!partForm"
-      color="accent"
-      mode="indeterminate"
-    ></mat-progress-bar>
-  </div>
-  <div class="global-content">
-    <form *ngIf="partForm" [formGroup]="partForm" (ngSubmit)="onSubmit()">
-      <mat-divider></mat-divider>
-      <h3>Basic fields</h3>
-      <div
-        *ngFor="
-          let field of (partForm.controls | keys);
-          first as isFirst;
-          last as isLast;
-          index as i
-        "
+  <div class="global">
+    <mat-toolbar class="mat-elevation-z6" color="primary">
+      <button
+        type="button"
+        aria-label="back"
+        mat-icon-button
+        (click)="goBack()"
       >
-        <mat-form-field *ngIf="!(isLast || isFirst)" class="full-width">
-          <input
-            matInput
-            placeholder="{{ field | uppercase }}{{ i > 4 ? '' : '*' }}"
-            [formControlName]="field"
-            [readonly]="isFirst"
-            [matAutocomplete]="auto"
-          />
-          <mat-error *ngIf="partForm.controls[field].hasError('required')">
-            {{ field | uppercase }} is <strong>required</strong>
-          </mat-error>
-          <mat-error *ngIf="partForm.controls[field].hasError('pattern')">
-            {{ field | uppercase }} contains <strong>invalid characters</strong>
-          </mat-error>
-          <mat-autocomplete
-            autoActiveFirstOption
-            #auto="matAutocomplete"
-            [ngSwitch]="field"
-          >
-            <ng-container *ngSwitchCase="'library'">
-              <mat-option *ngFor="let x of libraries" [value]="x">
-                {{ x }}
-              </mat-option>
-            </ng-container>
-            <ng-container *ngSwitchCase="'symbol'">
-              <mat-option *ngFor="let x of symbols" [value]="x">
-                {{ x }}
-              </mat-option>
-            </ng-container>
-            <ng-container *ngSwitchCase="'footprint'">
-              <mat-option *ngFor="let x of footprints" [value]="x">
-                {{ x }}
-              </mat-option>
-            </ng-container>
-            <ng-container *ngSwitchDefault> </ng-container>
-          </mat-autocomplete>
-        </mat-form-field>
-      </div>
-
-      <mat-divider></mat-divider>
-
-      <h3>Custom Fields</h3>
-      <div
-        *ngFor="
-          let field of (partForm.get('customFields').controls | keys);
-          first as isFirst;
-          last as isLast
-        "
+        <mat-icon aria-label="back icon">arrow_back</mat-icon>
+      </button>
+      <span>Part</span>
+      <span *ngIf="part">
+        <span *ngIf="part.id">&nbsp;{{ part.id }}</span>
+        <span *ngIf="part.value != ''"> - {{ part.value }}</span>
+      </span>
+      <span class="spacer"></span>
+      <button
+        type="button"
+        aria-label="submit"
+        matTooltip="Submit"
+        mat-icon-button
+        [disabled]="!partForm?.valid"
+        (click)="onSubmit()"
       >
-        <mat-form-field formGroupName="customFields" class="full-width">
-          <input
-            matInput
-            [placeholder]="field | uppercase"
-            [formControlName]="field"
-          />
-        </mat-form-field>
-      </div>
-    </form>
+        <mat-icon aria-label="submit icon">done</mat-icon>
+      </button>
+      <button
+        type="button"
+        aria-label="delete"
+        matTooltip="Delete part"
+        mat-icon-button
+        [disabled]="add"
+        (click)="delete()"
+      >
+        <mat-icon aria-label="delete icon">delete</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        matTooltip="Duplicate part"
+        type="button"
+        aria-label="duplicate"
+        [disabled]="add"
+        (click)="duplicate()"
+      >
+        <mat-icon aria-label="duplicate icon">control_point_duplicate</mat-icon>
+      </button>
+    </mat-toolbar>
+    <div class="global-progress-container">
+      <mat-progress-bar
+        *ngIf="!partForm"
+        color="accent"
+        mode="indeterminate"
+      ></mat-progress-bar>
+    </div>
+    <div class="global-content">
+      <form *ngIf="partForm" [formGroup]="partForm" (ngSubmit)="onSubmit()">
+        <mat-divider></mat-divider>
+        <h3>Basic fields</h3>
+        <div
+          *ngFor="
+            let field of (partForm.controls | keys);
+            first as isFirst;
+            last as isLast;
+            index as i
+          "
+        >
+          <mat-form-field *ngIf="!(isLast || isFirst)" class="full-width">
+            <input
+              matInput
+              placeholder="{{ field | uppercase }}{{ i > 4 ? '' : '*' }}"
+              [formControlName]="field"
+              [readonly]="isFirst"
+              [matAutocomplete]="auto"
+            />
+            <mat-error *ngIf="partForm.controls[field].hasError('required')">
+              {{ field | uppercase }} is <strong>required</strong>
+            </mat-error>
+            <mat-error *ngIf="partForm.controls[field].hasError('pattern')">
+              {{ field | uppercase }} contains
+              <strong>invalid characters</strong>
+            </mat-error>
+            <mat-autocomplete
+              autoActiveFirstOption
+              #auto="matAutocomplete"
+              [ngSwitch]="field"
+            >
+              <ng-container *ngSwitchCase="'library'">
+                <mat-option *ngFor="let x of libraries" [value]="x">
+                  {{ x }}
+                </mat-option>
+              </ng-container>
+              <ng-container *ngSwitchCase="'symbol'">
+                <mat-option *ngFor="let x of symbols" [value]="x">
+                  {{ x }}
+                </mat-option>
+              </ng-container>
+              <ng-container *ngSwitchCase="'footprint'">
+                <mat-option *ngFor="let x of footprints" [value]="x">
+                  {{ x }}
+                </mat-option>
+              </ng-container>
+              <ng-container *ngSwitchDefault> </ng-container>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <h3>Custom Fields</h3>
+        <div
+          *ngFor="
+            let field of (partForm.get('customFields').controls | keys);
+            first as isFirst;
+            last as isLast
+          "
+        >
+          <mat-form-field formGroupName="customFields" class="full-width">
+            <input
+              matInput
+              [placeholder]="field | uppercase"
+              [formControlName]="field"
+            />
+          </mat-form-field>
+        </div>
+      </form>
+    </div>
   </div>
 </section>
