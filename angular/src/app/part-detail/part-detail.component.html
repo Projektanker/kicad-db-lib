@@ -40,8 +40,12 @@
       <mat-icon aria-label="duplicate icon">file_copy</mat-icon>
     </button>
   </mat-toolbar>
-  <div *ngIf="!partForm">
-    <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+  <div class="global-progress-container">
+    <mat-progress-bar
+      *ngIf="!partForm"
+      color="accent"
+      mode="indeterminate"
+    ></mat-progress-bar>
   </div>
   <div class="global-content">
     <form *ngIf="partForm" [formGroup]="partForm" (ngSubmit)="onSubmit()">
