@@ -80,9 +80,9 @@ electron_1.ipcMain.on('settings.update', function (event, arg) {
         .then(function (settings) { return console.log('settings.update: then'); })["catch"](function (error) { return console.error(error); });
 });
 console.log('on: part.getParts');
-electron_1.ipcMain.on('part.getParts', function (event) {
-    console.log('ipcMain: part.getParts');
-    var promise = partService.getParts();
+electron_1.ipcMain.on('part.getParts', function (event, sortActive, sortDirection) {
+    console.log("ipcMain: part.getParts('" + sortActive + "','" + sortDirection + "')");
+    var promise = partService.getParts(sortActive, sortDirection);
     promise
         .then(function (parts) {
         console.log('part.getParts: then');
