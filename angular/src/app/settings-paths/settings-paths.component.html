@@ -1,52 +1,58 @@
-<mat-toolbar class="mat-elevation-z6" color="primary">
-  <mat-toolbar-row>
-    <button
-      type="submit"
-      aria-label="submit"
-      mat-icon-button
-      [disabled]="!settingsForm?.valid"
-      (click)="onSubmit()"
+<div class="global">
+  <mat-toolbar class="mat-elevation-z6" color="primary">
+    <mat-toolbar-row>
+      <button
+        type="submit"
+        aria-label="submit"
+        mat-icon-button
+        [disabled]="!settingsForm?.valid"
+        (click)="onSubmit()"
+      >
+        <mat-icon aria-label="submit icon">arrow_back</mat-icon>
+      </button>
+      <span>Paths</span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <div class="global-progress-container">
+    <mat-progress-bar
+      *ngIf="!settingsForm"
+      color="accent"
+      mode="indeterminate"
+    ></mat-progress-bar>
+  </div>
+  <div class="global-content">
+    <form
+      *ngIf="settingsForm"
+      [formGroup]="settingsForm"
+      (ngSubmit)="onSubmit()"
     >
-      <mat-icon aria-label="submit icon">arrow_back</mat-icon>
-    </button>
-    <span>Paths</span>
-  </mat-toolbar-row>
-</mat-toolbar>
-<div class="global-progress-container">
-  <mat-progress-bar
-    *ngIf="!settingsForm"
-    color="accent"
-    mode="indeterminate"
-  ></mat-progress-bar>
-</div>
-<div class="global-content">
-  <form *ngIf="settingsForm" [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
-    <div
-      *ngFor="
-        let field of (settingsForm.controls | keys);
-        first as isFirst;
-        last as isLast
-      "
-    >
-      <mat-form-field class="full-width">
-        <input
-          matInput
-          [placeholder]="field | uppercase"
-          [formControlName]="field"
-        />
-        <button
-          mat-icon-button
-          matSuffix
-          aria-label="folder open"
-          type="button"
-          (click)="setPath(field)"
-        >
-          <mat-icon>folder_open</mat-icon>
-        </button>
-        <mat-error *ngIf="settingsForm.controls[field].hasError('required')">
-          {{ field | uppercase }} is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
-    </div>
-  </form>
+      <div
+        *ngFor="
+          let field of (settingsForm.controls | keys);
+          first as isFirst;
+          last as isLast
+        "
+      >
+        <mat-form-field class="full-width">
+          <input
+            matInput
+            [placeholder]="field | uppercase"
+            [formControlName]="field"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            aria-label="folder open"
+            type="button"
+            (click)="setPath(field)"
+          >
+            <mat-icon>folder_open</mat-icon>
+          </button>
+          <mat-error *ngIf="settingsForm.controls[field].hasError('required')">
+            {{ field | uppercase }} is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
 </div>

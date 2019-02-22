@@ -110,7 +110,7 @@ var PartService = /** @class */ (function () {
                             ? b[sortActive]
                             : b.customFields[sortActive];
                         if (key1 == key2) {
-                            return 0;
+                            return a.id - b.id;
                         }
                         if (key1 < key2) {
                             return asc ? -1 : 1;
