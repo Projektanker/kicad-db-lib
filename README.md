@@ -68,7 +68,7 @@ After creating some parts with `KiCad-Db-Lib` you can use the library files from
 
 ## Roadmap
 
-- [ ] Add sort functionality to parts data table
+- [x] Add sort functionality to parts data table
 - [ ] Add filter functionality to parts data table
 - [x] Function to duplicate part
 - [x] Add pard id to created library

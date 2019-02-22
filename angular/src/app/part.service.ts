@@ -85,10 +85,14 @@ export class PartService {
     });
   }
 
-  getParts() {
-    console.log('getParts()');
+  getParts(sortActive: string = '', sortDirection: string = '') {
+    console.log(`getParts('${sortActive}','${sortDirection}')`);
     if (this.electronService.isElectronApp) {
-      this.electronService.ipcRenderer.send('part.getParts');
+      this.electronService.ipcRenderer.send(
+        'part.getParts',
+        sortActive,
+        sortDirection
+      );
     } else {
       this.http
         .get<Part[]>(this.partsUrl)

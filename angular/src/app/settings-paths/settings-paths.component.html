@@ -12,8 +12,12 @@
     <span>Paths</span>
   </mat-toolbar-row>
 </mat-toolbar>
-<div *ngIf="!settingsForm">
-  <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+<div class="global-progress-container">
+  <mat-progress-bar
+    *ngIf="!settingsForm"
+    color="accent"
+    mode="indeterminate"
+  ></mat-progress-bar>
 </div>
 <div class="global-content">
   <form *ngIf="settingsForm" [formGroup]="settingsForm" (ngSubmit)="onSubmit()">

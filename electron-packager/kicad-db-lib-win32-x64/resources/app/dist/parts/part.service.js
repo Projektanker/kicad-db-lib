@@ -43,7 +43,9 @@ var PartService = /** @class */ (function () {
     function PartService() {
         this.libraries = null;
     }
-    PartService.prototype.getParts = function () {
+    PartService.prototype.getParts = function (sortActive, sortDirection) {
+        if (sortActive === void 0) { sortActive = ''; }
+        if (sortDirection === void 0) { sortDirection = ''; }
         return __awaiter(this, void 0, void 0, function () {
             var settingsService, settings, files, parts, i, file, json, part, error_1;
             return __generator(this, function (_a) {
@@ -75,8 +77,8 @@ var PartService = /** @class */ (function () {
                         i++;
                         return [3 /*break*/, 3];
                     case 6:
-                        // sort parts by id
-                        parts.sort(function (a, b) { return a.id - b.id; });
+                        // sort parts
+                        parts = this.sortParts(parts, sortActive, sortDirection);
                         return [2 /*return*/, Promise.resolve(parts)];
                     case 7:
                         error_1 = _a.sent();
@@ -86,6 +88,39 @@ var PartService = /** @class */ (function () {
                 }
             });
         });
+    };
+    PartService.prototype.sortParts = function (parts, sortActive, sortDirection) {
+        if (sortActive === void 0) { sortActive = ''; }
+        if (sortDirection === void 0) { sortDirection = ''; }
+        if (!sortActive || !sortDirection) {
+            parts.sort(function (a, b) { return a.id - b.id; });
+        }
+        else {
+            var asc = sortDirection == 'asc';
+            switch (sortActive) {
+                case 'id':
+                    parts.sort(function (a, b) { return (asc ? a.id - b.id : b.id - a.id); });
+                    break;
+                default:
+                    parts.sort(function (a, b) {
+                        var key1 = a.hasOwnProperty(sortActive)
+                            ? a[sortActive]
+                            : a.customFields[sortActive];
+                        var key2 = b.hasOwnProperty(sortActive)
+                            ? b[sortActive]
+                            : b.customFields[sortActive];
+                        if (key1 == key2) {
+                            return 0;
+                        }
+                        if (key1 < key2) {
+                            return asc ? -1 : 1;
+                        }
+                        return asc ? 1 : -1;
+                    });
+                    break;
+            }
+        }
+        return parts;
     };
     PartService.prototype.getPart = function (id) {
         return __awaiter(this, void 0, void 0, function () {

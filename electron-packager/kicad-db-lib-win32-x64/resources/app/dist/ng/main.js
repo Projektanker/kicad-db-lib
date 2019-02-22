@@ -1847,11 +1847,13 @@ var PartService = /** @class */ (function () {
             _this.onLibrariesChangedSubject.next(arg);
         });
     };
-    PartService.prototype.getParts = function () {
+    PartService.prototype.getParts = function (sortActive, sortDirection) {
         var _this = this;
-        console.log('getParts()');
+        if (sortActive === void 0) { sortActive = ''; }
+        if (sortDirection === void 0) { sortDirection = ''; }
+        console.log("getParts('" + sortActive + "','" + sortDirection + "')");
         if (this.electronService.isElectronApp) {
-            this.electronService.ipcRenderer.send('part.getParts');
+            this.electronService.ipcRenderer.send('part.getParts', sortActive, sortDirection);
         }
         else {
             this.http
@@ -2089,9 +2091,13 @@ var PartsDataSource = /** @class */ (function (_super) {
         }
         return item;
     };
-    PartsDataSource.prototype.loadParts = function () {
+    PartsDataSource.prototype.loadParts = function (sortActive, sortDirection) {
+        if (sortActive === void 0) { sortActive = ''; }
+        if (sortDirection === void 0) { sortDirection = ''; }
+        console.log("sort active: " + sortActive);
+        console.log("sort direction: " + sortDirection);
         this.loadingSubject.next(true);
-        this.partService.getParts();
+        this.partService.getParts(sortActive, sortDirection);
     };
     /**
      *  Called when the table is being destroyed. Use this function, to clean up
@@ -2127,7 +2133,7 @@ module.exports = ".full-width-table {\r\n  width: 100%;\r\n}\r\n\r\ntd.mat-cell 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n  <mat-toolbar-row>\r\n    <span>Parts</span> <span class=\"spacer\"></span>\r\n    <button type=\"button\" aria-label=\"add\" mat-icon-button (click)=\"addPart()\">\r\n      <mat-icon aria-label=\"add icon\">add</mat-icon>\r\n    </button>\r\n    <button\r\n      type=\"button\"\r\n      aria-label=\"settings\"\r\n      mat-icon-button\r\n      routerLink=\"/settings\"\r\n    >\r\n      <mat-icon aria-label=\"settings icon\">settings</mat-icon>\r\n    </button>\r\n    <button mat-icon-button [matMenuTriggerFor]=\"menu\">\r\n      <mat-icon>more_vert</mat-icon>\r\n    </button>\r\n    <mat-menu #menu=\"matMenu\">\r\n      <button mat-menu-item (click)=\"refresh()\">\r\n        <mat-icon>refresh</mat-icon>\r\n        <span>Refresh</span>\r\n      </button>\r\n      <button mat-menu-item (click)=\"build()\">\r\n        <mat-icon>build</mat-icon>\r\n        <span>Build</span>\r\n      </button>\r\n      <button mat-menu-item routerLink=\"/about\">\r\n        <mat-icon>info</mat-icon>\r\n        <span>About</span>\r\n      </button>\r\n    </mat-menu>\r\n  </mat-toolbar-row>\r\n</mat-toolbar>\r\n<div *ngIf=\"(dataSource.loading$ | async)\">\r\n  <mat-progress-bar color=\"accent\" mode=\"indeterminate\"></mat-progress-bar>\r\n</div>\r\n\r\n<div class=\"global-content\">\r\n  <table\r\n    mat-table\r\n    class=\"full-width-table\"\r\n    [dataSource]=\"dataSource\"\r\n    matSort\r\n    aria-label=\"Elements\"\r\n  >\r\n    <ng-container\r\n      *ngFor=\"let col of dataSource.displayedColumns\"\r\n      matColumnDef=\"{{ col }}\"\r\n    >\r\n      <th mat-header-cell *matHeaderCellDef>\r\n        {{ col | uppercase }}\r\n      </th>\r\n      <td mat-cell *matCellDef=\"let element\">{{ element[col] }}</td>\r\n    </ng-container>\r\n\r\n    <tr mat-header-row *matHeaderRowDef=\"dataSource.displayedColumns\"></tr>\r\n    <tr\r\n      mat-row\r\n      *matRowDef=\"let row; columns: dataSource.displayedColumns\"\r\n      (click)=\"onRowClicked(row)\"\r\n    ></tr>\r\n  </table>\r\n</div>\r\n"
+module.exports = "<mat-toolbar class=\"mat-elevation-z6\" color=\"primary\">\r\n  <mat-toolbar-row>\r\n    <span>Parts</span> <span class=\"spacer\"></span>\r\n    <button type=\"button\" aria-label=\"add\" mat-icon-button (click)=\"addPart()\">\r\n      <mat-icon aria-label=\"add icon\">add</mat-icon>\r\n    </button>\r\n    <button\r\n      type=\"button\"\r\n      aria-label=\"settings\"\r\n      mat-icon-button\r\n      routerLink=\"/settings\"\r\n    >\r\n      <mat-icon aria-label=\"settings icon\">settings</mat-icon>\r\n    </button>\r\n    <button mat-icon-button [matMenuTriggerFor]=\"menu\">\r\n      <mat-icon>more_vert</mat-icon>\r\n    </button>\r\n    <mat-menu #menu=\"matMenu\">\r\n      <button mat-menu-item (click)=\"refresh()\">\r\n        <mat-icon>refresh</mat-icon>\r\n        <span>Refresh</span>\r\n      </button>\r\n      <button mat-menu-item (click)=\"build()\">\r\n        <mat-icon>build</mat-icon>\r\n        <span>Build</span>\r\n      </button>\r\n      <button mat-menu-item routerLink=\"/about\">\r\n        <mat-icon>info</mat-icon>\r\n        <span>About</span>\r\n      </button>\r\n    </mat-menu>\r\n  </mat-toolbar-row>\r\n</mat-toolbar>\r\n<div *ngIf=\"(dataSource.loading$ | async)\">\r\n  <mat-progress-bar color=\"accent\" mode=\"indeterminate\"></mat-progress-bar>\r\n</div>\r\n\r\n<div class=\"global-content\">\r\n  <table\r\n    mat-table\r\n    class=\"full-width-table\"\r\n    [dataSource]=\"dataSource\"\r\n    matSort\r\n    [matSortDirection]=\"sortDirection\"\r\n    [matSortActive]=\"sortActive\"\r\n    aria-label=\"Elements\"\r\n  >\r\n    <ng-container\r\n      *ngFor=\"let col of dataSource.displayedColumns\"\r\n      matColumnDef=\"{{ col }}\"\r\n    >\r\n      <th mat-header-cell *matHeaderCellDef mat-sort-header>\r\n        {{ col | uppercase }}\r\n      </th>\r\n      <td mat-cell *matCellDef=\"let element\">{{ element[col] }}</td>\r\n    </ng-container>\r\n\r\n    <tr mat-header-row *matHeaderRowDef=\"dataSource.displayedColumns\"></tr>\r\n    <tr\r\n      mat-row\r\n      *matRowDef=\"let row; columns: dataSource.displayedColumns\"\r\n      (click)=\"onRowClicked(row)\"\r\n    ></tr>\r\n  </table>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -2149,6 +2155,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _library_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../library.service */ "./src/app/library.service.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+
 
 
 
@@ -2164,12 +2172,15 @@ var PartsComponent = /** @class */ (function () {
         this.router = router;
         this.snackBar = snackBar;
         this.subscription = new rxjs__WEBPACK_IMPORTED_MODULE_7__["Subscription"]();
+        this.sortActive = PartsComponent_1.sortActive;
+        this.sortDirection = PartsComponent_1.sortDirection;
     }
+    PartsComponent_1 = PartsComponent;
     PartsComponent.prototype.ngOnInit = function () {
         var _this = this;
         console.log('ngOnInit');
         this.dataSource = new _parts_datasource__WEBPACK_IMPORTED_MODULE_3__["PartsDataSource"](this.partService);
-        this.dataSource.loadParts();
+        this.refresh();
         this.subscription.add(this.libraryService.onBuildRunning.subscribe(function (next) {
             console.log('onBuildRunning: next');
             _this.onBuildRunning(next);
@@ -2191,6 +2202,21 @@ var PartsComponent = /** @class */ (function () {
             console.log('onBuildError: error');
             _this.handleError(error);
         }, function () { return console.log('onBuildError: complete'); }));
+    };
+    PartsComponent.prototype.ngOnDestroy = function () {
+        console.log('ngOnDestroy');
+        PartsComponent_1.sortActive = this.sortActive;
+        PartsComponent_1.sortDirection = this.sortDirection;
+        this.subscription.unsubscribe();
+    };
+    PartsComponent.prototype.ngAfterViewInit = function () {
+        var _this = this;
+        this.sort.sortChange
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_8__["tap"])(function () {
+            _this.sortActive = _this.sort.active;
+            _this.sortDirection = _this.sort.direction;
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_8__["tap"])(function () { return _this.refresh(); }))
+            .subscribe();
     };
     PartsComponent.prototype.onBuildError = function (next) {
         if (this.buildSnackBar) {
@@ -2227,10 +2253,6 @@ var PartsComponent = /** @class */ (function () {
     PartsComponent.prototype.onBuildRunning = function (next) {
         this.buildSnackBar = this.snackBar.open('Build running.');
     };
-    PartsComponent.prototype.ngOnDestroy = function () {
-        console.log('ngOnDestroy');
-        this.subscription.unsubscribe();
-    };
     PartsComponent.prototype.handleError = function (error) {
         console.error(error);
     };
@@ -2241,20 +2263,17 @@ var PartsComponent = /** @class */ (function () {
         this.router.navigateByUrl("/part/new");
     };
     PartsComponent.prototype.refresh = function () {
-        this.dataSource.loadParts();
+        this.dataSource.loadParts(this.sortActive, this.sortDirection);
     };
     PartsComponent.prototype.build = function () {
         this.libraryService.build();
     };
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatPaginator"]),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatPaginator"])
-    ], PartsComponent.prototype, "paginator", void 0);
+    var PartsComponent_1;
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatSort"]),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatSort"])
     ], PartsComponent.prototype, "sort", void 0);
-    PartsComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    PartsComponent = PartsComponent_1 = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-parts',
             template: __webpack_require__(/*! ./parts.component.html */ "./src/app/parts/parts.component.html"),

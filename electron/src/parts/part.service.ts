@@ -2,11 +2,15 @@ import { fs } from '../fs';
 import { Part } from '../part/part';
 import * as path from 'path';
 import { SettingsService } from '../settings/settings.service';
+import { on } from 'cluster';
 
 export class PartService {
   libraries: string[] = null;
 
-  async getParts(): Promise<Part[]> {
+  async getParts(
+    sortActive: string = '',
+    sortDirection: string = ''
+  ): Promise<Part[]> {
     try {
       var settingsService = new SettingsService();
       var settings = await settingsService.getSettings();
@@ -20,13 +24,49 @@ export class PartService {
         console.log(part);
         parts.push(part);
       }
-      // sort parts by id
-      parts.sort((a, b) => a.id - b.id);
+      // sort parts
+      parts = this.sortParts(parts, sortActive, sortDirection);
       return Promise.resolve(parts);
     } catch (error) {
       console.error(error);
       return Promise.resolve([]);
     }
+  }
+
+  private sortParts(
+    parts: Part[],
+    sortActive: string = '',
+    sortDirection: string = ''
+  ): Part[] {
+    if (!sortActive || !sortDirection) {
+      parts.sort((a, b) => a.id - b.id);
+    } else {
+      var asc: boolean = sortDirection == 'asc';
+      switch (sortActive) {
+        case 'id':
+          parts.sort((a, b) => (asc ? a.id - b.id : b.id - a.id));
+          break;
+
+        default:
+          parts.sort((a: Part, b: Part) => {
+            var key1 = a.hasOwnProperty(sortActive)
+              ? (a as any)[sortActive]
+              : a.customFields[sortActive];
+            var key2 = b.hasOwnProperty(sortActive)
+              ? (b as any)[sortActive]
+              : b.customFields[sortActive];
+            if (key1 == key2) {
+              return 0;
+            }
+            if (key1 < key2) {
+              return asc ? -1 : 1;
+            }
+            return asc ? 1 : -1;
+          });
+          break;
+      }
+    }
+    return parts;
   }
 
   async getPart(id: number): Promise<Part> {
