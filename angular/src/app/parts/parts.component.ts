@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import {
   MatPaginator,
   MatSort,
   MatSnackBar,
   MatSnackBarRef,
-  SimpleSnackBar
+  SimpleSnackBar,
+  SortDirection
 } from '@angular/material';
 import { PartsDataSource } from './parts-datasource';
 import { PartService } from '../part.service';
@@ -13,16 +14,19 @@ import { Router } from '@angular/router';
 import { MessageService } from '../message.service';
 import { LibraryService } from '../library.service';
 import { Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-parts',
   templateUrl: './parts.component.html',
   styleUrls: ['./parts.component.css']
 })
-export class PartsComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+export class PartsComponent implements OnInit, AfterViewInit {
+  // @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   dataSource: PartsDataSource;
+  private static sortActive: string;
+  private static sortDirection: string;
 
   private buildSnackBar?: MatSnackBarRef<SimpleSnackBar>;
   private subscription: Subscription = new Subscription();
@@ -81,6 +85,24 @@ export class PartsComponent implements OnInit {
       )
     );
   }
+
+  ngOnDestroy() {
+    console.log('ngOnDestroy');
+    this.subscription.unsubscribe();
+  }
+
+  ngAfterViewInit() {
+    this.sort.sortChange
+      .pipe(
+        tap(() => {
+          PartsComponent.sortActive = this.sort.active;
+          PartsComponent.sortDirection = this.sort.direction;
+        }),
+        tap(() => this.refresh())
+      )
+      .subscribe();
+  }
+
   onBuildError(next: any): any {
     if (this.buildSnackBar) {
       this.buildSnackBar.dismiss();
@@ -105,6 +127,7 @@ export class PartsComponent implements OnInit {
 
     this.buildSnackBar = this.snackBar.open(`Build error: ${error}`, 'OK');
   }
+
   onBuildComplete(next: string): any {
     if (this.buildSnackBar) {
       this.buildSnackBar.dismiss();
@@ -113,14 +136,11 @@ export class PartsComponent implements OnInit {
       duration: 3000
     });
   }
+
   onBuildRunning(next: string): any {
     this.buildSnackBar = this.snackBar.open('Build running.');
   }
 
-  ngOnDestroy() {
-    console.log('ngOnDestroy');
-    this.subscription.unsubscribe();
-  }
   private handleError(error) {
     console.error(error);
   }
@@ -133,7 +153,10 @@ export class PartsComponent implements OnInit {
   }
 
   refresh() {
-    this.dataSource.loadParts();
+    this.dataSource.loadParts(
+      PartsComponent.sortActive,
+      PartsComponent.sortDirection
+    );
   }
 
   build() {
