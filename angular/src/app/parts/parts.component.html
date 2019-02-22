@@ -44,7 +44,7 @@
       mode="indeterminate"
     ></mat-progress-bar>
   </div>
-  <div class="global-content">
+  <div class="global-content content">
     <table
       mat-table
       class="full-width-table"
@@ -64,7 +64,10 @@
         <td mat-cell *matCellDef="let element">{{ element[col] }}</td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="dataSource.displayedColumns"></tr>
+      <tr
+        mat-header-row
+        *matHeaderRowDef="dataSource.displayedColumns; sticky: true"
+      ></tr>
       <tr
         mat-row
         *matRowDef="let row; columns: dataSource.displayedColumns"
