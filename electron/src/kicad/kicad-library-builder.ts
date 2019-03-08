@@ -99,6 +99,7 @@ export class KiCadLibraryBuilder {
 
         // Fill part and remove empty lines
         part.customFields['ID'] = part.id.toString();
+        part.customFields['Description'] = part.description;
         var values = [
           part.value,
           part.reference,
