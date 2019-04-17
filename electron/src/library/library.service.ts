@@ -65,11 +65,9 @@ export class LibraryService {
   }
 
   private wildCardToRegExp(s: string): string {
-    var exp =
-      '^' +
-      this.regExpEscape(s)
-        .replace(/\\\*/g, '.*?')
-        .replace(/\\\?/g, '.?');
+    var exp = this.regExpEscape(s)
+      .replace(/\\\*/g, '.*?')
+      .replace(/\\\?/g, '.?');
 
     return exp;
   }
