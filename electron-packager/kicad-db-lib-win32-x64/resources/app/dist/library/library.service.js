@@ -101,10 +101,9 @@ var LibraryService = /** @class */ (function () {
         return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     };
     LibraryService.prototype.wildCardToRegExp = function (s) {
-        var exp = '^' +
-            this.regExpEscape(s)
-                .replace(/\\\*/g, '.*?')
-                .replace(/\\\?/g, '.?');
+        var exp = this.regExpEscape(s)
+            .replace(/\\\*/g, '.*?')
+            .replace(/\\\?/g, '.?');
         return exp;
     };
     LibraryService.prototype.getSymbols = function (filter, reload, max) {
