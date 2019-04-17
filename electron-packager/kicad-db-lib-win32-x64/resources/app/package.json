@@ -21,8 +21,8 @@
   ],
   "author": "SebastianRumohr",
   "devDependencies": {
-    "electron": "^4.0.5",
-    "typescript": "^3.3.3",
-    "electron-packager": "^13.0.1"
+    "electron": "^4.1.4",
+    "electron-packager": "^13.1.1",
+    "typescript": "^3.4.3"
   }
 }
