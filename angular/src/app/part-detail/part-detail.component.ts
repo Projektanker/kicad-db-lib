@@ -234,7 +234,7 @@ export class PartDetailComponent implements OnInit {
 
     var pattern_library = '^[a-zA-Z0-9_\\-\\.:]*$';
     var pattern_default = '^[a-zA-Z0-9_\\-\\.:\\~\\*\\?]*$';
-    var patter_value = '^[a-zA-Z0-9_\\-\\.]*$';
+    var patter_value = '^[a-zA-Z0-9_\\-\\.,]*$';
 
     const customFieldsGroup: FormGroup = new FormGroup({});
     this.settings.customFields.forEach(field => {

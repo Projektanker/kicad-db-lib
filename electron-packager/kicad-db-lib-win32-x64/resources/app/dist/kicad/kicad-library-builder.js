@@ -144,6 +144,7 @@ var KiCadLibraryBuilder = /** @class */ (function () {
                         template = _a.sent();
                         // Fill part and remove empty lines
                         part.customFields['ID'] = part.id.toString();
+                        part.customFields['Description'] = part.description;
                         values = [
                             part.value,
                             part.reference,
@@ -194,8 +195,8 @@ var KiCadLibraryBuilder = /** @class */ (function () {
         if (fieldNumber < 4) {
             throw new Error('Fieldnumber must be greater or equal 4!');
         }
-        return "F" + fieldNumber + " \"" + value + "\" " + 100 * (fieldNumber - 3) + " " + 100 *
-            (fieldNumber - 2) + " 50 H I C CNN \"" + key + "\"";
+        return "F" + fieldNumber + " \"" + (value ? value : '-') + "\" " + 100 *
+            (fieldNumber - 3) + " " + 100 * (fieldNumber - 2) + " 50 H I C CNN \"" + key + "\"";
     };
     KiCadLibraryBuilder.prototype.createCustomFields = function (fields) {
         if (fields == null)

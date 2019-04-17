@@ -1106,7 +1106,7 @@ var PartDetailComponent = /** @class */ (function () {
         //if (!this.symbols) return;
         var pattern_library = '^[a-zA-Z0-9_\\-\\.:]*$';
         var pattern_default = '^[a-zA-Z0-9_\\-\\.:\\~\\*\\?]*$';
-        var patter_value = '^[a-zA-Z0-9_\\-\\.]*$';
+        var patter_value = '^[a-zA-Z0-9_\\-\\.,]*$';
         var customFieldsGroup = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormGroup"]({});
         this.settings.customFields.forEach(function (field) {
             customFieldsGroup.addControl(field, new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](''));

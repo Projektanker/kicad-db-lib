@@ -99,6 +99,7 @@ export class KiCadLibraryBuilder {
 
         // Fill part and remove empty lines
         part.customFields['ID'] = part.id.toString();
+        part.customFields['Description'] = part.description;
         var values = [
           part.value,
           part.reference,
@@ -143,8 +144,8 @@ export class KiCadLibraryBuilder {
       throw new Error('Fieldnumber must be greater or equal 4!');
     }
 
-    return `F${fieldNumber} \"${value}\" ${100 * (fieldNumber - 3)} ${100 *
-      (fieldNumber - 2)} 50 H I C CNN \"${key}\"`;
+    return `F${fieldNumber} \"${value ? value : '-'}\" ${100 *
+      (fieldNumber - 3)} ${100 * (fieldNumber - 2)} 50 H I C CNN \"${key}\"`;
   }
 
   private createCustomFields(fields: { [name: string]: string }): string {
