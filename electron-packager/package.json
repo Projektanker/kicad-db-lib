@@ -1,6 +1,6 @@
 {
   "name": "kicad-db-lib",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "main": "./dist/main.js",
   "license": "MIT",
   "description": "KiCad Database Library Tool",
@@ -10,7 +10,9 @@
     "electron": "cd ../electron/ && tsc --outDir ../electron-packager/dist && cd ../electron-packager",
     "prepare": "npm run clean && npm run angular && npm run electron",
     "pack": " electron-packager . --overwrite --ignore=\"\\.git(ignore|modules)\"",
-    "pack:win": "npm run pack --platform=win32 "
+    "pack:win": "npm run pack --platform=win32",
+    "pack:all": "npm run pack --all",
+    "pack:linux": "npm run pack --platform=x86_64"
   },
   "keywords": [
     "KiCad",
@@ -19,7 +21,7 @@
     "Angular",
     "Electron"
   ],
-  "author": "SebastianRumohr",
+  "author": "Sebastian Rumohr",
   "devDependencies": {
     "electron": "^4.1.4",
     "electron-packager": "^13.1.1",
