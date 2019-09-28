@@ -44,7 +44,7 @@ Add or delete custom fields like manufacturer, order codes etc.
 
 - Parts:
 
-  Directory where your created parts are stored. E.g. `C:\kicad\parts`.
+  The parts folder is to store the parts created using kicad-db-lib. Every part you create is stored as a single JSON file. So it is possible to sync your parts across multiple devices by DropBox, OneDrive etc. E.g. `C:\kicad\parts`.
 
 - Symbol:
 
@@ -52,11 +52,11 @@ Add or delete custom fields like manufacturer, order codes etc.
 
 - Footprint:
 
-  Directory where toe KiCad footprints are stored. On Windows, it is `C:\Program Files\KiCad\share\kicad\modules`.
+  Directory where the KiCad footprints are stored. On Windows, it is `C:\Program Files\KiCad\share\kicad\modules`.
 
 - Output:
 
-  Directory where your builded library files are stored. E.g. `C:\kicad\library`.
+  Directory where the final created library files for use in KiCad go. E.g. `C:\kicad\library`.
 
 ### Add, update, delete part
 
