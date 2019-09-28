@@ -81,7 +81,8 @@ After creating some parts with `KiCad-Db-Lib` you can use the library files from
 
   from the symbol template as well
 
-- [ ] Configure electron packager for Linux and Mac OS
+- [x] Configure electron packager for Linux and Mac OS (thanks to Terry Gray)
+- [ ] Configure electron packager for Mac OS
 - [ ] Setup guide on first application usage
 
 [settings]: https://fonts.gstatic.com/s/i/materialicons/settings/v1/24px.svg 'Settings Icon'
