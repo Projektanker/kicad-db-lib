@@ -84,6 +84,6 @@ After creating some parts with `KiCad-Db-Lib` you can use the library files from
 - [ ] Configure electron packager for Linux and Mac OS
 - [ ] Setup guide on first application usage
 
-[settings]: https://material.io/tools/icons/static/icons/baseline-settings-20px.svg 'Settings Icon'
-[add]: https://material.io/tools/icons/static/icons/baseline-add-24px.svg 'Add Icon'
-[more-vert]: https://material.io/tools/icons/static/icons/baseline-more_vert-24px.svg 'More vert Icon'
+[settings]: https://fonts.gstatic.com/s/i/materialicons/settings/v1/24px.svg 'Settings Icon'
+[add]: https://fonts.gstatic.com/s/i/materialicons/add/v1/24px.svg 'Add Icon'
+[more-vert]: https://fonts.gstatic.com/s/i/materialicons/more_vert/v1/24px.svg 'More vert Icon'
