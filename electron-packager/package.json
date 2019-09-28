@@ -21,7 +21,7 @@
     "Angular",
     "Electron"
   ],
-  "author": "Sebastian Rumohr",
+  "author": "Sebastian Rumohr, Terry Gray",
   "devDependencies": {
     "electron": "^4.1.4",
     "electron-packager": "^13.1.1",
