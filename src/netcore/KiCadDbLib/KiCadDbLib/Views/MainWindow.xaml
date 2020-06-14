@@ -1,0 +1,41 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+		xmlns:rxui="http://reactiveui.net"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:KiCadDbLib.ViewModels;assembly=KiCadDbLib"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="KiCadDbLib.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="KiCadDbLib">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<rxui:RoutedViewHost Grid.Row="0" Router="{Binding Router}">
+			<rxui:RoutedViewHost.DefaultContent>
+				<TextBlock Text="Default content"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+			</rxui:RoutedViewHost.DefaultContent>
+		</rxui:RoutedViewHost>
+		<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="15">
+			<StackPanel.Styles>
+				<Style Selector="StackPanel > :is(Control)">
+					<Setter Property="Margin" Value="2"/>
+				</Style>
+				<Style Selector="StackPanel > TextBlock">
+					<Setter Property="VerticalAlignment" Value="Center"/>
+				</Style>
+			</StackPanel.Styles>
+			<Button Content="Go next" Command="{Binding GoNext}" />
+			<Button Content="Go back" Command="{Binding GoBack}" />
+			<TextBlock Text="{Binding Router.NavigationStack.Count}" />
+		</StackPanel>
+	</Grid>
+</Window>
