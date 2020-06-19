@@ -4,6 +4,7 @@
         xmlns:vm="clr-namespace:KiCadDbLib.ViewModels;assembly=KiCadDbLib"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:l="clr-namespace:KiCadDbLib.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="KiCadDbLib.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
@@ -12,11 +13,17 @@
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
+    <Window.Styles>
+        <StyleInclude Source="/Styles/Generic.xaml"/>
+        <StyleInclude Source="avares://Avalonia.Themes.Default/Accents/BaseDark.xaml"/>
+    </Window.Styles>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*" />
 			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
+        
 		<rxui:RoutedViewHost Grid.Row="0" Router="{Binding Router}">
 			<rxui:RoutedViewHost.DefaultContent>
 				<TextBlock Text="Default content"
@@ -35,7 +42,11 @@
 			</StackPanel.Styles>
 			<Button Content="Go next" Command="{Binding GoNext}" />
 			<Button Content="Go back" Command="{Binding GoBack}" />
-			<TextBlock Text="{Binding Router.NavigationStack.Count}" />
+			
 		</StackPanel>
+        <StackPanel Grid.Row="2">
+            <TextBlock Text="Test"></TextBlock>
+            <l:LabeledTextBox IsRequired="True" Label="My Label">Text</l:LabeledTextBox>
+        </StackPanel>
 	</Grid>
 </Window>

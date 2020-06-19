@@ -32,7 +32,6 @@ namespace KiCadDbLib.Controls
 
         public LabeledTextBox()
         {
-            AvaloniaXamlLoader.Load(this);
         }
 
         public bool IsRequired
