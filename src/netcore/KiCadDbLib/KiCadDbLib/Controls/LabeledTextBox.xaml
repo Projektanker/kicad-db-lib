@@ -1,0 +1,22 @@
+<TemplatedControl xmlns="https://github.com/avaloniaui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+       xmlns:local="clr-namespace:KiCadDbLib.Controls"
+       x:Class="KiCadDbLib.Controls.LabeledTextBox">
+    <TemplatedControl.Template>
+        <ControlTemplate>
+            <StackPanel>
+                <TextBlock Margin="0 0 0 5">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="\{0\}\{1\}">
+                            <Binding RelativeSource="{RelativeSource TemplatedParent}" 
+                                     Path="Label"/>
+                            <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                                     Path="IsRequiredAsterisk"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBox Text="{TemplateBinding Text}"/>
+            </StackPanel>
+        </ControlTemplate>
+    </TemplatedControl.Template>
+</TemplatedControl>
