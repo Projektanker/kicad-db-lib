@@ -18,10 +18,11 @@ namespace KiCadDbLib.ViewModels
             // your view models, or to reuse existing view models.
             //
             GoNext = ReactiveCommand.CreateFromObservable(
-                () => Router.Navigate.Execute(new PartsViewModel(this))
+                () => Router.Navigate.Execute(new SettingsViewModel(this, new Services.SettingsService()))
             );
 
-            Router = new RoutingState();            
+            Router = new RoutingState();
+            Router.NavigateAndReset.Execute(new SettingsViewModel(this, new Services.SettingsService()));
         }
 
         public string Greeting => "Welcome to Avalonia!";

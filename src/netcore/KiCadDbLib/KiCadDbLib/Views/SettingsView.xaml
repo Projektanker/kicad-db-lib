@@ -1,0 +1,37 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:l="clr-namespace:KiCadDbLib.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="KiCadDbLib.Views.SettingsView">
+    
+	<StackPanel HorizontalAlignment="Center"
+			VerticalAlignment="Center">
+		<TextBlock Text="Settings View" />
+		<TextBlock Text="{Binding UrlPathSegment}" />
+		<TextBlock Text="{Binding SettingsLocation}" />
+        <Expander Header="Paths" IsExpanded="True" DataContext="{Binding Settings}" Padding="5">
+            <StackPanel>
+                <l:LabeledTextBox Label="Database" Text="{Binding DatabasePath}"/>
+                <l:LabeledTextBox Label="Symbols" Text="{Binding SymbolsPath}"/>
+                <l:LabeledTextBox Label="Footprints" Text="{Binding FootprintsPath}"/>
+                <l:LabeledTextBox Label="Output" Text="{Binding OutputPath}"/>
+            </StackPanel>
+        </Expander>
+        <Expander Header="Custom fields" IsExpanded="True" DataContext="{Binding Settings}" Padding="5">
+            <ScrollViewer>
+                <ItemsRepeater Items="{Binding CustomFields}" >
+                    <ItemsRepeater.Layout>
+                        <StackLayout Orientation="Vertical" />
+                    </ItemsRepeater.Layout>
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding}" Watermark="New custom field"/>
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                </ItemsRepeater>
+            </ScrollViewer>
+        </Expander>
+	</StackPanel>
+</UserControl>

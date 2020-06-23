@@ -28,6 +28,7 @@ namespace KiCadDbLib
             // view models, so we need to register our views.
             //
             Locator.CurrentMutable.Register(() => new PartsView(), typeof(IViewFor<PartsViewModel>));
+            Locator.CurrentMutable.Register(() => new SettingsView(), typeof(IViewFor<SettingsViewModel>));
             
             return AppBuilder.Configure<App>()
                            .UseReactiveUI()

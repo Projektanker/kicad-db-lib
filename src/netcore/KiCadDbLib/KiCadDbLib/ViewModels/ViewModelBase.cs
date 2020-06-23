@@ -5,7 +5,13 @@ using ReactiveUI;
 
 namespace KiCadDbLib.ViewModels
 {
-    public class ViewModelBase : ReactiveObject
+    public abstract class ViewModelBase : ReactiveObject, IActivatableViewModel
     {
+        public ViewModelBase()
+        {
+            Activator = new ViewModelActivator();
+        }
+
+        public ViewModelActivator Activator { get; }
     }
 }
