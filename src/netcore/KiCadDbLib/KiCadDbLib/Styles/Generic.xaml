@@ -1,4 +1,46 @@
 <Styles xmlns="https://github.com/avaloniaui"
-       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=netstandard">
+    <Styles.Resources>
+        <sys:Double x:Key="FontSizeH1">24</sys:Double>
+        <sys:Double x:Key="FontSizeH2">20</sys:Double>
+        <sys:Double x:Key="FontSizeH3">16</sys:Double>
+    </Styles.Resources>
+    
     <StyleInclude Source="/Styles/LabeledTextBox.xaml"/>
+
+    <!--TextBlock-->
+    <Style Selector="TextBlock.h1" >
+        <Setter Property="FontSize" Value="{StaticResource FontSizeH1}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="TextBlock.h2" >
+        <Setter Property="FontSize" Value="{StaticResource FontSizeH2}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    
+    <!--Expander-->
+    <Style Selector="Expander.h2" >
+        <Setter Property="Padding" Value="5"/>
+    </Style>
+    <Style Selector="Expander.h2 /template/ ToggleButton" >
+        <Setter Property="FontSize" Value="{StaticResource FontSizeH2}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="5"/>
+    </Style>
+
+    <!--CommandBar-->
+    <Style Selector="DockPanel.commandbar" >
+        <Setter Property="LastChildFill" Value="True"/>
+    </Style>
+    <Style Selector="DockPanel.commandbar Button">
+        <Setter Property="FontFamily" Value="avares://KicadDbLib/Assets/Fonts#Font Awesome 5 Free" />
+    </Style>
+    <Style Selector="DockPanel.commandbar Button.left" >
+        <Setter Property="DockPanel.Dock" Value="Left"/>
+    </Style>
+    <Style Selector="DockPanel.commandbar Button.right" >
+        <Setter Property="DockPanel.Dock" Value="Right"/>
+    </Style>
+    
 </Styles>

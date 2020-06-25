@@ -22,7 +22,7 @@ namespace KiCadDbLib.ViewModels
             );
 
             Router = new RoutingState();
-            Router.NavigateAndReset.Execute(new SettingsViewModel(this, new Services.SettingsService()));
+            Router.NavigateAndReset.Execute(new PartsViewModel(this));
         }
 
         public string Greeting => "Welcome to Avalonia!";

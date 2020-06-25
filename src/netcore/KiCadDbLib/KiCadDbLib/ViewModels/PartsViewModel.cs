@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reactive;
+using KiCadDbLib.Views;
 using ReactiveUI;
 
 namespace KiCadDbLib.ViewModels
@@ -9,6 +11,9 @@ namespace KiCadDbLib.ViewModels
         {
             HostScreen = hostScreen ?? throw new ArgumentNullException(nameof(hostScreen));
             UrlPathSegment = Guid.NewGuid().ToString().Substring(0, 5);
+
+            GoToSettings = ReactiveCommand.CreateFromObservable(
+                () => HostScreen.Router.Navigate.Execute(new SettingsViewModel(HostScreen, new Services.SettingsService())));
         }
 
         /// <summary>
@@ -20,5 +25,7 @@ namespace KiCadDbLib.ViewModels
         /// Gets the unique identifier for the routable view model.
         /// </summary>
         public string UrlPathSegment { get; }
+
+        public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
     }
 }

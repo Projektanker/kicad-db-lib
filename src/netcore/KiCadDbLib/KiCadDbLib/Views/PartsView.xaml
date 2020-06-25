@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="KiCadDbLib.Views.PartsView">
-	<StackPanel HorizontalAlignment="Center"
-			VerticalAlignment="Center">
-		<TextBlock Text="Hi, I'm the first view!" />
-		<TextBlock Text="{Binding UrlPathSegment}" />
-	</StackPanel>
+    <Grid RowDefinitions="Auto, Auto">
+        <DockPanel Classes="commandbar">
+            <Button Content="" Classes="right" Command="{Binding GoToSettings}"  />
+            <TextBlock Text="Parts" Classes="h1" />            
+        </DockPanel>
+    </Grid>
 </UserControl>
