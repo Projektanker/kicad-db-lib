@@ -11,6 +11,7 @@
       <SubType>Designer</SubType>
     </AvaloniaResource>
     <AvaloniaResource Include="Assets\**" />
+    <AvaloniaResource Include="Assets\Fonts\*" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.9.10" />

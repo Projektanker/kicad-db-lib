@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KiCadDbLib", "KiCadDbLib\KiCadDbLib.csproj", "{8D41CBAC-0D07-4153-9398-BAD72163A18B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KiCadDbLib", "KiCadDbLib\KiCadDbLib.csproj", "{8D41CBAC-0D07-4153-9398-BAD72163A18B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontAwesome.Avalonia", "FontAwesome.Avalonia\FontAwesome.Avalonia.csproj", "{3761C5EC-4000-4305-971D-A7D7358CA9CB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontAwesome.Avalonia.Generator", "FontAwesome.Avalonia.Generator\FontAwesome.Avalonia.Generator.csproj", "{093EF683-6AAF-4062-82DA-EFA61F504997}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{8D41CBAC-0D07-4153-9398-BAD72163A18B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D41CBAC-0D07-4153-9398-BAD72163A18B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D41CBAC-0D07-4153-9398-BAD72163A18B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3761C5EC-4000-4305-971D-A7D7358CA9CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3761C5EC-4000-4305-971D-A7D7358CA9CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3761C5EC-4000-4305-971D-A7D7358CA9CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3761C5EC-4000-4305-971D-A7D7358CA9CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{093EF683-6AAF-4062-82DA-EFA61F504997}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{093EF683-6AAF-4062-82DA-EFA61F504997}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{093EF683-6AAF-4062-82DA-EFA61F504997}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{093EF683-6AAF-4062-82DA-EFA61F504997}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

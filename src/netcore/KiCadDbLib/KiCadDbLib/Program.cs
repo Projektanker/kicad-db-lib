@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Logging.Serilog;
@@ -17,6 +18,7 @@ namespace KiCadDbLib
         // yet and stuff might break.
         public static void Main(string[] args)
         {
+             var res = Assembly.GetExecutingAssembly().GetManifestResourceNames();
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
         }

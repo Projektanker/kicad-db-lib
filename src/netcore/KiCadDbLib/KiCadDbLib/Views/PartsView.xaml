@@ -7,6 +7,7 @@
     <Grid RowDefinitions="Auto, Auto">
         <DockPanel Classes="commandbar">
             <Button Content="" Classes="right" Command="{Binding GoToSettings}"  />
+            <Button Name="Test" Classes="left fa fa_cog" Command="{Binding GoToSettings}"  />
             <TextBlock Text="Parts" Classes="h1" />            
         </DockPanel>
     </Grid>

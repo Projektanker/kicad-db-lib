@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Utils;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using KiCadDbLib.ViewModels;
@@ -12,7 +13,7 @@ namespace KiCadDbLib.Views
         public PartsView()
         {
             this.WhenActivated(disposables => { });
-            InitializeComponent();
+            InitializeComponent();            
         }
 
         private void InitializeComponent()
