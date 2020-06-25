@@ -19,4 +19,7 @@
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.10" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FontAwesome.Avalonia\FontAwesome.Avalonia.csproj" />
+  </ItemGroup>
 </Project>

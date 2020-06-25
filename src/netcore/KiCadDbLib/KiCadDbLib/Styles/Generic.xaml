@@ -9,7 +9,8 @@
 
     
     <StyleInclude Source="/Styles/LabeledTextBox.xaml"/>
-    <StyleInclude Source="/Styles/FontAwesome.xaml"/>
+    <!--<StyleInclude Source="/Styles/FontAwesome.xaml"/>-->
+    <StyleInclude Source="avares://FontAwesome.Avalonia/FontAwesome.xaml"/>
     
     <!--TextBlock-->
     <Style Selector="TextBlock.h1" >
