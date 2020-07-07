@@ -23,7 +23,7 @@
   ],
   "author": "Sebastian Rumohr, Terry Gray",
   "devDependencies": {
-    "electron": "^4.1.4",
+    "electron": "^7.2.4",
     "electron-packager": "^13.1.1",
     "typescript": "^3.4.3"
   }
