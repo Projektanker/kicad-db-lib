@@ -22,7 +22,7 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^4.1.4",
+    "electron": "^7.2.4",
     "tslint": "^5.16.0",
     "typescript": "^3.4.3"
   },
