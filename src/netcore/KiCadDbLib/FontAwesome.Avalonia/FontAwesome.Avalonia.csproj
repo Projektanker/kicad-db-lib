@@ -1,20 +1,26 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="cd $(SolutionDir)\$(ProjectName).Generator&#xD;&#xA;dotnet build&#xD;&#xA;cd $(ProjectDir)&#xD;&#xA;dotnet run  -p $(SolutionDir)\$(ProjectName).Generator &gt; FontAwesome.xaml" />
-  </Target>
+  <ItemGroup>
+      <Compile Update="**\*.xaml.cs">
+          <DependentUpon>%(Filename)</DependentUpon>
+      </Compile>
+      <AvaloniaResource Include="**\*.xaml">
+          <SubType>Designer</SubType>
+      </AvaloniaResource>
+  </ItemGroup>
 
   <ItemGroup>
-      <AvaloniaResource Include="Fonts\**" />
-      <AvaloniaResource Include="*.xaml" />
+    <EmbeddedResource Include="Assets\icons.json" />
   </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="0.9.10" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.9.10" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     </ItemGroup>
 
 </Project>

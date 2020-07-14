@@ -18,8 +18,6 @@ namespace KiCadDbLib
         // yet and stuff might break.
         public static void Main(string[] args)
         {
-             var res = Assembly.GetExecutingAssembly().GetManifestResourceNames();
-             res = Assembly.LoadFrom("Fontawesome.Avalonia.dll").GetManifestResourceNames();
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
         }
