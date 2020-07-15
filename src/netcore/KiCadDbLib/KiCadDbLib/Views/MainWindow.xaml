@@ -5,50 +5,50 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:l="clr-namespace:KiCadDbLib.Controls"
-        xmlns:fa="clr-namespace:FontAwesome.Avalonia;assembly=FontAwesome.Avalonia"
+        xmlns:i="clr-namespace:FontAwesome.Avalonia;assembly=FontAwesome.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="KiCadDbLib.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="KiCadDbLib">
 
     <Design.DataContext>
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Design.DataContext>
     <Window.Styles>
-        <StyleInclude Source="/Styles/Generic.xaml"/>
-        <StyleInclude Source="avares://Avalonia.Themes.Default/Accents/BaseDark.xaml"/>
+        <StyleInclude Source="/Styles/Generic.xaml" />
+        <StyleInclude Source="avares://Avalonia.Themes.Default/Accents/BaseDark.xaml" />
     </Window.Styles>
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-		</Grid.RowDefinitions>
-        
-		<rxui:RoutedViewHost Grid.Row="0" Router="{Binding Router}">
-			<rxui:RoutedViewHost.DefaultContent>
-				<TextBlock Text="Default content"
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <rxui:RoutedViewHost Grid.Row="0" Router="{Binding Router}">
+            <rxui:RoutedViewHost.DefaultContent>
+                <TextBlock Text="Default content"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center" />
-			</rxui:RoutedViewHost.DefaultContent>
-		</rxui:RoutedViewHost>
-		<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="15">
-			<StackPanel.Styles>
-				<Style Selector="StackPanel > :is(Control)">
-					<Setter Property="Margin" Value="2"/>
-				</Style>
-				<Style Selector="StackPanel > TextBlock">
-					<Setter Property="VerticalAlignment" Value="Center"/>
-				</Style>
-			</StackPanel.Styles>
-			<Button Content="{Binding #back.FontFamily.Name}" Command="{Binding GoNext}" />
-            <Button Command="{Binding GoBack}" fa:Awesome.Icon="arrow-left" >
+            </rxui:RoutedViewHost.DefaultContent>
+        </rxui:RoutedViewHost>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="15">
+            <StackPanel.Styles>
+                <Style Selector="StackPanel > :is(Control)">
+                    <Setter Property="Margin" Value="2" />
+                </Style>
+                <Style Selector="StackPanel > TextBlock">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+            </StackPanel.Styles>
+            <Button Content="{Binding #back.FontFamily.Name}" Command="{Binding GoNext}" />
+            <Button Command="{Binding GoBack}">
+                <i:Icon Value="fas fa-arrow-left" />
             </Button>
-			
-		</StackPanel>
+        </StackPanel>
         <StackPanel Grid.Row="2">
             <TextBlock Text="Test"></TextBlock>
             <l:LabeledTextBox IsRequired="True" Label="My Label">Text</l:LabeledTextBox>
         </StackPanel>
-	</Grid>
+    </Grid>
 </Window>

@@ -2,13 +2,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:fa="clr-namespace:FontAwesome.Avalonia;assembly=FontAwesome.Avalonia"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"              
+             xmlns:i="clr-namespace:FontAwesome.Avalonia;assembly=FontAwesome.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="KiCadDbLib.Views.PartsView">
     <Grid RowDefinitions="Auto, Auto">
         <DockPanel Classes="commandbar">
-            <Button Classes="right fa h1" Command="{Binding GoToSettings}" Foreground="Aqua" fa:Awesome.Icon="cog" />
-            <TextBlock Text="Parts" Classes="h1" />            
+            <Button Classes="right fa h1" Command="{Binding GoToSettings}" i:Attached.Icon="fas fa-cog" />
+            <Button Classes="right fa h1" Command="{Binding GoToSettings}" i:Attached.Icon="fas fa-ellipsis-v" />
+            <TextBlock Text="Parts" Classes="h1" />
         </DockPanel>
     </Grid>
 </UserControl>

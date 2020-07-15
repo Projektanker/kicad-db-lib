@@ -3,14 +3,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:l="clr-namespace:KiCadDbLib.Controls"
+             xmlns:i="clr-namespace:FontAwesome.Avalonia;assembly=FontAwesome.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="KiCadDbLib.Views.SettingsView">
 
     <Grid RowDefinitions="Auto,Auto,Auto">
         <DockPanel Grid.Row="0" LastChildFill="True" Classes="commandbar">
-            <Button Content="" Classes="left" Command="{Binding GoBack}"/>
-            <Button Content="" Classes="right" />
-            <TextBlock Text="Settings" Classes="h1" />            
+            <Button Classes="h1 fa left" Command="{Binding GoBack}" i:Attached.Icon="fas fa-arrow-left" />
+            <TextBlock Text="Settings" Classes="h1" />
         </DockPanel>
         <StackPanel Grid.Row="1">
             <TextBlock Text="{Binding UrlPathSegment}" />
@@ -19,37 +19,35 @@
         <StackPanel Grid.Row="2">
             <Expander Header="Paths" IsExpanded="True" DataContext="{Binding Settings}" Classes="h2">
                 <StackPanel>
-                    <l:LabeledTextBox Label="Database" Text="{Binding DatabasePath}"/>
-                    <l:LabeledTextBox Label="Symbols" Text="{Binding SymbolsPath}"/>
-                    <l:LabeledTextBox Label="Footprints" Text="{Binding FootprintsPath}"/>
-                    <l:LabeledTextBox Label="Output" Text="{Binding OutputPath}"/>
+                    <l:LabeledTextBox Label="Database" Text="{Binding DatabasePath}" />
+                    <l:LabeledTextBox Label="Symbols" Text="{Binding SymbolsPath}" />
+                    <l:LabeledTextBox Label="Footprints" Text="{Binding FootprintsPath}" />
+                    <l:LabeledTextBox Label="Output" Text="{Binding OutputPath}" />
                 </StackPanel>
             </Expander>
             <Expander Header="Custom fields" IsExpanded="True" Padding="5" Classes="h2">
                 <StackPanel>
                     <ScrollViewer>
-                        <ItemsRepeater Items="{Binding CustomFields}" >
+                        <ItemsRepeater Items="{Binding CustomFields}">
                             <ItemsRepeater.Layout>
                                 <StackLayout Orientation="Vertical" />
                             </ItemsRepeater.Layout>
                             <ItemsRepeater.ItemTemplate>
                                 <DataTemplate>
                                     <DockPanel LastChildFill="True">
-                                        <Button Command="{Binding Remove}" Content="X" DockPanel.Dock="Right"/>
-                                        <TextBlock Text="{Binding Value}"/>
+                                        <Button Command="{Binding Remove}" Content="X" DockPanel.Dock="Right" />
+                                        <TextBlock Text="{Binding Value}" />
                                     </DockPanel>
                                 </DataTemplate>
                             </ItemsRepeater.ItemTemplate>
                         </ItemsRepeater>
                     </ScrollViewer>
                     <DockPanel LastChildFill="True" DataContext="{Binding NewCustomField}">
-                        <Button Command="{Binding Add}" Content="+" DockPanel.Dock="Right" IsEnabled="{Binding CanAdd}"/>
-                        <TextBox Text="{Binding Value}"/>
+                        <Button Command="{Binding Add}" Content="+" DockPanel.Dock="Right" IsEnabled="{Binding CanAdd}" />
+                        <TextBox Text="{Binding Value}" />
                     </DockPanel>
                 </StackPanel>
             </Expander>
         </StackPanel>
-		
-        
-	</Grid>
+    </Grid>
 </UserControl>
