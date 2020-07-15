@@ -1,21 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
 
-  <ItemGroup>
-      <Compile Update="**\*.xaml.cs">
-          <DependentUpon>%(Filename)</DependentUpon>
-      </Compile>
-      <AvaloniaResource Include="**\*.xaml">
-          <SubType>Designer</SubType>
-      </AvaloniaResource>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="**\*.xaml.cs">
+            <DependentUpon>%(Filename)</DependentUpon>
+        </Compile>
+        <AvaloniaResource Include="**\*.xaml">
+            <SubType>Designer</SubType>
+        </AvaloniaResource>
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Assets\icons.json" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Assets\FontAwesome\icons.json" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="0.9.10" />

@@ -1,27 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.LogicalTree;
 
 namespace FontAwesome.Avalonia
 {
     /// <summary>
     /// Provides attached properties to set FontAwesome icons on controls.
     /// </summary>
-    public class Awesome
+    public class Attached
     {
-        static Awesome()
+        static Attached()
         {
             IconProperty.Changed.Subscribe(IconChanged);
         }
 
-
         /// <summary>
         /// Identifies the FontAwesome.Avalonia.Awesome.Content attached dependency property.
-        /// </summary>  
+        /// </summary>
         public static readonly AttachedProperty<string> IconProperty =
-            AvaloniaProperty.RegisterAttached<Awesome, ContentControl, string>("Icon", string.Empty);
+            AvaloniaProperty.RegisterAttached<Attached, ContentControl, string>("Icon", string.Empty);
 
         public static string GetIcon(ContentControl target)
         {
@@ -35,15 +33,20 @@ namespace FontAwesome.Avalonia
 
         private static void IconChanged(AvaloniaPropertyChangedEventArgs evt)
         {
-            if (!(evt.NewValue is string)) return;
-            if (!(evt.Sender is ContentControl)) return;
-
-            string iconKey = (string)evt.NewValue;
-            var target = (evt.Sender as ContentControl); 
-            var fa = new FontAwesome()
+            if (!(evt.NewValue is string value))
             {
-                Icon = iconKey,
+                return;
+            }
+            if (!(evt.Sender is ContentControl target))
+            {
+                return;
+            }
+
+            var fa = new Icon()
+            {
+                Value = value,
             };
+
             target.Content = fa;
         }
     }
