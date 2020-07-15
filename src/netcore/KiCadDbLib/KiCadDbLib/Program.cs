@@ -2,6 +2,7 @@
 using System.Reflection;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Icons.FontAwesome;
 using Avalonia.Logging.Serilog;
 using Avalonia.ReactiveUI;
 using KiCadDbLib.ViewModels;
@@ -18,6 +19,8 @@ namespace KiCadDbLib
         // yet and stuff might break.
         public static void Main(string[] args)
         {
+            
+
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
         }
@@ -25,6 +28,8 @@ namespace KiCadDbLib
         // Avalonia configuration, don't remove; also used by visual designer.
         public static AppBuilder BuildAvaloniaApp()
         {
+            FontAwesomeIconProvider.Register();
+
             // Router uses Splat.Locator to resolve views for
             // view models, so we need to register our views.
             //

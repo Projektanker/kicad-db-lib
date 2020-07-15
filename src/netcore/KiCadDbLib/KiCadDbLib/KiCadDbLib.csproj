@@ -14,12 +14,13 @@
     <AvaloniaResource Include="Assets\Fonts\*" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.9.10" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.9.10" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.10" />
+    <PackageReference Include="Avalonia" Version="0.9.11" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.9.11" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.11" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FontAwesome.Avalonia\FontAwesome.Avalonia.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Avalonia.Icons\src\Avalonia.Icons.Core\Avalonia.Icons.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Avalonia.Icons\src\Avalonia.Icons.FontAwesome\Avalonia.Icons.FontAwesome.csproj" />
   </ItemGroup>
 </Project>

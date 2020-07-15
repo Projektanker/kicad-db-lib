@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontAwesome.Avalonia", "Fon
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontAwesome.Avalonia.Generator", "FontAwesome.Avalonia.Generator\FontAwesome.Avalonia.Generator.csproj", "{093EF683-6AAF-4062-82DA-EFA61F504997}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Avalonia.Icons.Core", "..\..\..\..\Avalonia.Icons\src\Avalonia.Icons.Core\Avalonia.Icons.Core.csproj", "{09622613-AF40-4322-A1EC-EB053F2A922C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Avalonia.Icons.FontAwesome", "..\..\..\..\Avalonia.Icons\src\Avalonia.Icons.FontAwesome\Avalonia.Icons.FontAwesome.csproj", "{5BCCAD49-DA5C-4735-A138-3693EAC5839A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{093EF683-6AAF-4062-82DA-EFA61F504997}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{093EF683-6AAF-4062-82DA-EFA61F504997}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{093EF683-6AAF-4062-82DA-EFA61F504997}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09622613-AF40-4322-A1EC-EB053F2A922C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09622613-AF40-4322-A1EC-EB053F2A922C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09622613-AF40-4322-A1EC-EB053F2A922C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09622613-AF40-4322-A1EC-EB053F2A922C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BCCAD49-DA5C-4735-A138-3693EAC5839A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BCCAD49-DA5C-4735-A138-3693EAC5839A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BCCAD49-DA5C-4735-A138-3693EAC5839A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BCCAD49-DA5C-4735-A138-3693EAC5839A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

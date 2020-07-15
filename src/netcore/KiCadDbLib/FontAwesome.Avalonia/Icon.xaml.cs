@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using Avalonia;
@@ -6,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
+using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using FontAwesome.Avalonia.FontAwesome;
@@ -24,28 +26,12 @@ namespace FontAwesome.Avalonia
 
         private Drawing _drawing;
 
-        static Icon()
+        public Icon()
         {
-            ValueProperty.Changed.Subscribe(OnIconPropertyChanged);
-            // ForegroundProperty.Changed.Subscribe(OnForegroundPropertyChanged);
-        }
-
-        private static void OnForegroundPropertyChanged(AvaloniaPropertyChangedEventArgs e)
-        {
-            if (!(e.Sender is Icon target))
-            {
-                return;
-            }
-
-            switch (target.Drawing)
-            {
-                case GeometryDrawing geometryDrawing:
-                    geometryDrawing.Brush = target.Foreground;
-                    break;
-
-                default:
-                    break;
-            }
+            AvaloniaXamlLoader.Load(this);
+            IObservable<string> valueObservable = this.GetObservable(ValueProperty);
+            IObservable<Drawing> drawingObservable = valueObservable.Select(ValueToDrawing);
+            Bind(DrawingProperty, drawingObservable);
         }
 
         public Drawing Drawing
@@ -58,6 +44,22 @@ namespace FontAwesome.Avalonia
         {
             get => GetValue(ValueProperty);
             set => SetValue(ValueProperty, value);
+        }
+
+        private Drawing ValueToDrawing(string value)
+        {
+            string path = FontAwesomeIconProvider.GetIconPath(value);
+
+            GeometryDrawing drawing = new GeometryDrawing()
+            {
+                Geometry = Geometry.Parse(path),
+            };
+
+            // Bind Foreground to icon foreground
+            IObservable<IBrush> foregroundObservable = this.GetObservable(ForegroundProperty);
+            drawing.Bind(GeometryDrawing.BrushProperty, foregroundObservable);
+
+            return drawing;
         }
 
         private static void OnIconPropertyChanged(AvaloniaPropertyChangedEventArgs e)
