@@ -2,14 +2,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:i="clr-namespace:Avalonia.Icons;assembly=Avalonia.Icons.Core"
+             xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="KiCadDbLib.Views.PartsView">
     <Grid RowDefinitions="Auto, Auto">
-        <DockPanel Classes="commandbar">
-            <Button Classes="right fa h1" Command="{Binding GoToSettings}" i:Attached.Icon="fas fa-cog" />
-            <Button Classes="right fa h1" Command="{Binding GoToSettings}" i:Attached.Icon="fas fa-ellipsis-v" />
-            <TextBlock Text="Parts" Classes="h1" />
-        </DockPanel>
+        <Menu>            
+            <MenuItem Classes="right" Header="fas fa-ellipsis-v" >
+                <MenuItem Icon="fas fa-cog" Header="Reload" />
+                <MenuItem Icon="fas fa-cog" Header="Build" />
+                <MenuItem Icon="fas fa-info-circle" Header="About" />
+            </MenuItem>
+            <MenuItem Classes="right" Command="{Binding GoToSettings}" Header="fas fa-cog" />
+            <MenuItem Header="Parts" Classes="heading" />
+        </Menu>
     </Grid>
 </UserControl>

@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:l="clr-namespace:KiCadDbLib.Controls"
-        xmlns:i="clr-namespace:Avalonia.Icons;assembly=Avalonia.Icons.Core"
+        xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="KiCadDbLib.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
