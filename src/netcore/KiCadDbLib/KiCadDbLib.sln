@@ -5,14 +5,6 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KiCadDbLib", "KiCadDbLib\KiCadDbLib.csproj", "{8D41CBAC-0D07-4153-9398-BAD72163A18B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontAwesome.Avalonia", "FontAwesome.Avalonia\FontAwesome.Avalonia.csproj", "{3761C5EC-4000-4305-971D-A7D7358CA9CB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontAwesome.Avalonia.Generator", "FontAwesome.Avalonia.Generator\FontAwesome.Avalonia.Generator.csproj", "{093EF683-6AAF-4062-82DA-EFA61F504997}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Avalonia.Icons.Core", "..\..\..\..\Avalonia.Icons\src\Avalonia.Icons.Core\Avalonia.Icons.Core.csproj", "{09622613-AF40-4322-A1EC-EB053F2A922C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Avalonia.Icons.FontAwesome", "..\..\..\..\Avalonia.Icons\src\Avalonia.Icons.FontAwesome\Avalonia.Icons.FontAwesome.csproj", "{5BCCAD49-DA5C-4735-A138-3693EAC5839A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,22 +15,6 @@ Global
 		{8D41CBAC-0D07-4153-9398-BAD72163A18B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D41CBAC-0D07-4153-9398-BAD72163A18B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D41CBAC-0D07-4153-9398-BAD72163A18B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3761C5EC-4000-4305-971D-A7D7358CA9CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3761C5EC-4000-4305-971D-A7D7358CA9CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3761C5EC-4000-4305-971D-A7D7358CA9CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3761C5EC-4000-4305-971D-A7D7358CA9CB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{093EF683-6AAF-4062-82DA-EFA61F504997}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{093EF683-6AAF-4062-82DA-EFA61F504997}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{093EF683-6AAF-4062-82DA-EFA61F504997}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{093EF683-6AAF-4062-82DA-EFA61F504997}.Release|Any CPU.Build.0 = Release|Any CPU
-		{09622613-AF40-4322-A1EC-EB053F2A922C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{09622613-AF40-4322-A1EC-EB053F2A922C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{09622613-AF40-4322-A1EC-EB053F2A922C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{09622613-AF40-4322-A1EC-EB053F2A922C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5BCCAD49-DA5C-4735-A138-3693EAC5839A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5BCCAD49-DA5C-4735-A138-3693EAC5839A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5BCCAD49-DA5C-4735-A138-3693EAC5839A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5BCCAD49-DA5C-4735-A138-3693EAC5839A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
