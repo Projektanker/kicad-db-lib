@@ -16,7 +16,6 @@
     </Design.DataContext>
     <Window.Styles>
         <StyleInclude Source="/Styles/Generic.xaml" />
-        <StyleInclude Source="avares://Avalonia.Themes.Default/Accents/BaseDark.xaml" />
     </Window.Styles>
     <Grid>
         <Grid.RowDefinitions>

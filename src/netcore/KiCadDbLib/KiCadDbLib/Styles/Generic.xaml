@@ -9,10 +9,21 @@
         <sys:Double x:Key="FontSizeH3">16</sys:Double>
         <sys:Double x:Key="IconSize">24</sys:Double>
         <CornerRadius x:Key="IconRadius">24,24,24,24</CornerRadius>
+        <sys:Double x:Key="TextSpacing">10</sys:Double>
     </Styles.Resources>
 
 
     <StyleInclude Source="/Styles/LabeledTextBox.xaml"/>
+
+    <!--Layout-->
+    <Style Selector="DockPanel.root">
+        <Setter Property="LastChildFill" Value="True" />
+    </Style>
+    
+    <Style Selector="DockPanel.root > :is(Control)">
+        <Setter Property="DockPanel.Dock" Value="Top" />        
+    </Style>
+    
 
     <!--TextBlock-->
     <Style Selector="TextBlock.h1" >
@@ -39,15 +50,18 @@
     <Style Selector="Menu" >
         <Setter Property="ItemsPanel">
             <ItemsPanelTemplate>
-                <DockPanel HorizontalAlignment="Stretch"/>
+                <DockPanel HorizontalAlignment="Stretch">                    
+                </DockPanel>
             </ItemsPanelTemplate>
         </Setter>
         <Setter Property="FontSize" Value="{StaticResource FontSizeH1}"/>
+        <Setter Property="Padding" Value="5" />
     </Style>
 
     <!--All menu items-->
     <Style Selector="MenuItem" >
         <Setter Property="BorderThickness" Value="0" />
+        
     </Style>
 
     <Style Selector="MenuItem:not(.heading)" >
@@ -66,6 +80,7 @@
             </DataTemplate>
         </Setter>
     </Style>
+    
     <!--First level Menu-->
     <!-- > Header or Icon-->
     <Style Selector="Menu > MenuItem:not(.heading) /template/ ContentPresenter" >
@@ -75,25 +90,23 @@
             </DataTemplate>
         </Setter>
     </Style>
-
+    
     <!-- > Circle-->
     <Style Selector="Menu > MenuItem:not(.heading) /template/ Border" >
         <Setter Property="CornerRadius" Value="{DynamicResource IconRadius}" />
     </Style>
 
-    <!-- > Override selected if has sub menu-->
-    <Style Selector="Menu > MenuItem[IsSubMenuOpen=false] /template/ Border#root" >
+    <!-- > Omit :selected background-->
+    <Style Selector="MenuItem:selected /template/ Border#root" >
         <Setter Property="Background" Value="Transparent"/>
+    </Style>   
+
+    <!-- > Override :pointerover background-->
+    <Style Selector="MenuItem:pointerover:not(.heading) /template/ Border#root" >
+        <Setter Property="Background" Value="{DynamicResource ThemeControlLowBrush}"/>
     </Style>
 
-    <!-- > Override selected if has no sub menu-->
-    <Style Selector="Menu > MenuItem:empty:not /template/ Border#root" >
-        <Setter Property="Background" Value="Transparent"/>
-    </Style>
-
-
-
-    <!--TextBlock-->
+    <!--Button-->
     <Style Selector="Button.h1" >
         <Setter Property="FontSize" Value="{StaticResource FontSizeH1}"/>
     </Style>
@@ -102,13 +115,13 @@
         <Setter Property="FontSize" Value="{StaticResource FontSizeH2}"/>
     </Style>
 
-    <Style Selector="Button.fa" >
+    <Style Selector="Button.icon" >
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Cursor" Value="Hand"/>
     </Style>
 
-    <Style Selector="Button.fa /template/ ContentPresenter" >
+    <Style Selector="Button.icon /template/ ContentPresenter" >
         <Setter Property="CornerRadius" Value="{DynamicResource IconRadius}"/>
     </Style>
 

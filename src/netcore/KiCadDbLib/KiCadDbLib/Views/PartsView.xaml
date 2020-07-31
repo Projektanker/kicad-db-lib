@@ -5,15 +5,20 @@
              xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="KiCadDbLib.Views.PartsView">
-    <Grid RowDefinitions="Auto, Auto">
+    <DockPanel Classes="root">
         <Menu>            
             <MenuItem Classes="right" Header="fas fa-ellipsis-v" >
-                <MenuItem Icon="fas fa-cog" Header="Reload" />
-                <MenuItem Icon="fas fa-cog" Header="Build" />
+                <MenuItem Icon="fas fa-redo" Header="Reload" />
+                <MenuItem Icon="fas fa-wrench" Header="Build" />
                 <MenuItem Icon="fas fa-info-circle" Header="About" />
             </MenuItem>
             <MenuItem Classes="right" Command="{Binding GoToSettings}" Header="fas fa-cog" />
+            <MenuItem Classes="right" Command="{Binding GoToNewPart}" Header="fas fa-plus" />
             <MenuItem Header="Parts" Classes="heading" />
         </Menu>
-    </Grid>
+        <DockPanel Margin="10">
+            <DataGrid AutoGenerateColumns="True" Items="{Binding Parts}" Name="partsGrid">
+            </DataGrid>
+        </DockPanel>
+    </DockPanel>
 </UserControl>

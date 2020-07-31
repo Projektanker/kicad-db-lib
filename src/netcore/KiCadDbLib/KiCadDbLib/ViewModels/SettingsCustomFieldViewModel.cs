@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 using ReactiveUI;
 
 namespace KiCadDbLib.ViewModels
@@ -8,37 +10,32 @@ namespace KiCadDbLib.ViewModels
     public sealed class SettingsCustomFieldViewModel : ViewModelBase, IEquatable<SettingsCustomFieldViewModel>
     {
         private readonly ICollection<SettingsCustomFieldViewModel> _parent;
-        private readonly string _clean;
-        private string _dirty;
-        private bool _canAdd;
+        private string _value;
 
-        public SettingsCustomFieldViewModel(ICollection<SettingsCustomFieldViewModel> parent, string clean)
+        public SettingsCustomFieldViewModel(ICollection<SettingsCustomFieldViewModel> parent, string value)
         {
             _parent = parent ?? throw new ArgumentNullException(nameof(parent));
-            _clean = clean;
-            Value = clean;
+            _value = value;
+            IObservable<bool> canAdd = this.WhenAnyValue(
+                vm => vm.Value,
+                changedValue =>
+                {
+                    return !string.IsNullOrWhiteSpace(changedValue)
+                        && !_parent.Contains(this);
+                });
+
+            Add = ReactiveCommand.Create(execute: ExectuteAdd, canExecute: canAdd);
+            Remove = ReactiveCommand.Create(execute: ExectuteRemove);
         }
 
-        public bool CanAdd => _canAdd;
+        public ReactiveCommand<Unit, Unit> Add { get; }
 
-        public bool CanRemove => _parent.Contains(this);
+        public ReactiveCommand<Unit, Unit> Remove { get; }
 
         public string Value
         {
-            get => _dirty;
-            set {
-                this.RaiseAndSetIfChanged(ref _dirty, value);
-                this.RaiseAndSetIfChanged(
-                    ref _canAdd, 
-                    !string.IsNullOrEmpty(value) && !_parent.Any(vm => vm.Value == value),
-                    nameof(CanAdd));
-            }
-        }
-
-        public void Add()
-        {
-            _parent.Add(new SettingsCustomFieldViewModel(_parent, Value));
-            Value = string.Empty;
+            get => _value;
+            set => this.RaiseAndSetIfChanged(ref _value, value);
         }
 
         public override bool Equals(object obj)
@@ -49,15 +46,21 @@ namespace KiCadDbLib.ViewModels
         public bool Equals(SettingsCustomFieldViewModel other)
         {
             return other != null &&
-                   _clean == other._clean;
+                   _value == other._value;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_clean);
+            return HashCode.Combine(_value);
         }
 
-        public void Remove()
+        private void ExectuteAdd()
+        {
+            _parent.Add(new SettingsCustomFieldViewModel(_parent, Value));
+            Value = string.Empty;
+        }
+
+        private void ExectuteRemove()
         {
             _parent.Remove(this);
         }

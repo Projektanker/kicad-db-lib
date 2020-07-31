@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
@@ -12,21 +10,19 @@ using ReactiveUI;
 
 namespace KiCadDbLib.ViewModels
 {
-
     public sealed class SettingsViewModel : ViewModelBase, IRoutableViewModel, IDisposable
     {
         private readonly SettingsService _settingsService;
         private ObservableCollection<SettingsCustomFieldViewModel> customFields;
         private SettingsCustomFieldViewModel newCustomField;
         private Settings settings;
+
         public SettingsViewModel(IScreen hostScreen, SettingsService settingsService)
         {
             HostScreen = hostScreen ?? throw new ArgumentNullException(nameof(hostScreen));
             _settingsService = settingsService;
             UrlPathSegment = Guid.NewGuid().ToString().Substring(0, 5);
             this.WhenNavigatedTo(OnNavigatedTo);
-
-
         }
 
         public ObservableCollection<SettingsCustomFieldViewModel> CustomFields
@@ -43,10 +39,11 @@ namespace KiCadDbLib.ViewModels
         public IScreen HostScreen { get; }
 
         public SettingsCustomFieldViewModel NewCustomField
-        { 
-            get => newCustomField; 
-            private set => this.RaiseAndSetIfChanged(ref newCustomField, value); 
+        {
+            get => newCustomField;
+            private set => this.RaiseAndSetIfChanged(ref newCustomField, value);
         }
+
         public Settings Settings
         {
             get => settings;
@@ -59,10 +56,12 @@ namespace KiCadDbLib.ViewModels
         /// Gets the unique identifier for the routable view model.
         /// </summary>
         public string UrlPathSegment { get; }
+
         public void Dispose()
         {
             settings = null;
         }
+
         private IDisposable OnNavigatedTo()
         {
             _settingsService.GetSettings().ToObservable().Subscribe(

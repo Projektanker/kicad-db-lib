@@ -1,11 +1,19 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:l="clr-namespace:KiCadDbLib.Controls">    
+        xmlns:l="clr-namespace:KiCadDbLib.Controls">
+    <Design.PreviewWith>
+        <StackPanel Spacing="10">
+            <l:LabeledTextBox Label="Database" Text="BindingDatabasePath" />
+            <l:LabeledTextBox Label="Symbols" Text="Binding SymbolsPath" />
+            <l:LabeledTextBox Label="Footprints" Text="Binding FootprintsPath" />
+            <l:LabeledTextBox Label="Output" Text="Binding OutputPath" />
+        </StackPanel>
+    </Design.PreviewWith>
     <Style Selector="l|LabeledTextBox">
         <Setter Property="Template">
             <ControlTemplate>
-                <StackPanel>
-                    <TextBlock Margin="0 0 0 5">
+                <StackPanel Spacing="5">
+                    <TextBlock>
                         <TextBlock.Text>
                             <MultiBinding StringFormat="\{0\}\{1\}">
                                 <Binding RelativeSource="{RelativeSource TemplatedParent}"

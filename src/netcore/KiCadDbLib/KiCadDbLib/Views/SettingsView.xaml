@@ -6,19 +6,19 @@
              xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="KiCadDbLib.Views.SettingsView">
-
-    <Grid RowDefinitions="Auto,Auto,Auto">
-        <DockPanel Grid.Row="0" LastChildFill="True" Classes="commandbar">
-            <Button Classes="h1 fa left" Command="{Binding GoBack}" i:Attached.Icon="fas fa-arrow-left" />
-            <TextBlock Text="Settings" Classes="h1" />
-        </DockPanel>
-        <StackPanel Grid.Row="1">
+    
+    <DockPanel Classes="root">
+        <Menu>
+            <MenuItem Command="{Binding GoBack}" Header="fas fa-arrow-left" />
+            <MenuItem Header="Settings" Classes="heading" />
+        </Menu>
+        <StackPanel>
             <TextBlock Text="{Binding UrlPathSegment}" />
             <TextBlock Text="{Binding SettingsLocation}" />
         </StackPanel>
-        <StackPanel Grid.Row="2">
+        <StackPanel>
             <Expander Header="Paths" IsExpanded="True" DataContext="{Binding Settings}" Classes="h2">
-                <StackPanel>
+                <StackPanel Spacing="10">
                     <l:LabeledTextBox Label="Database" Text="{Binding DatabasePath}" />
                     <l:LabeledTextBox Label="Symbols" Text="{Binding SymbolsPath}" />
                     <l:LabeledTextBox Label="Footprints" Text="{Binding FootprintsPath}" />
@@ -30,24 +30,24 @@
                     <ScrollViewer>
                         <ItemsRepeater Items="{Binding CustomFields}">
                             <ItemsRepeater.Layout>
-                                <StackLayout Orientation="Vertical" />
+                                <StackLayout Orientation="Vertical" Spacing="10"/>
                             </ItemsRepeater.Layout>
                             <ItemsRepeater.ItemTemplate>
                                 <DataTemplate>
                                     <DockPanel LastChildFill="True">
-                                        <Button Command="{Binding Remove}" Content="X" DockPanel.Dock="Right" />
+                                        <Button Classes="icon" Command="{Binding Remove}" i:Attached.Icon="fas fa-times" DockPanel.Dock="Right" />
                                         <TextBlock Text="{Binding Value}" />
                                     </DockPanel>
                                 </DataTemplate>
                             </ItemsRepeater.ItemTemplate>
                         </ItemsRepeater>
                     </ScrollViewer>
-                    <DockPanel LastChildFill="True" DataContext="{Binding NewCustomField}">
-                        <Button Command="{Binding Add}" Content="+" DockPanel.Dock="Right" IsEnabled="{Binding CanAdd}" />
+                    <DockPanel LastChildFill="True" DataContext="{Binding NewCustomField}" Margin="0 10 0 0">
+                        <Button Classes="icon" Command="{Binding Add}" i:Attached.Icon="fas fa-plus" DockPanel.Dock="Right" IsEnabled="{Binding CanAdd}" />
                         <TextBox Text="{Binding Value}" />
                     </DockPanel>
                 </StackPanel>
             </Expander>
         </StackPanel>
-    </Grid>
+    </DockPanel>
 </UserControl>
