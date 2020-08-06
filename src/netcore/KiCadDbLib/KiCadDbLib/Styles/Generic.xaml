@@ -125,6 +125,8 @@
         <Setter Property="CornerRadius" Value="{DynamicResource IconRadius}"/>
     </Style>
 
-
+    <Style Selector="Grid.parts > :is(Control)">
+        <Setter Property="Margin" Value="0 0 0 20"/>
+    </Style>
 
 </Styles>

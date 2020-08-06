@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using DynamicData.Alias;
@@ -8,12 +9,15 @@ using KiCadDbLib.Models;
 using KiCadDbLib.Navigation;
 using KiCadDbLib.Views;
 using ReactiveUI;
+using SharpDX.Direct2D1.Effects;
 
 namespace KiCadDbLib.ViewModels
 {
     public class PartsViewModel : ViewModelBase, IRoutableViewModel
     {
         private IEnumerable<Part> _parts;
+        private ObservableAsPropertyHelper<IEnumerable<ColumnInfo>> _partColumns;
+
 
         public PartsViewModel(IScreen hostScreen)
         {
@@ -21,7 +25,23 @@ namespace KiCadDbLib.ViewModels
             UrlPathSegment = Guid.NewGuid().ToString().Substring(0, 5);
 
             GoToSettings = NavigationCommand.Create(HostScreen, () => new SettingsViewModel(HostScreen, new Services.SettingsService()));
-            Parts = MockParts();
+            _partColumns = this.WhenAnyValue(vm => vm.Parts)
+                .Select(parts => GetColumnInfos(parts))
+                .ToProperty(this, vm => vm.PartColumns);
+            Parts = MockParts();            
+        }
+                
+        private static IEnumerable<ColumnInfo> GetColumnInfos(IEnumerable<Part> parts)
+        {
+            HashSet<ColumnInfo> columnInfos = new HashSet<ColumnInfo>();
+            foreach (var part in parts ?? Enumerable.Empty<Part>())
+            {
+                foreach (var item in part.CustomFields.Keys)
+                {
+                    columnInfos.Add(new ColumnInfo(item, $"CustomFields[{item}]"));
+                }
+            }
+            return columnInfos;
         }
 
         private IEnumerable<Part> MockParts()
@@ -70,9 +90,12 @@ namespace KiCadDbLib.ViewModels
         /// </summary>
         public string UrlPathSegment { get; }
 
-        public IEnumerable<Part> Parts { 
-            get => _parts; 
-            set => this.RaiseAndSetIfChanged(ref _parts, value); }
+        public IEnumerable<Part> Parts
+        {
+            get => _parts;
+            set => this.RaiseAndSetIfChanged(ref _parts, value);
+        }
+        public IEnumerable<ColumnInfo> PartColumns => _partColumns.Value;
 
         public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
     }

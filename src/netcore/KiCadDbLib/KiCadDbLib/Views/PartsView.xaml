@@ -16,9 +16,52 @@
             <MenuItem Classes="right" Command="{Binding GoToNewPart}" Header="fas fa-plus" />
             <MenuItem Header="Parts" Classes="heading" />
         </Menu>
-        <DockPanel Margin="10">
-            <DataGrid AutoGenerateColumns="True" Items="{Binding Parts}" Name="partsGrid">
-            </DataGrid>
+        <DockPanel Margin="10" LastChildFill="True" Grid.IsSharedSizeScope="True">
+            <ListBox Items="{Binding PartColumns}"  >
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Classes="parts">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Header}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Path}"/>
+                            <TextBlock Grid.Column="2" Text="{Binding SortDirection}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <Grid Margin="40 0 0 0" DockPanel.Dock="Top" Classes="parts">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="C1"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="C2"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="C3"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Id"/>
+                <TextBlock Grid.Column="1" Text="Reference"/>
+                <TextBlock Grid.Column="2" Text="CustomFields[MF]"/>
+            </Grid>
+            <ListBox Items="{Binding Parts}"  >
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Classes="parts">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="C1"/>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="C2"/>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="C3"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Id}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Reference}"/>
+                            <TextBlock Grid.Column="2" Text="{Binding CustomFields[MF]}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            
         </DockPanel>
     </DockPanel>
 </UserControl>
