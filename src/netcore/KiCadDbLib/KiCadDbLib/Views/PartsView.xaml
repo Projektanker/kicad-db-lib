@@ -2,11 +2,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:l="clr-namespace:KiCadDbLib.Controls"
              xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="KiCadDbLib.Views.PartsView">
     <DockPanel Classes="root">
-        <Menu>            
+        <Menu>
             <MenuItem Classes="right" Header="fas fa-ellipsis-v" >
                 <MenuItem Icon="fas fa-redo" Header="Reload" />
                 <MenuItem Icon="fas fa-wrench" Header="Build" />
@@ -17,51 +18,20 @@
             <MenuItem Header="Parts" Classes="heading" />
         </Menu>
         <DockPanel Margin="10" LastChildFill="True" Grid.IsSharedSizeScope="True">
-            <ListBox Items="{Binding PartColumns}"  >
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Classes="parts">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding Header}"/>
-                            <TextBlock Grid.Column="1" Text="{Binding Path}"/>
-                            <TextBlock Grid.Column="2" Text="{Binding SortDirection}"/>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-
             <Grid Margin="40 0 0 0" DockPanel.Dock="Top" Classes="parts">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="C1"/>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="C2"/>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="C3"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Id"/>
-                <TextBlock Grid.Column="1" Text="Reference"/>
-                <TextBlock Grid.Column="2" Text="CustomFields[MF]"/>
+                <l:SortableHeader Grid.Column="0" Header="Id"/>
+                <l:SortableHeader Grid.Column="1" Header="Reference"/>
+                <l:SortableHeader Grid.Column="2" Header="CustomFields[MF]"/>
             </Grid>
-            <ListBox Items="{Binding Parts}"  >
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Classes="parts">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="C1"/>
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="C2"/>
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="C3"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding Id}"/>
-                            <TextBlock Grid.Column="1" Text="{Binding Reference}"/>
-                            <TextBlock Grid.Column="2" Text="{Binding CustomFields[MF]}"/>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <DataGrid Items="{Binding Parts}" l:DataGridBehavior.ColumnInfos="{Binding PartColumns}"/>
+                
 
-            
+
         </DockPanel>
     </DockPanel>
 </UserControl>

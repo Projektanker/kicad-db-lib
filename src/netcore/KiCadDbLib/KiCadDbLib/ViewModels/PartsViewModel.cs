@@ -33,14 +33,23 @@ namespace KiCadDbLib.ViewModels
                 
         private static IEnumerable<ColumnInfo> GetColumnInfos(IEnumerable<Part> parts)
         {
-            HashSet<ColumnInfo> columnInfos = new HashSet<ColumnInfo>();
-            foreach (var part in parts ?? Enumerable.Empty<Part>())
+            List<ColumnInfo> columnInfos = new List<ColumnInfo>()
             {
-                foreach (var item in part.CustomFields.Keys)
-                {
-                    columnInfos.Add(new ColumnInfo(item, $"CustomFields[{item}]"));
-                }
+                new ColumnInfo(nameof(Part.Id)),
+                new ColumnInfo(nameof(Part.Library)),
+                new ColumnInfo(nameof(Part.Reference)),
+            };
+
+            if(parts != null)
+            {
+                var customFieldColumnInfos = parts
+                    .SelectMany(part => part.CustomFields.Keys)
+                    .Distinct()
+                    .Select(field => new ColumnInfo(field, $"{nameof(Part.CustomFields)}[{field}]"));
+
+                columnInfos.AddRange(customFieldColumnInfos);
             }
+
             return columnInfos;
         }
 

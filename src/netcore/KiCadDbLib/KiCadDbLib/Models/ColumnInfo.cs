@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using DynamicData.Binding;
 
 namespace KiCadDbLib.Models
 {
     public class ColumnInfo : IEquatable<ColumnInfo>
     {
+        public ColumnInfo(string headerAndPath)
+            :this(headerAndPath, headerAndPath)
+        {
+
+        }
         public ColumnInfo(string header, string path)
         {
             Header = header;
@@ -17,7 +23,7 @@ namespace KiCadDbLib.Models
 
         public string Path { get; }
 
-        public ListSortDirection? SortDirection { get; set; }
+        public SortDirection? SortDirection { get; set; }
 
         public override bool Equals(object obj)
         {
