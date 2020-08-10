@@ -5,6 +5,8 @@ using KiCadDbLib.ViewModels;
 
 namespace KiCadDbLib
 {
+
+
     public class ViewLocator : IDataTemplate
     {
         public bool SupportsRecycling => false;

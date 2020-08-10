@@ -2,83 +2,82 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
+using System.Reflection.Metadata.Ecma335;
+using Avalonia.Rendering.SceneGraph;
 using KiCadDbLib.Models;
 using KiCadDbLib.Services;
 using ReactiveUI;
 
 namespace KiCadDbLib.ViewModels
 {
-    public sealed class SettingsViewModel : ViewModelBase, IRoutableViewModel, IDisposable
+    public sealed class SettingsViewModel : RoutableViewModelBase
     {
         private readonly SettingsService _settingsService;
-        private ObservableCollection<SettingsCustomFieldViewModel> customFields;
-        private SettingsCustomFieldViewModel newCustomField;
-        private Settings settings;
-
+        ObservableAsPropertyHelper<ObservableCollection<SettingsCustomFieldViewModel>> _customFieldsProperty;
+        ObservableAsPropertyHelper<SettingsCustomFieldViewModel> _newCustomFieldProperty;
+        ObservableAsPropertyHelper<Settings> _settingsProperty;
+      
         public SettingsViewModel(IScreen hostScreen, SettingsService settingsService)
+            : base(hostScreen)
         {
-            HostScreen = hostScreen ?? throw new ArgumentNullException(nameof(hostScreen));
             _settingsService = settingsService;
-            UrlPathSegment = Guid.NewGuid().ToString().Substring(0, 5);
-            this.WhenNavigatedTo(OnNavigatedTo);
         }
 
-        public ObservableCollection<SettingsCustomFieldViewModel> CustomFields
-        {
-            get => customFields;
-            set => this.RaiseAndSetIfChanged(ref customFields, value);
-        }
+        public ObservableCollection<SettingsCustomFieldViewModel> CustomFields => _customFieldsProperty?.Value;
 
         public ReactiveCommand<Unit, Unit> GoBack => HostScreen.Router.NavigateBack;
 
-        /// <summary>
-        /// Gets the <see cref="IScreen"/> that owns the routable view model.
-        /// </summary>
-        public IScreen HostScreen { get; }
+        public SettingsCustomFieldViewModel NewCustomField => _newCustomFieldProperty?.Value;
 
-        public SettingsCustomFieldViewModel NewCustomField
-        {
-            get => newCustomField;
-            private set => this.RaiseAndSetIfChanged(ref newCustomField, value);
-        }
-
-        public Settings Settings
-        {
-            get => settings;
-            private set => this.RaiseAndSetIfChanged(ref settings, value);
-        }
+        public Settings Settings => _settingsProperty?.Value;
 
         public string SettingsLocation => _settingsService?.Location;
 
-        /// <summary>
-        /// Gets the unique identifier for the routable view model.
-        /// </summary>
-        public string UrlPathSegment { get; }
-
-        public void Dispose()
+        protected override void WhenActivated(CompositeDisposable disposables)
         {
-            settings = null;
-        }
+            base.WhenActivated(disposables);
 
-        private IDisposable OnNavigatedTo()
-        {
-            _settingsService.GetSettings().ToObservable().Subscribe(
-                onNext: settings =>
+            IObservable<Settings> settingsObservable = _settingsService.GetSettings().ToObservable();
+
+            // Logging
+            settingsObservable
+                .Subscribe(
+                    onNext: _ => Console.WriteLine("Settings: onNext"),
+                    onError: exception => Console.WriteLine(exception))
+                .DisposeWith(disposables);
+
+
+            // Settings
+            _settingsProperty = settingsObservable
+                .ToProperty(this, vm => vm.Settings)
+                .DisposeWith(disposables);
+
+            // Custom Fields
+            _customFieldsProperty = settingsObservable
+                .Select(settings => settings.CustomFields)
+                .Select(customFields =>
                 {
-                    Settings = settings;
-                    var customFields = new ObservableCollection<SettingsCustomFieldViewModel>();
-                    foreach (var field in settings.CustomFields)
+                    var customFieldsCollection = new ObservableCollection<SettingsCustomFieldViewModel>();
+                    foreach (var field in customFields)
                     {
-                        customFields.Add(new SettingsCustomFieldViewModel(customFields, field));
+                        customFieldsCollection.Add(new SettingsCustomFieldViewModel(customFieldsCollection, field));
                     }
-                    CustomFields = customFields;
-                    NewCustomField = new SettingsCustomFieldViewModel(customFields, null);
-                },
-                onError: exception => Debug.WriteLine(exception));
 
-            return this;
+                    return customFieldsCollection;
+                })
+                .ToProperty(this, vm => vm.CustomFields)
+                .DisposeWith(disposables);
+
+            _newCustomFieldProperty = this.WhenAnyValue(vm => vm.CustomFields)
+                .Where(x => x != null)
+                .Select(cusomFields => new SettingsCustomFieldViewModel(cusomFields, null))
+                .ToProperty(this, vm => vm.NewCustomField)
+                .DisposeWith(disposables);
+
+
         }
     }
 }

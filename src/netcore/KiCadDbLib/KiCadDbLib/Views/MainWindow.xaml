@@ -20,8 +20,6 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <rxui:RoutedViewHost Grid.Row="0" Router="{Binding Router}">
@@ -30,24 +28,6 @@
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center" />
             </rxui:RoutedViewHost.DefaultContent>
-        </rxui:RoutedViewHost>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="15">
-            <StackPanel.Styles>
-                <Style Selector="StackPanel > :is(Control)">
-                    <Setter Property="Margin" Value="2" />
-                </Style>
-                <Style Selector="StackPanel > TextBlock">
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                </Style>
-            </StackPanel.Styles>
-            <Button Content="{Binding #back.FontFamily.Name}" Command="{Binding GoNext}" />
-            <Button Command="{Binding GoBack}">
-                <i:Icon Value="fas fa-arrow-left" />
-            </Button>
-        </StackPanel>
-        <StackPanel Grid.Row="2">
-            <TextBlock Text="Test"></TextBlock>
-            <l:LabeledTextBox IsRequired="True" Label="My Label">Text</l:LabeledTextBox>
-        </StackPanel>
+        </rxui:RoutedViewHost>        
     </Grid>
 </Window>

@@ -1,0 +1,70 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:KiCadDbLib.Controls"
+        xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia">
+
+    <StyleInclude Source="/Styles/Resources.xaml" />
+    
+    <!--CommandBar-->
+    <Style Selector="Menu" >
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <DockPanel HorizontalAlignment="Stretch">
+                </DockPanel>
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Padding" Value="5" />
+    </Style>
+
+    <!--All menu items-->
+    <Style Selector="MenuItem" >
+        <Setter Property="BorderThickness" Value="0" />
+
+    </Style>
+
+    <Style Selector="MenuItem:not(.heading)" >
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+
+    <Style Selector="MenuItem.right" >
+        <Setter Property="DockPanel.Dock" Value="Right" />
+    </Style>
+
+    <!--MenuItem.Icon-->
+    <Style Selector="MenuItem /template/ ContentPresenter#icon" >
+        <Setter Property="ContentTemplate" >
+            <DataTemplate>
+                <i:Icon Value="{Binding $parent[MenuItem].Icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </DataTemplate>
+        </Setter>
+    </Style>
+
+    <!--First level Menu-->
+    <Style Selector="Menu > MenuItem.heading">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeH1}"/>
+    </Style>
+
+    <Style Selector="Menu > MenuItem:not(.heading)">
+        <Setter Property="Width" Value="{Binding $self.Height}"/>
+    </Style>
+    
+    <!-- > Header or Icon-->
+    <Style Selector="Menu > MenuItem:not(.heading) /template/ ContentPresenter" >
+        <Setter Property="ContentTemplate" >
+            <DataTemplate>
+                <i:Icon Value="{Binding $parent[MenuItem].Header}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </DataTemplate>
+        </Setter>
+    </Style>
+
+    <!-- > Omit :selected background-->
+    <Style Selector="MenuItem:selected /template/ Border#root" >
+        <Setter Property="Background" Value="Transparent"/>
+    </Style>
+
+    <!-- > Override :pointerover background-->
+    <Style Selector="MenuItem:pointerover:not(.heading) /template/ Border#root" >
+        <Setter Property="Background" Value="{DynamicResource ThemeControlLowBrush}"/>
+    </Style>
+
+</Styles>

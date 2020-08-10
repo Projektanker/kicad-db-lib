@@ -17,21 +17,8 @@
             <MenuItem Classes="right" Command="{Binding GoToNewPart}" Header="fas fa-plus" />
             <MenuItem Header="Parts" Classes="heading" />
         </Menu>
-        <DockPanel Margin="10" LastChildFill="True" Grid.IsSharedSizeScope="True">
-            <Grid Margin="40 0 0 0" DockPanel.Dock="Top" Classes="parts">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="C1"/>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="C2"/>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="C3"/>
-                </Grid.ColumnDefinitions>
-                <l:SortableHeader Grid.Column="0" Header="Id"/>
-                <l:SortableHeader Grid.Column="1" Header="Reference"/>
-                <l:SortableHeader Grid.Column="2" Header="CustomFields[MF]"/>
-            </Grid>
+        <DockPanel Margin="10" LastChildFill="True" >
             <DataGrid Items="{Binding Parts}" l:DataGridBehavior.ColumnInfos="{Binding PartColumns}"/>
-                
-
-
         </DockPanel>
     </DockPanel>
 </UserControl>

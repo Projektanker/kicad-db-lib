@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using DynamicData.Alias;
 using KiCadDbLib.Models;
@@ -13,24 +14,37 @@ using SharpDX.Direct2D1.Effects;
 
 namespace KiCadDbLib.ViewModels
 {
-    public class PartsViewModel : ViewModelBase, IRoutableViewModel
+    public class PartsViewModel : RoutableViewModelBase
     {
-        private IEnumerable<Part> _parts;
         private ObservableAsPropertyHelper<IEnumerable<ColumnInfo>> _partColumns;
-
-
+        private IEnumerable<Part> _parts;
         public PartsViewModel(IScreen hostScreen)
+            : base(hostScreen)
         {
-            HostScreen = hostScreen ?? throw new ArgumentNullException(nameof(hostScreen));
-            UrlPathSegment = Guid.NewGuid().ToString().Substring(0, 5);
-
             GoToSettings = NavigationCommand.Create(HostScreen, () => new SettingsViewModel(HostScreen, new Services.SettingsService()));
+            
+            Parts = MockParts();            
+        }
+
+        protected override void WhenActivated(CompositeDisposable disposables)
+        {
+            base.WhenActivated(disposables);
+
             _partColumns = this.WhenAnyValue(vm => vm.Parts)
                 .Select(parts => GetColumnInfos(parts))
                 .ToProperty(this, vm => vm.PartColumns);
-            Parts = MockParts();            
         }
-                
+
+        public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
+
+        public IEnumerable<ColumnInfo> PartColumns => _partColumns?.Value;
+
+        public IEnumerable<Part> Parts
+        {
+            get => _parts;
+            set => this.RaiseAndSetIfChanged(ref _parts, value);
+        }
+
         private static IEnumerable<ColumnInfo> GetColumnInfos(IEnumerable<Part> parts)
         {
             List<ColumnInfo> columnInfos = new List<ColumnInfo>()
@@ -40,7 +54,7 @@ namespace KiCadDbLib.ViewModels
                 new ColumnInfo(nameof(Part.Reference)),
             };
 
-            if(parts != null)
+            if (parts != null)
             {
                 var customFieldColumnInfos = parts
                     .SelectMany(part => part.CustomFields.Keys)
@@ -88,24 +102,5 @@ namespace KiCadDbLib.ViewModels
                 }
             };
         }
-
-        /// <summary>
-        /// Gets the <see cref="IScreen"/> that owns the routable view model.
-        /// </summary>
-        public IScreen HostScreen { get; }
-
-        /// <summary>
-        /// Gets the unique identifier for the routable view model.
-        /// </summary>
-        public string UrlPathSegment { get; }
-
-        public IEnumerable<Part> Parts
-        {
-            get => _parts;
-            set => this.RaiseAndSetIfChanged(ref _parts, value);
-        }
-        public IEnumerable<ColumnInfo> PartColumns => _partColumns.Value;
-
-        public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
     }
 }

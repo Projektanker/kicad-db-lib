@@ -1,6 +1,8 @@
-﻿using Avalonia;
+﻿using System.Reflection;
+using Avalonia;
 using Avalonia.Logging.Serilog;
 using Avalonia.ReactiveUI;
+using KiCadDbLib.Services;
 using KiCadDbLib.ViewModels;
 using KiCadDbLib.Views;
 using Projektanker.Icons.Avalonia;
@@ -27,9 +29,14 @@ namespace KiCadDbLib
         {
             // Router uses Splat.Locator to resolve views for view models, so we need to register
             // our views.
-            Locator.CurrentMutable.Register(() => new PartsView(), typeof(IViewFor<PartsViewModel>));
-            Locator.CurrentMutable.Register(() => new SettingsView(), typeof(IViewFor<SettingsViewModel>));
+            // Locator.CurrentMutable.Register(() => new PartsView(), typeof(IViewFor<PartsViewModel>));
+            // Locator.CurrentMutable.Register(() => new SettingsView(), typeof(IViewFor<SettingsViewModel>));
+            Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetCallingAssembly());
+            
+            Locator.CurrentMutable.RegisterLazySingleton(() => new SettingsService());
 
+            // TODO: SimpleInjector instead of Splat
+            
             return AppBuilder.Configure<App>()
                 .AfterSetup(AfterSetupCallback)       
                 .UseReactiveUI()
