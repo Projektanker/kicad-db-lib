@@ -3,7 +3,7 @@
         xmlns:l="clr-namespace:KiCadDbLib.Controls"
         xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia">
 
-    <StyleInclude Source="/Styles/Resources.xaml" />
+    <StyleInclude Source="/Styles/Resources.axaml" />
     
     <!--CommandBar-->
     <Style Selector="Menu" >

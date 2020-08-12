@@ -9,7 +9,7 @@ namespace KiCadDbLib.Models
     public class ColumnInfo : IEquatable<ColumnInfo>
     {
         public ColumnInfo(string headerAndPath)
-            :this(headerAndPath, headerAndPath)
+            : this(headerAndPath, headerAndPath)
         {
 
         }
@@ -24,6 +24,16 @@ namespace KiCadDbLib.Models
         public string Path { get; }
 
         public SortDirection? SortDirection { get; set; }
+
+        public static bool operator !=(ColumnInfo left, ColumnInfo right)
+        {
+            return !(left == right);
+        }
+
+        public static bool operator ==(ColumnInfo left, ColumnInfo right)
+        {
+            return EqualityComparer<ColumnInfo>.Default.Equals(left, right);
+        }
 
         public override bool Equals(object obj)
         {
@@ -40,16 +50,6 @@ namespace KiCadDbLib.Models
         public override int GetHashCode()
         {
             return HashCode.Combine(Header, Path);
-        }
-
-        public static bool operator ==(ColumnInfo left, ColumnInfo right)
-        {
-            return EqualityComparer<ColumnInfo>.Default.Equals(left, right);
-        }
-
-        public static bool operator !=(ColumnInfo left, ColumnInfo right)
-        {
-            return !(left == right);
         }
     }
 }

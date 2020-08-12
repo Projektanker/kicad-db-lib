@@ -40,7 +40,7 @@ namespace KiCadDbLib.ViewModels
         {
             base.WhenActivated(disposables);
 
-            IObservable<Settings> settingsObservable = _settingsService.GetSettings().ToObservable();
+            IObservable<Settings> settingsObservable = _settingsService.GetSettingsAsync().ToObservable();
 
             // Logging
             settingsObservable

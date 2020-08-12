@@ -4,10 +4,10 @@
         xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
         >
    
-    <StyleInclude Source="/Styles/Resources.xaml"/>
-    <StyleInclude Source="/Styles/Menu.xaml"/>
-    <StyleInclude Source="/Styles/LabeledTextBox.xaml"/>
-    <StyleInclude Source="/Styles/SortableHeader.xaml"/>
+    <StyleInclude Source="/Styles/Resources.axaml"/>
+    <StyleInclude Source="/Styles/Menu.axaml"/>
+    <StyleInclude Source="/Styles/LabeledTextBox.axaml"/>
+    <StyleInclude Source="/Styles/SortableHeader.axaml"/>
 
     <!--Layout-->
     <Style Selector="DockPanel.root">

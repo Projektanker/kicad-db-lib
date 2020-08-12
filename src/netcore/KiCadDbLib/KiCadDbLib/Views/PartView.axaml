@@ -1,0 +1,44 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:l="clr-namespace:KiCadDbLib.Controls"
+             xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="KiCadDbLib.Views.PartView">
+    <DockPanel Classes ="root">
+        <Menu>
+            <MenuItem Command="{Binding GoBack}" Header="fas fa-arrow-left" />
+            <MenuItem Header="Settings" Classes="heading" />
+        </Menu>
+        <ScrollViewer>
+            <StackPanel Spacing="10">
+                <!--Default fields-->                
+                <TextBlock Text="Basic fields" Classes="h2"/>
+                <l:LabeledTextBox Label="LIBRARY" Text="{Binding Library}" />
+                <l:LabeledTextBox Label="REFERENCE" Text="{Binding Reference}" IsRequired="true"/>
+                <l:LabeledTextBox Label="VALUE" Text="{Binding Value}" IsRequired="true"/>
+                <l:LabeledTextBox Label="SYMBOL" Text="{Binding Symbol}" IsRequired="true"/>
+                <l:LabeledTextBox Label="FOOTPRINT" Text="{Binding Footprint}" />
+                <l:LabeledTextBox Label="DESCRIPTION" Text="{Binding Description}" />
+                <l:LabeledTextBox Label="KEYWORDS" Text="{Binding Keywords}" />
+                <l:LabeledTextBox Label="DATASHEET" Text="{Binding Datasheet}" />
+                
+                <!--Custom fields-->
+                <TextBlock Text="Custom fields" Classes="h2"/>
+                <ItemsRepeater Items="{Binding CustomFields}">
+                    <ItemsRepeater.Layout>
+                        <StackLayout Orientation="Vertical" Spacing="10" />
+                    </ItemsRepeater.Layout>
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel LastChildFill="True">
+                                <l:LabeledTextBox Label="{Binding Name}" Text="{Binding Value}" />
+                            </DockPanel>
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                </ItemsRepeater>
+            </StackPanel>            
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

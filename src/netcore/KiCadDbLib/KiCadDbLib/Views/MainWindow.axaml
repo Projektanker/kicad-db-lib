@@ -15,7 +15,7 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
     <Window.Styles>
-        <StyleInclude Source="/Styles/Generic.xaml" />
+        <StyleInclude Source="/Styles/Generic.axaml" />
     </Window.Styles>
     <Grid>
         <Grid.RowDefinitions>

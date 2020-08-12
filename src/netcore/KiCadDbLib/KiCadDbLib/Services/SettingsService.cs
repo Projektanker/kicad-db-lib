@@ -21,7 +21,7 @@ namespace KiCadDbLib.Services
 
         public string Location { get; }
 
-        public async Task<Settings> GetSettings()
+        public async Task<Settings> GetSettingsAsync()
         {
             if (File.Exists(Location))
             {
