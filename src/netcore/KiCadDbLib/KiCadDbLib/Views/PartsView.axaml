@@ -18,7 +18,7 @@
             <MenuItem Header="Parts" Classes="heading" />
         </Menu>
         <DockPanel Margin="10" LastChildFill="True" >
-            <DataGrid Items="{Binding Parts}" l:DataGridBehavior.ColumnInfos="{Binding PartColumns}"/>
+            <DataGrid Items="{Binding Parts}" IsReadOnly="True" l:DataGridBehavior.ColumnInfos="{Binding PartColumns}"/>
         </DockPanel>
     </DockPanel>
 </UserControl>

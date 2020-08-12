@@ -52,6 +52,12 @@ namespace KiCadDbLib.ViewModels
                 new ColumnInfo(nameof(Part.Id)),
                 new ColumnInfo(nameof(Part.Library)),
                 new ColumnInfo(nameof(Part.Reference)),
+                new ColumnInfo(nameof(Part.Value)),
+                new ColumnInfo(nameof(Part.Symbol)),
+                new ColumnInfo(nameof(Part.Footprint)),
+                new ColumnInfo(nameof(Part.Description)),
+                new ColumnInfo(nameof(Part.Keywords)),
+                new ColumnInfo(nameof(Part.Datasheet)),
             };
 
             if (parts != null)
@@ -59,6 +65,7 @@ namespace KiCadDbLib.ViewModels
                 var customFieldColumnInfos = parts
                     .SelectMany(part => part.CustomFields.Keys)
                     .Distinct()
+                    .OrderBy(x => x)
                     .Select(field => new ColumnInfo(field, $"{nameof(Part.CustomFields)}[{field}]"));
 
                 columnInfos.AddRange(customFieldColumnInfos);
