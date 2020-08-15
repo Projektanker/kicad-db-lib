@@ -1,0 +1,48 @@
+﻿# top-most EditorConfig file
+root = true
+
+[*.cs]
+# SA0001: XML comment analysis is disabled due to project configuration
+dotnet_diagnostic.SA0001.severity = none
+
+# SA1101: Prefix local calls with this
+dotnet_diagnostic.SA1101.severity = none
+
+# SA1123: Region should not be located within a code element
+dotnet_diagnostic.SA1123.severity = suggestion
+
+# SA1124: Do not use regions
+dotnet_diagnostic.SA1124.severity = suggestion
+
+# SA1200: Using directives should be placed correctly
+dotnet_diagnostic.SA1200.severity = none
+
+# SA1309: Field names must not begin with underscore
+dotnet_diagnostic.SA1309.severity = none
+
+# SA1633: File should have header
+dotnet_diagnostic.SA1633.severity = none
+
+# SX1101: Do not prefix local members with this
+dotnet_diagnostic.SX1101.severity = warning
+
+# SX1309: Field names must begin with underscore
+dotnet_diagnostic.SX1309.severity = warning
+
+# SX1309S: Static field names must begin with underscore
+dotnet_diagnostic.SX1309S.severity = warning
+
+# .NET naming symbols: 
+# private_field
+dotnet_naming_symbols.private_field.applicable_kinds           = field
+dotnet_naming_symbols.private_field.applicable_accessibilities = private
+
+# .NET naming style: underscore_camel_case 
+dotnet_naming_style.underscore_camel_case.required_prefix = _
+dotnet_naming_style.underscore_camel_case.capitalization  = camel_case
+
+#.NET naming rule: private_fields_underscore_camelcase
+dotnet_naming_rule.private_fields_underscore_camelcase.symbols  = private_field
+dotnet_naming_rule.private_fields_underscore_camelcase.style    = underscore_camel_case
+dotnet_naming_rule.private_fields_underscore_camelcase.severity = suggestion
+
