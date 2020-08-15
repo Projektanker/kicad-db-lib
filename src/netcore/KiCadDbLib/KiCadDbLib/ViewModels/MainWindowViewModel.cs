@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Reactive;
 using System.Text;
+using KiCadDbLib.Services;
 using ReactiveUI;
+using Splat;
 
 namespace KiCadDbLib.ViewModels
 {
@@ -22,7 +24,7 @@ namespace KiCadDbLib.ViewModels
             );
 
             Router = new RoutingState();
-            Router.NavigateAndReset.Execute(new PartsViewModel(this));
+            Router.NavigateAndReset.Execute(new PartsViewModel(this, Locator.Current.GetService<PartsService>()));
         }
 
         public string Greeting => "Welcome to Avalonia!";

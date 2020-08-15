@@ -24,7 +24,7 @@
                 <TextBlock Text="{Binding SettingsLocation}" />
             </StackPanel>
             <StackPanel>
-                <Expander Header="Paths" IsExpanded="True" DataContext="{Binding Settings}" Classes="h2">
+                <Expander Header="Paths" IsExpanded="True" Classes="h2">
                     <StackPanel Spacing="10">
                         <l:LabeledTextBox Label="Database" Text="{Binding DatabasePath}" />
                         <l:LabeledTextBox Label="Symbols" Text="{Binding SymbolsPath}" />

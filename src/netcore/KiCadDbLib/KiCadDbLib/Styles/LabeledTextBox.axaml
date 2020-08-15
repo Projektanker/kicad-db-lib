@@ -23,7 +23,7 @@
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
-                    <TextBox Text="{TemplateBinding Text}"/>
+                    <TextBox Text="{TemplateBinding Text, Mode=TwoWay}"/>
                 </StackPanel>
             </ControlTemplate>
         </Setter>

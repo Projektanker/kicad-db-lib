@@ -1,48 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using DynamicData.Alias;
 using KiCadDbLib.Models;
 using KiCadDbLib.Navigation;
-using KiCadDbLib.Views;
+using KiCadDbLib.Services;
 using ReactiveUI;
-using SharpDX.Direct2D1.Effects;
+using Splat;
 
 namespace KiCadDbLib.ViewModels
 {
     public class PartsViewModel : RoutableViewModelBase
     {
-        private ObservableAsPropertyHelper<IEnumerable<ColumnInfo>> _partColumns;
-        private IEnumerable<Part> _parts;
-        public PartsViewModel(IScreen hostScreen)
+        private readonly PartsService _partsService;
+        private ObservableAsPropertyHelper<IEnumerable<ColumnInfo>> _partColumnsProperty;
+        private ObservableAsPropertyHelper<IEnumerable<Part>> _partsProperty;
+
+        public PartsViewModel(IScreen hostScreen, PartsService partsService)
             : base(hostScreen)
         {
-            GoToSettings = NavigationCommand.Create(HostScreen, () => new SettingsViewModel(HostScreen, new Services.SettingsService()));
-            
-            Parts = MockParts();            
+            _partsService = partsService;
+            GoToSettings = NavigationCommand.Create(
+                hostScreen: HostScreen,
+                viewModelFactory: () => new SettingsViewModel(
+                    hostScreen: HostScreen,
+                    settingsService: Locator.Current.GetService<SettingsService>()));
+
+            GoToPart = NavigationCommand.Create<Part, PartViewModel>(hostScreen: HostScreen,
+                viewModelFactory: CreatePartViewModel);
         }
+
+        private PartViewModel CreatePartViewModel(Part part = null)
+        {
+            return new PartViewModel(
+                     hostScreen: HostScreen,
+                     settingsService: Locator.Current.GetService<SettingsService>(),
+                     partsService: Locator.Current.GetService<PartsService>(),
+                     part: part ?? new Part());
+        }
+
+        public ReactiveCommand<Part, IRoutableViewModel> GoToPart { get; }
+        public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
+
+        public IEnumerable<ColumnInfo> PartColumns => _partColumnsProperty?.Value ?? Enumerable.Empty<ColumnInfo>();
+
+        public IEnumerable<Part> Parts => _partsProperty?.Value ?? Enumerable.Empty<Part>();
 
         protected override void WhenActivated(CompositeDisposable disposables)
         {
             base.WhenActivated(disposables);
 
-            _partColumns = this.WhenAnyValue(vm => vm.Parts)
+            _partColumnsProperty = this.WhenAnyValue(vm => vm.Parts)
                 .Select(parts => GetColumnInfos(parts))
-                .ToProperty(this, vm => vm.PartColumns);
-        }
+                .ToProperty(this, vm => vm.PartColumns)
+                .DisposeWith(disposables);
 
-        public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
-
-        public IEnumerable<ColumnInfo> PartColumns => _partColumns?.Value;
-
-        public IEnumerable<Part> Parts
-        {
-            get => _parts;
-            set => this.RaiseAndSetIfChanged(ref _parts, value);
+            var partsObservable = _partsService.GetPartsAsync().ToObservable();
+            _partsProperty = partsObservable
+                .Cast<IEnumerable<Part>>()
+                .ToProperty(this, nameof(Parts))
+                .DisposeWith(disposables);
         }
 
         private static IEnumerable<ColumnInfo> GetColumnInfos(IEnumerable<Part> parts)

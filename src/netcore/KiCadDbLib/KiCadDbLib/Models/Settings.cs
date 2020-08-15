@@ -8,7 +8,7 @@ namespace KiCadDbLib.Models
     {
         public Settings()
         {
-            CustomFields = new List<string>() { "MF", "MPN", "OC_MOUSER" };
+            CustomFields = new List<string>();
             DatabasePath = nameof(DatabasePath);
             FootprintsPath = nameof(FootprintsPath);
             OutputPath = nameof(OutputPath);

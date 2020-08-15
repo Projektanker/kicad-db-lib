@@ -12,7 +12,20 @@ namespace KiCadDbLib.Navigation
         {
             return ReactiveCommand.CreateFromObservable(
                 execute: () => hostScreen.Router.Navigate.Execute(viewModelFactory.Invoke()),
-                canExecute: hostScreen.Router.CurrentViewModel.Select(routableViewModel => !(routableViewModel is TViewModel)));
+                canExecute: GetCanExecute<TViewModel>(hostScreen));
+        }
+
+        public static ReactiveCommand<TParam, IRoutableViewModel> Create<TParam, TViewModel>(IScreen hostScreen, Func<TParam, TViewModel> viewModelFactory)
+            where TViewModel : IRoutableViewModel
+        {
+            return ReactiveCommand.CreateFromObservable(
+                execute: (TParam param) => hostScreen.Router.Navigate.Execute(viewModelFactory.Invoke(param)),
+                canExecute: GetCanExecute<TViewModel>(hostScreen));
+        }
+
+        private static IObservable<bool> GetCanExecute<TViewModel>(IScreen hostScreen)
+        {
+            return hostScreen.Router.CurrentViewModel.Select(routableViewModel => !(routableViewModel is TViewModel));
         }
     }
 }

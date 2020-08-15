@@ -40,9 +40,11 @@ namespace KiCadDbLib.Services
             {
                 throw new ArgumentNullException(nameof(settings));
             }
-
+            FileInfo file = new FileInfo(Location);
+            file.Directory.Create();
             string json = JsonConvert.SerializeObject(settings);
-            await File.WriteAllTextAsync(Location, json);
+            using var writer = file.CreateText();
+            await writer.WriteAsync(json);
         }
     }
 }

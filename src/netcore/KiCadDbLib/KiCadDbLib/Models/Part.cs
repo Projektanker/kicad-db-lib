@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace KiCadDbLib.Models
 {
     public class Part
     {
-
+        [JsonConstructor]
         public Part()
         {
             CustomFields = new Dictionary<string, string>();
@@ -16,7 +17,7 @@ namespace KiCadDbLib.Models
         /// Gets a dictionary of the custom fields with it's values.
         /// </summary>
         public Dictionary<string, string> CustomFields { get; }
-        
+
         /// <summary>
         /// Gets or sets the datasheet location.
         /// </summary>
@@ -61,5 +62,6 @@ namespace KiCadDbLib.Models
         /// Gets or sets the value.
         /// </summary>
         public string Value { get; set; }
+
     }
 }

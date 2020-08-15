@@ -14,11 +14,14 @@
                 <MenuItem Icon="fas fa-info-circle" Header="About" />
             </MenuItem>
             <MenuItem Classes="right" Command="{Binding GoToSettings}" Header="fas fa-cog" />
-            <MenuItem Classes="right" Command="{Binding GoToNewPart}" Header="fas fa-plus" />
+            <MenuItem Classes="right" Command="{Binding GoToPart}" Header="fas fa-plus" />
             <MenuItem Header="Parts" Classes="heading" />
         </Menu>
         <DockPanel Margin="10" LastChildFill="True" >
-            <DataGrid Items="{Binding Parts}" IsReadOnly="True" l:DataGridBehavior.ColumnInfos="{Binding PartColumns}"/>
+            <DataGrid Items="{Binding Parts}" IsReadOnly="True" x:Name="partsGrid"
+                      l:DataGridBehavior.ColumnInfos="{Binding PartColumns}"
+                      l:DataGridBehavior.SelectionChangedCommand="{Binding GoToPart}">
+            </DataGrid>
         </DockPanel>
     </DockPanel>
 </UserControl>

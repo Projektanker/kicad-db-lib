@@ -1,8 +1,0 @@
-EESchema-DOCLIB  Version 2.0
-#
-$CMP 10u_16V
-D Capacitor 10uF 0805 16V
-K Capacitor Capacitor 10u 0805
-$ENDCMP
-#
-#End Doc Library

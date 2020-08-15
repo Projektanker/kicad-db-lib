@@ -14,7 +14,7 @@ namespace KiCadDbLib
 {
     internal class Program
     {
-        
+
         // Initialization code. Don't use any Avalonia, third-party APIs or any
         // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
         // yet and stuff might break.
@@ -32,13 +32,17 @@ namespace KiCadDbLib
             // Locator.CurrentMutable.Register(() => new PartsView(), typeof(IViewFor<PartsViewModel>));
             // Locator.CurrentMutable.Register(() => new SettingsView(), typeof(IViewFor<SettingsViewModel>));
             Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetCallingAssembly());
-            
+
             Locator.CurrentMutable.RegisterLazySingleton(() => new SettingsService());
+            Locator.CurrentMutable.RegisterLazySingleton(() =>
+            {
+                return new PartsService(Locator.Current.GetService<SettingsService>());
+            });
 
             // TODO: SimpleInjector instead of Splat
-            
+
             return AppBuilder.Configure<App>()
-                .AfterSetup(AfterSetupCallback)       
+                .AfterSetup(AfterSetupCallback)
                 .UseReactiveUI()
                 .UsePlatformDetect()
                 .LogToDebug();
