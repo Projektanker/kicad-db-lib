@@ -1,0 +1,37 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=netstandard"
+        xmlns:l="clr-namespace:KiCadDbLib.Controls">
+    <Design.PreviewWith>
+        <StackPanel Spacing="10">
+            <l:LabeledAutoCompleteBox Label="Database" Text="BindingDatabasePath" />
+            <l:LabeledAutoCompleteBox Label="Symbols" Text="Binding SymbolsPath" />
+            <l:LabeledAutoCompleteBox Label="Footprints" Text="Binding FootprintsPath" />
+            <l:LabeledAutoCompleteBox Label="Output" Text="Binding OutputPath" >
+                <l:LabeledAutoCompleteBox.Items>
+                    <sys:String>Hallo</sys:String>
+                    <sys:String>Hallo</sys:String>
+                </l:LabeledAutoCompleteBox.Items>
+            </l:LabeledAutoCompleteBox>
+        </StackPanel>
+    </Design.PreviewWith>
+    <Style Selector="l|LabeledAutoCompleteBox">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Spacing="5">
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="\{0\}\{1\}">
+                                <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                                         Path="Label"/>
+                                <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                                         Path="IsRequiredAsterisk"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

@@ -7,7 +7,9 @@
     <StyleInclude Source="/Styles/Resources.axaml"/>
     <StyleInclude Source="/Styles/Menu.axaml"/>
     <StyleInclude Source="/Styles/LabeledTextBox.axaml"/>
+    <StyleInclude Source="/Styles/LabeledAutoCompleteBox.axaml"/>
     <StyleInclude Source="/Styles/SortableHeader.axaml"/>
+    <StyleInclude Source="/Styles/Form.axaml"/>
 
     <!--Layout-->
     <Style Selector="DockPanel.root">

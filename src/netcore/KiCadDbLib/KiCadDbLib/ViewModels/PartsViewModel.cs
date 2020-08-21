@@ -94,41 +94,5 @@ namespace KiCadDbLib.ViewModels
 
             return columnInfos;
         }
-
-        private IEnumerable<Part> MockParts()
-        {
-            yield return new Part()
-            {
-                Id = "0001",
-                Library = "_R_0603",
-                Reference = "R",
-                CustomFields =
-                {
-                    { "MF", "Wuerth" },
-                }
-            };
-
-            yield return new Part()
-            {
-                Id = "0002",
-                Library = "_R_0805",
-                Reference = "R",
-                CustomFields =
-                {
-                    { "MF", "Wuerth" },
-                }
-            };
-
-            yield return new Part()
-            {
-                Id = "0003",
-                Library = "_C_0603",
-                Reference = "R",
-                CustomFields =
-                {
-                    { "MF", "Wuerth" },
-                }
-            };
-        }
     }
 }

@@ -1,53 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Controls.Templates;
+using Avalonia.Rendering.SceneGraph;
 using KiCadDbLib.Models;
 using KiCadDbLib.Navigation;
+using KiCadDbLib.ReactiveForms;
+using KiCadDbLib.ReactiveForms.Validation;
 using KiCadDbLib.Services;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ReactiveUI;
 
 namespace KiCadDbLib.ViewModels
 {
     public class PartViewModel : RoutableViewModelBase
     {
-        private readonly Part _part;
         private readonly PartsService _partsService;
         private readonly SettingsService _settingsService;
-        private ObservableAsPropertyHelper<IEnumerable<CustomField>> _customFieldsProperty;
-        private string _datasheet;
-        private string _description;
-        private string _footprint;
-        private string _id;
-        private string _keywords;
-        private string _library;
-        private string _reference;
-        private string _symbol;
-        private string _value;
+        private Part _part;
+        private ObservableAsPropertyHelper<FormGroup> _partFormProperty;
         public PartViewModel(IScreen hostScreen, SettingsService settingsService, PartsService partsService, Part part)
             : base(hostScreen)
         {
             _settingsService = settingsService ?? throw new ArgumentNullException(nameof(settingsService));
             _partsService = partsService ?? throw new ArgumentNullException(nameof(partsService));
             _part = part ?? new Part();
-
             Id = _part.Id;
-            Library = _part.Library;
-            Reference = _part.Reference;
-            Value = _part.Value;
-            Symbol = _part.Symbol;
-            Footprint = _part.Footprint;
-            Description = _part.Description;
-            Keywords = _part.Keywords;
-            Datasheet = _part.Datasheet;
 
             GoBack = ReactiveCommand.CreateFromTask(ExecuteGoBackAsync);
 
-            var canCloneOrDelete = this.WhenAnyValue(vm => vm.Id, id => !string.IsNullOrEmpty(id));
+            var canCloneOrDelete = this.WhenAnyValue(vm => vm.Id)
+                .Select(id => !string.IsNullOrEmpty(Id));                
             Clone = ReactiveCommand.Create(ExecuteClone, canCloneOrDelete);
             Delete = ReactiveCommand.CreateFromTask(ExecuteDeleteAsync, canCloneOrDelete);
             Save = ReactiveCommand.CreateFromTask(ExecuteSaveAsync);
@@ -55,119 +48,152 @@ namespace KiCadDbLib.ViewModels
             DeletePartConfirmation = new Interaction<Unit, bool>();
         }
 
-        public ReactiveCommand<Unit, Unit> Clone { get; }
 
-        public IEnumerable<CustomField> CustomFields => _customFieldsProperty?.Value;
-
-        /// <summary>
-        /// Gets or sets the <see cref="Part.Datasheet"/>
-        /// </summary>
-        public string Datasheet
-        {
-            get => _datasheet;
-            set => this.RaiseAndSetIfChanged(ref _datasheet, value);
-        }
-
-        public ReactiveCommand<Unit, Unit> Delete { get; }
-
-        /// <summary>
-        /// Gets or sets the <see cref="Part.Description"/>
-        /// </summary>
-        public string Description
-        {
-            get => _description;
-            set => this.RaiseAndSetIfChanged(ref _description, value);
-        }
-
-        public Interaction<Unit, bool> DiscardChangesConfirmation { get; }
-        public Interaction<Unit, bool> DeletePartConfirmation { get; }
-
-        /// <summary>
-        /// Gets or sets the <see cref="Part.Footprint"/>
-        /// </summary>
-        public string Footprint
-        {
-            get => _footprint;
-            set => this.RaiseAndSetIfChanged(ref _footprint, value);
-        }
-
-        public ReactiveCommand<Unit, Unit> GoBack { get; }
-
-        public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
-
-        /// <summary>
-        /// Gets the <see cref="Part.Id"/>
-        /// </summary>
+        private string _id;
         public string Id
         {
             get => _id;
             set => this.RaiseAndSetIfChanged(ref _id, value);
         }
 
-        /// <summary>
-        /// Gets or sets the <see cref="Part.Keywords"/>
-        /// </summary>
-        public string Keywords
-        {
-            get => _keywords;
-            set => this.RaiseAndSetIfChanged(ref _keywords, value);
-        }
 
-        /// <summary>
-        /// Gets the <see cref="Part.Library"/>
-        /// </summary>
-        public string Library
-        {
-            get => _library;
-            set => this.RaiseAndSetIfChanged(ref _library, value);
-        }
+        public Func<string, CancellationToken, Task<IEnumerable<object>>> AsyncAvailableFootprintsPopulator => GetAvailableFootrpintsAsync;
 
-        /// <summary>
-        /// Gets or sets the <see cref="Part.Reference"/>
-        /// </summary>
-        public string Reference
-        {
-            get => _reference;
-            set => this.RaiseAndSetIfChanged(ref _reference, value);
-        }
+        public Func<string, CancellationToken, Task<IEnumerable<object>>> AsyncAvailableSymbolsPopulator => GetAvailableSymbolsAsync;
+
+        public ReactiveCommand<Unit, Unit> Clone { get; }
+
+        
+        public ReactiveCommand<Unit, Unit> Delete { get; }
+
+        public Interaction<Unit, bool> DeletePartConfirmation { get; }
+
+        
+
+        public Interaction<Unit, bool> DiscardChangesConfirmation { get; }
+
+       
+        public ReactiveCommand<Unit, Unit> GoBack { get; }
+
+        public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
+
+
+        public FormGroup PartForm => _partFormProperty?.Value;
+                
 
         public ReactiveCommand<Unit, Unit> Save { get; }
 
-        /// <summary>
-        /// Gets or sets the <see cref="Part.Symbol"/>
-        /// </summary>
-        public string Symbol
-        {
-            get => _symbol;
-            set => this.RaiseAndSetIfChanged(ref _symbol, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the <see cref="Part.Value"/>
-        /// </summary>
-        public string Value
-        {
-            get => _value;
-            set => this.RaiseAndSetIfChanged(ref _value, value);
-        }
-
+        
         protected override void WhenActivated(CompositeDisposable disposables)
         {
             base.WhenActivated(disposables);
 
-            _customFieldsProperty = _settingsService.GetSettingsAsync().ToObservable()
-                .Select(settings => GetCustomFields(settings, _part))
-                .ToProperty(this, nameof(CustomFields))
+            IObservable<Settings> settingsObservable = _settingsService.GetSettingsAsync().ToObservable();
+          
+
+            _partFormProperty = settingsObservable
+                .Select(settings => GetPartForm(settings, _part))
+                .ToProperty(this, nameof(PartForm))
                 .DisposeWith(disposables);
         }
-
-        private static IEnumerable<CustomField> GetCustomFields(Settings settings, Part part)
+        private static FormGroup GetPartForm(Settings settings, Part part)
         {
-            return settings.CustomFields
-                .Select(cf => new CustomField(name: cf, value: part.CustomFields.TryGetValue(cf, out string value) ? value : string.Empty))
-                .ToArray();
-        }
+            FormGroup customFields = new FormGroup()
+            {
+                Label = "Custom fields",
+            };
 
+            foreach (string customField in settings.CustomFields)
+            {
+                FormControl formControl = new FormControl()
+                {
+                    Label = customField,
+                    Value = part.CustomFields.TryGetValue(customField, out string temp) ? temp : string.Empty,
+                };
+
+                customFields.Controls.Add(customField, formControl);
+            }
+
+            FormGroup basicFields = new FormGroup()
+            {
+                Label = "Basic fields",
+                Controls =
+                {
+                    {nameof(Part.Library), new FormControl()
+                        {
+                            Label = nameof(Part.Library),
+                            Value = part.Library,
+                            Validator = Validators.Compose(
+                                Validators.Required,
+                                Validators.Pattern(new Regex(@"^[a-zA-Z0-9_\-\. ]+$"))),
+
+                        }
+                    },
+                    {nameof(Part.Reference), new FormControl()
+                        {
+                            Label = nameof(Part.Reference),
+                            Value = part.Reference,
+                            Validator = Validators.Compose(
+                                Validators.Required,
+                                Validators.Pattern(new Regex(@"^[^ \\/:]+$"))),
+                        }
+                    },
+                    {nameof(Part.Value), new FormControl()
+                        {
+                            Label = nameof(Part.Value),
+                            Value = part.Value,
+                            Validator = Validators.Compose(
+                                Validators.Required,
+                                Validators.Pattern(new Regex(@"^[^ \\/:]+$"))),
+                        }
+                    },
+                    {nameof(Part.Symbol), new FormControl()
+                        {
+                            Label = nameof(Part.Symbol),
+                            Value = part.Symbol,
+                            Validator = Validators.Required,
+                        }
+                    },
+                    {nameof(Part.Footprint), new FormControl()
+                        {
+                            Label = nameof(Part.Footprint),
+                            Value = part.Footprint,
+                        }
+                    },
+                    {nameof(Part.Description), new FormControl()
+                        {
+                            Label = nameof(Part.Description),
+                            Value = part.Description,
+                        }
+                    },
+                    {nameof(Part.Keywords), new FormControl()
+                        {
+                            Label = nameof(Part.Keywords),
+                            Value = part.Keywords,
+                        }
+                    },
+                    {nameof(Part.Datasheet), new FormControl()
+                        {
+                            Label = nameof(Part.Datasheet),
+                            Value = part.Datasheet,
+                        }
+                    },
+                },
+            };
+
+            
+
+            FormGroup form = new FormGroup()
+            {
+                Controls =
+                {
+                    {"BasicFields", basicFields},
+                    {"CustomFields", customFields},
+                },
+            };
+
+            return form;
+        }
         private void ExecuteClone()
         {
             Id = null;
@@ -177,13 +203,14 @@ namespace KiCadDbLib.ViewModels
         {
             if (await DeletePartConfirmation.Handle(default).Catch(Observable.Return(true)))
             {
-                await _partsService.DeleteAsync(Id);
+                await _partsService.DeleteAsync(_part.Id);
                 await HostScreen.Router.NavigateBack.Execute();
             }
         }
+
         private async Task ExecuteGoBackAsync()
         {
-            if (!IsDirty()
+            if (!PartForm.IsDirty
                 || await DiscardChangesConfirmation.Handle(default).Catch(Observable.Return(true)))
             {
                 await HostScreen.Router.NavigateBack.Execute();
@@ -192,41 +219,41 @@ namespace KiCadDbLib.ViewModels
 
         private async Task ExecuteSaveAsync()
         {
-            _part.Id = Id;
-            _part.Library = Library;
-            _part.Reference = Reference;
-            _part.Value = Value;
-            _part.Symbol = Symbol;
-            _part.Footprint = Footprint;
-            _part.Description = Description;
-            _part.Keywords = Keywords;
-            _part.Datasheet = Datasheet;
+            JObject part = PartForm.Controls.Values
+                .First()
+                .GetValue() as JObject;
 
-            foreach (CustomField customField in CustomFields)
-            {
-                _part.CustomFields[customField.Name] = customField.Value;
-            }
+            part[nameof(Part.CustomFields)] = PartForm.Controls.Values
+                .Skip(1)
+                .First()
+                .GetValue() as JObject;
+
+            _part = part.ToObject<Part>();
+            _part.Id = Id;
 
             await _partsService.AddOrUpdateAsync(_part);
             await HostScreen.Router.NavigateBack.Execute();
         }
 
-        private bool IsDirty()
+        private async Task<IEnumerable<object>> GetAvailableFootrpintsAsync(string searchText, CancellationToken cancellationToken)
         {
-            return Id != _part.Id
-                || Library != _part.Library
-                || Reference != _part.Reference
-                || Value != _part.Value
-                || Symbol != _part.Symbol
-                || Footprint != _part.Footprint
-                || Description != _part.Description
-                || Keywords != _part.Keywords
-                || Datasheet != _part.Datasheet
-                || CustomFields.Any(cf =>
-                {
-                    string value = _part.CustomFields.TryGetValue(cf.Value, out string temp) ? temp : string.Empty;
-                    return cf.Value != value;
-                });
+            return await Task.Run(() =>
+            {
+                return new[] { "Device:C", "Device:R", "Device:L" }
+                    .Where(symbol => symbol.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                    .Cast<object>();
+            }, cancellationToken);
         }
+
+        private async Task<IEnumerable<object>> GetAvailableSymbolsAsync(string searchText, CancellationToken cancellationToken)
+        {
+            return await Task.Run(() =>
+            {
+                return new[] { "Device:C", "Device:R", "Device:L" }
+                    .Where(symbol => symbol.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                    .Cast<object>();
+            }, cancellationToken);
+        }
+        
     }
 }

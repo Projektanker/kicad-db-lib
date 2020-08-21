@@ -15,31 +15,7 @@
             <MenuItem Header="{Binding Id, StringFormat='Part \{0\}'}" Classes="heading" />
         </Menu>
         <ScrollViewer>
-            <StackPanel Spacing="10" Margin="10">
-                <!--Default fields-->
-                <TextBlock Text="Basic fields" Classes="h2"/>
-                <l:LabeledTextBox Label="LIBRARY" Text="{Binding Library}" />
-                <l:LabeledTextBox Label="REFERENCE" Text="{Binding Reference}" IsRequired="true"/>
-                <l:LabeledTextBox Label="VALUE" Text="{Binding Value}" IsRequired="true"/>
-                <l:LabeledTextBox Label="SYMBOL" Text="{Binding Symbol}" IsRequired="true"/>
-                <l:LabeledTextBox Label="FOOTPRINT" Text="{Binding Footprint}" />
-                <l:LabeledTextBox Label="DESCRIPTION" Text="{Binding Description}" />
-                <l:LabeledTextBox Label="KEYWORDS" Text="{Binding Keywords}" />
-                <l:LabeledTextBox Label="DATASHEET" Text="{Binding Datasheet}" />
-
-                <!--Custom fields-->
-                <TextBlock Text="Custom fields" Classes="h2"/>
-                <ItemsRepeater Items="{Binding CustomFields}">
-                    <ItemsRepeater.Layout>
-                        <StackLayout Orientation="Vertical" Spacing="10" />
-                    </ItemsRepeater.Layout>
-                    <ItemsRepeater.ItemTemplate>
-                        <DataTemplate>
-                            <l:LabeledTextBox Label="{Binding Name}" Text="{Binding Value, Mode=TwoWay}" />
-                        </DataTemplate>
-                    </ItemsRepeater.ItemTemplate>
-                </ItemsRepeater>
-            </StackPanel>
+            <l:FormControl Content="{Binding PartForm}"/>
         </ScrollViewer>
     </DockPanel>
 </UserControl>

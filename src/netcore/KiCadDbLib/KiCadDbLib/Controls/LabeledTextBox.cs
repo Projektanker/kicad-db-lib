@@ -1,16 +1,12 @@
-﻿
-using Avalonia;
-using Avalonia.Controls;
+﻿using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
-using Avalonia.Markup.Xaml;
 using Avalonia.Metadata;
 
 namespace KiCadDbLib.Controls
 {
     public class LabeledTextBox : TemplatedControl
     {
-
         public static readonly StyledProperty<bool> IsRequiredProperty =
             AvaloniaProperty.Register<LabeledTextBox, bool>(nameof(IsRequired));
 
