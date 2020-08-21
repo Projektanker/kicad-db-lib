@@ -25,12 +25,7 @@
             </StackPanel>
             <StackPanel>
                 <Expander Header="Paths" IsExpanded="True" Classes="h2">
-                    <StackPanel Spacing="10">
-                        <l:LabeledTextBox Label="Database" Text="{Binding DatabasePath}" />
-                        <l:LabeledTextBox Label="Symbols" Text="{Binding SymbolsPath}" />
-                        <l:LabeledTextBox Label="Footprints" Text="{Binding FootprintsPath}" />
-                        <l:LabeledTextBox Label="Output" Text="{Binding OutputPath}" />
-                    </StackPanel>
+                    <l:FormControl Content="{Binding PathsForm}"/>
                 </Expander>
                 <Expander Header="Custom fields" IsExpanded="True" Padding="10" Classes="h2">
                     <StackPanel>

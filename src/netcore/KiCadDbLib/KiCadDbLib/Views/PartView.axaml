@@ -15,7 +15,7 @@
             <MenuItem Header="{Binding Id, StringFormat='Part \{0\}'}" Classes="heading" />
         </Menu>
         <ScrollViewer>
-            <l:FormControl Content="{Binding PartForm}"/>
+            <l:FormControl Content="{Binding PartForm}" Margin="10"/>
         </ScrollViewer>
     </DockPanel>
 </UserControl>

@@ -29,5 +29,10 @@ namespace KiCadDbLib.ReactiveForms
         public virtual bool IsDirty => false;
 
         public abstract JToken GetValue();
+
+        public T ToObject<T>()
+        {
+            return GetValue().ToObject<T>();
+        }                
     }
 }

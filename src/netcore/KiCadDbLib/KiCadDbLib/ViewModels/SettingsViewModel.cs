@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Avalonia.Rendering.SceneGraph;
 using DynamicData;
 using KiCadDbLib.Models;
+using KiCadDbLib.ReactiveForms;
+using KiCadDbLib.ReactiveForms.Validation;
 using KiCadDbLib.Services;
 using ReactiveUI;
 
@@ -22,12 +19,9 @@ namespace KiCadDbLib.ViewModels
     public sealed class SettingsViewModel : RoutableViewModelBase
     {
         private readonly SettingsService _settingsService;
-        ObservableAsPropertyHelper<ObservableCollection<SettingsCustomFieldViewModel>> _customFieldsProperty;        
+        private ObservableAsPropertyHelper<ObservableCollection<SettingsCustomFieldViewModel>> _customFieldsProperty;
         private string _newCustomField;
-        private string _databasePath;
-        private string _footprintsPath;
-        private string _outputPath;
-        private string _symbolsPath;
+        private ObservableAsPropertyHelper<FormGroup> _pathsFormProperty;
 
         public SettingsViewModel(IScreen hostScreen, SettingsService settingsService)
             : base(hostScreen)
@@ -48,21 +42,11 @@ namespace KiCadDbLib.ViewModels
             });
         }
 
-        private Task ExecuteSaveSettings()
-        {
-            Settings settings = new Settings()
-            {
-                DatabasePath = DatabasePath,
-                FootprintsPath = FootprintsPath,
-                OutputPath = OutputPath,
-                SymbolsPath = SymbolsPath
-            };
+        public ReactiveCommand<Unit, Unit> AddCustomField { get; }
 
-            settings.CustomFields.AddRange(
-                CustomFields.Select(vm => vm.Value));
-            
-            return _settingsService.SetSettingsAsync(settings);
-        }
+        public ObservableCollection<SettingsCustomFieldViewModel> CustomFields => _customFieldsProperty?.Value;
+
+        public CombinedReactiveCommand<Unit, Unit> GoBack { get; }
 
         public string NewCustomField
         {
@@ -70,39 +54,9 @@ namespace KiCadDbLib.ViewModels
             set => this.RaiseAndSetIfChanged(ref _newCustomField, value);
         }
 
-        private void ExecuteAddCustomField()
-        {
-            CustomFields.Add(new SettingsCustomFieldViewModel(NewCustomField, RemoveCustomField));
-            NewCustomField = string.Empty;
-        }
-
-        public ObservableCollection<SettingsCustomFieldViewModel> CustomFields => _customFieldsProperty?.Value;
-
-        public CombinedReactiveCommand<Unit, Unit> GoBack { get; }
-        public ReactiveCommand<Unit, Unit> AddCustomField { get; }
+        public AbstractControl PathsForm => _pathsFormProperty?.Value;
 
         public ReactiveCommand<Unit, Unit> SaveSettings { get; }
-
-        public string DatabasePath
-        {
-            get => _databasePath;
-            set => this.RaiseAndSetIfChanged(ref _databasePath, value);
-        }
-        public string FootprintsPath
-        {
-            get => _footprintsPath;
-            set => this.RaiseAndSetIfChanged(ref _footprintsPath, value);
-        }
-        public string OutputPath
-        {
-            get => _outputPath;
-            set => this.RaiseAndSetIfChanged(ref _outputPath, value);
-        }
-        public string SymbolsPath
-        {
-            get => _symbolsPath;
-            set => this.RaiseAndSetIfChanged(ref _symbolsPath, value);
-        }
 
         public string SettingsLocation => _settingsService?.Location;
 
@@ -119,14 +73,10 @@ namespace KiCadDbLib.ViewModels
                     onError: exception => Console.WriteLine(exception))
                 .DisposeWith(disposables);
 
-
-            // Settings
-            settingsObservable
-                .Do(s => DatabasePath = s.DatabasePath)
-                .Do(s => FootprintsPath = s.FootprintsPath)
-                .Do(s => OutputPath = s.OutputPath)
-                .Do(s => SymbolsPath = s.SymbolsPath)
-                .Subscribe()
+            // Settings Paths
+            _pathsFormProperty = settingsObservable
+                .Select(settings => GetPathsForm(settings))
+                .ToProperty(this, nameof(PathsForm))
                 .DisposeWith(disposables);
 
             // Custom Fields
@@ -140,7 +90,64 @@ namespace KiCadDbLib.ViewModels
                 })
                 .ToProperty(this, nameof(CustomFields))
                 .DisposeWith(disposables);
+        }
 
+        private static FormGroup GetPathsForm(Settings settings)
+        {
+            return new FormGroup()
+            {
+                Controls =
+                {
+                    { nameof(Settings.DatabasePath), new FormControl(settings.DatabasePath)
+                        {
+                            Label = "Database",
+                            Validator = Validators.Compose(
+                                Validators.Required,
+                                Validators.DirectoryExists)
+                        }
+                    },
+                    { nameof(Settings.SymbolsPath), new FormControl(settings.SymbolsPath)
+                        {
+                            Label = "Symbols",
+                            Validator = Validators.Compose(
+                                Validators.Required,
+                                Validators.DirectoryExists)
+                        }
+                    },
+                    { nameof(Settings.FootprintsPath), new FormControl(settings.FootprintsPath)
+                        {
+                            Label = "Footprints",
+                            Validator = Validators.Compose(
+                                Validators.Required,
+                                Validators.DirectoryExists)
+                        }
+                    },
+                    { nameof(Settings.OutputPath), new FormControl(settings.OutputPath)
+                        {
+                            Label = "Output",
+                            Validator = Validators.Compose(
+                                Validators.Required,
+                                Validators.DirectoryExists)
+                        }
+                    },
+                }
+            };
+        }
+
+        private void ExecuteAddCustomField()
+        {
+            CustomFields.Add(new SettingsCustomFieldViewModel(NewCustomField, RemoveCustomField));
+            NewCustomField = string.Empty;
+        }
+
+        private Task ExecuteSaveSettings()
+        {
+            Settings settings = PathsForm.ToObject<Settings>();
+
+            settings.CustomFields.AddRange(
+                CustomFields.Select(vm => vm.Value));
+
+            return _settingsService.SetSettingsAsync(settings);
         }
 
         private void RemoveCustomField(string customField)

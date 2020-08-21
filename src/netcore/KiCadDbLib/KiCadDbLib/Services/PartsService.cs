@@ -41,6 +41,18 @@ namespace KiCadDbLib.Services
             File.Delete(filePath);
         }
 
+        public async Task<string> GetNewId(Settings settings = null)
+        {
+            settings ??= await _settingsService.GetSettingsAsync();
+            int newId = Directory.EnumerateFiles(settings.DatabasePath)
+                .Select(file => Path.GetFileNameWithoutExtension(file))
+                .Select(id => int.TryParse(id, out int result) ? result : default)
+                .DefaultIfEmpty()
+                .Max() + 1;
+
+            return newId.ToString();
+        }
+
         public async Task AddOrUpdateAsync(Part part)
         {
             if (part is null)
@@ -48,7 +60,14 @@ namespace KiCadDbLib.Services
                 throw new ArgumentNullException(nameof(part));
             }
 
-            string filePath = await GetFilePathAsync(part.Id);
+           var settings = await _settingsService.GetSettingsAsync();
+
+            if (string.IsNullOrEmpty(part.Id))
+            {
+                part.Id = await GetNewId(settings);
+            }
+
+            string filePath = await GetFilePathAsync(part.Id, settings);
 
             await Task.Run(() =>
             {
@@ -59,9 +78,9 @@ namespace KiCadDbLib.Services
             });            
         }
 
-        private async Task<string> GetFilePathAsync(string id)
+        private async Task<string> GetFilePathAsync(string id, Settings settings = null)
         {
-            var settings = await _settingsService.GetSettingsAsync();
+            settings ??= await _settingsService.GetSettingsAsync();
             return Path.Combine(settings.DatabasePath, $"{id}.json");
         }
     }
