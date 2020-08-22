@@ -19,7 +19,14 @@ namespace KiCadDbLib.ReactiveForms
         private IEnumerable<string> _errors;
         private IValidator _validator;
         private string _value;
-        public FormControl(string initialState = null)
+
+        public FormControl()
+            : this(null)
+        {
+
+        }
+
+        public FormControl(string initialState)
         {
             _initialState = initialState;
             _value = initialState;
@@ -35,21 +42,22 @@ namespace KiCadDbLib.ReactiveForms
                 .Select(value => !(_initialState?.Equals(value, StringComparison.Ordinal) == true))
                 .ToProperty(this, nameof(IsDirty));
 
-            _hasErrorProperty = this.WhenAnyValue(vm => vm.Value, vm => vm.IsRequired)
-                .Where(changes => changes.Item1 != null)
-                .Select(_ => Validate())
+            _hasErrorProperty = this.WhenAnyValue(vm => vm.Errors)
+                .Do(_ => ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(nameof(Value))))
+                .Select(errors => errors != null && errors.Any())
                 .ToProperty(this, nameof(HasErrors));
-
-            this.WhenAnyValue(vm => vm.HasErrors)
-                .Subscribe(_ => ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(nameof(Value))));
         }
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+        public IEnumerable<string> Errors
+        {
+            get => _errors;
+            set => this.RaiseAndSetIfChanged(ref _errors, value);
+        }
 
-        public bool HasErrors => _hasErrorProperty.Value;
+        public override bool HasErrors => _hasErrorProperty.Value;
         public override bool IsDirty => _isDirtyProperty.Value;
         public bool IsRequired => _isRequiredProperty.Value;
-
         public IValidator Validator
         {
             get => _validator;
@@ -69,15 +77,15 @@ namespace KiCadDbLib.ReactiveForms
                 : Enumerable.Empty<string>();
         }
 
-        private bool Validate()
-        {
-            _errors = (Validator ?? Validators.None).Validate(this).ToArray();
-            return _errors.Any();
-        }
-
         public override JToken GetValue()
         {
             return new JValue(Value);
+        }
+
+        public override bool Validate()
+        {
+            Errors = (Validator ?? Validators.None).Validate(this).ToArray();
+            return HasErrors;
         }
     }
 }

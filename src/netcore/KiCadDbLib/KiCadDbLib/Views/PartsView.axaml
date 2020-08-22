@@ -18,6 +18,7 @@
             <MenuItem Header="Parts" Classes="heading" />
         </Menu>
         <DockPanel Margin="10" LastChildFill="True" >
+            <TextBlock Text="Loading..." IsVisible="{Binding Parts, Converter={x:Static ObjectConverters.IsNull}}" Margin="10"/>
             <DataGrid Items="{Binding Parts}" IsReadOnly="True" x:Name="partsGrid"
                       l:DataGridBehavior.ColumnInfos="{Binding PartColumns}"
                       l:DataGridBehavior.SelectionChangedCommand="{Binding GoToPart}">

@@ -24,7 +24,7 @@ namespace KiCadDbLib.ReactiveForms.Validation
 
         public static IValidator Pattern(Regex regex)
         {
-            return new ValidatorFn(control => regex.IsMatch(control.Value) ? Sucess : Error(control, "contains invalid characters"));        
+            return new ValidatorFn(control => regex.IsMatch(control.Value ?? string.Empty) ? Sucess : Error(control, "contains invalid characters"));        
         }
 
         public static IValidator DirectoryExists { get; } 

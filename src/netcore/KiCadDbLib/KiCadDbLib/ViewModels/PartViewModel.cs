@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls.Templates;
+using Avalonia.Media;
 using Avalonia.Rendering.SceneGraph;
 using KiCadDbLib.Models;
 using KiCadDbLib.Navigation;
@@ -27,6 +28,7 @@ namespace KiCadDbLib.ViewModels
     {
         private readonly PartsService _partsService;
         private readonly SettingsService _settingsService;
+        private string _id;
         private Part _part;
         private ObservableAsPropertyHelper<FormGroup> _partFormProperty;
         public PartViewModel(IScreen hostScreen, SettingsService settingsService, PartsService partsService, Part part)
@@ -40,64 +42,66 @@ namespace KiCadDbLib.ViewModels
             GoBack = ReactiveCommand.CreateFromTask(ExecuteGoBackAsync);
 
             var canCloneOrDelete = this.WhenAnyValue(vm => vm.Id)
-                .Select(id => !string.IsNullOrEmpty(Id));                
+                .Select(id => !string.IsNullOrEmpty(Id));
             Clone = ReactiveCommand.Create(ExecuteClone, canCloneOrDelete);
             Delete = ReactiveCommand.CreateFromTask(ExecuteDeleteAsync, canCloneOrDelete);
             Save = ReactiveCommand.CreateFromTask(ExecuteSaveAsync);
             DiscardChangesConfirmation = new Interaction<Unit, bool>();
             DeletePartConfirmation = new Interaction<Unit, bool>();
         }
-
-
-        private string _id;
-        public string Id
-        {
-            get => _id;
-            set => this.RaiseAndSetIfChanged(ref _id, value);
-        }
-
-
         public Func<string, CancellationToken, Task<IEnumerable<object>>> AsyncAvailableFootprintsPopulator => GetAvailableFootrpintsAsync;
 
         public Func<string, CancellationToken, Task<IEnumerable<object>>> AsyncAvailableSymbolsPopulator => GetAvailableSymbolsAsync;
 
         public ReactiveCommand<Unit, Unit> Clone { get; }
 
-        
         public ReactiveCommand<Unit, Unit> Delete { get; }
 
         public Interaction<Unit, bool> DeletePartConfirmation { get; }
 
-        
-
         public Interaction<Unit, bool> DiscardChangesConfirmation { get; }
 
-       
         public ReactiveCommand<Unit, Unit> GoBack { get; }
 
         public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
 
-
+        public string Id
+        {
+            get => _id;
+            set => this.RaiseAndSetIfChanged(ref _id, value);
+        }
         public FormGroup PartForm => _partFormProperty?.Value;
-                
+
 
         public ReactiveCommand<Unit, Unit> Save { get; }
 
-        
+
         protected override void WhenActivated(CompositeDisposable disposables)
         {
             base.WhenActivated(disposables);
 
+
+            
+
             IObservable<Settings> settingsObservable = _settingsService.GetSettingsAsync().ToObservable();
-          
+            IObservable<(string[] Symbols, string[] Footprints)> kicadObservable = settingsObservable.SelectMany(settings =>
+            {
+                var kiCadReader = new KiCadLibraryReader();
+                return kiCadReader.GetSymbolsFromDirectoryAsync(settings.SymbolsPath).ToObservable()
+                    .ForkJoin(
+                        kiCadReader.GetFootprintsFromDirectoryAsync(settings.FootprintsPath).ToObservable(), 
+                        (symbols, footprints) => (Symbols: symbols, Footprints: footprints));
+            });
 
             _partFormProperty = settingsObservable
-                .Select(settings => GetPartForm(settings, _part))
+                .ForkJoin(kicadObservable, (settings, kicad) => (Settings: settings, KiCad: kicad))      
+                .Select(joined => GetPartForm(joined.Settings, joined.KiCad.Symbols, joined.KiCad.Footprints, _part))
                 .ToProperty(this, nameof(PartForm))
                 .DisposeWith(disposables);
         }
-        private static FormGroup GetPartForm(Settings settings, Part part)
+        private static FormGroup GetPartForm(Settings settings, IEnumerable<string> symbols, IEnumerable<string> footprints, Part part)
         {
+
             FormGroup customFields = new FormGroup()
             {
                 Label = "Custom fields",
@@ -105,92 +109,75 @@ namespace KiCadDbLib.ViewModels
 
             foreach (string customField in settings.CustomFields)
             {
-                FormControl formControl = new FormControl()
+                FormControl formControl = new FormControl(part.CustomFields.TryGetValue(customField, out string temp) ? temp : string.Empty)
                 {
                     Label = customField,
-                    Value = part.CustomFields.TryGetValue(customField, out string temp) ? temp : string.Empty,
                 };
 
-                customFields.Controls.Add(customField, formControl);
+                customFields.Add(customField, formControl);
             }
 
-            FormGroup basicFields = new FormGroup()
+            FormGroup basicFields = new FormGroup("Basic fields");
+
+            basicFields.Add(nameof(Part.Library), new AutoCompleteFormControl(part.Library)
             {
-                Label = "Basic fields",
-                Controls =
-                {
-                    {nameof(Part.Library), new FormControl()
-                        {
-                            Label = nameof(Part.Library),
-                            Value = part.Library,
-                            Validator = Validators.Compose(
-                                Validators.Required,
-                                Validators.Pattern(new Regex(@"^[a-zA-Z0-9_\-\. ]+$"))),
+                Label = nameof(Part.Library),
+                Validator = Validators.Compose(
+                        Validators.Required,
+                        Validators.Pattern(new Regex(@"^[a-zA-Z0-9_\-\. ]*$"))),
+                Items = new [] {"1", "2", "3"},
 
-                        }
-                    },
-                    {nameof(Part.Reference), new FormControl()
-                        {
-                            Label = nameof(Part.Reference),
-                            Value = part.Reference,
-                            Validator = Validators.Compose(
-                                Validators.Required,
-                                Validators.Pattern(new Regex(@"^[^ \\/:]+$"))),
-                        }
-                    },
-                    {nameof(Part.Value), new FormControl()
-                        {
-                            Label = nameof(Part.Value),
-                            Value = part.Value,
-                            Validator = Validators.Compose(
-                                Validators.Required,
-                                Validators.Pattern(new Regex(@"^[^ \\/:]+$"))),
-                        }
-                    },
-                    {nameof(Part.Symbol), new FormControl()
-                        {
-                            Label = nameof(Part.Symbol),
-                            Value = part.Symbol,
-                            Validator = Validators.Required,
-                        }
-                    },
-                    {nameof(Part.Footprint), new FormControl()
-                        {
-                            Label = nameof(Part.Footprint),
-                            Value = part.Footprint,
-                        }
-                    },
-                    {nameof(Part.Description), new FormControl()
-                        {
-                            Label = nameof(Part.Description),
-                            Value = part.Description,
-                        }
-                    },
-                    {nameof(Part.Keywords), new FormControl()
-                        {
-                            Label = nameof(Part.Keywords),
-                            Value = part.Keywords,
-                        }
-                    },
-                    {nameof(Part.Datasheet), new FormControl()
-                        {
-                            Label = nameof(Part.Datasheet),
-                            Value = part.Datasheet,
-                        }
-                    },
-                },
-            };
+            });
 
-            
-
-            FormGroup form = new FormGroup()
+            basicFields.Add(nameof(Part.Reference), new FormControl(part.Reference)
             {
-                Controls =
-                {
-                    {"BasicFields", basicFields},
-                    {"CustomFields", customFields},
-                },
-            };
+                Label = nameof(Part.Reference),
+                Validator = Validators.Compose(
+                        Validators.Required,
+                        Validators.Pattern(new Regex(@"^[^ \\/:]*$"))),
+            });
+
+            basicFields.Add(nameof(Part.Value), new FormControl(part.Value)
+            {
+                Label = nameof(Part.Value),
+                Validator = Validators.Compose(
+                        Validators.Required,
+                        Validators.Pattern(new Regex(@"^[^ \\/:]*$"))),
+            });
+
+            basicFields.Add(nameof(Part.Symbol), new AutoCompleteFormControl(part.Symbol)
+            {
+                Label = nameof(Part.Symbol),
+                Validator = Validators.Required,
+                Items = symbols,
+            });
+
+            basicFields.Add(nameof(Part.Footprint), new AutoCompleteFormControl(part.Footprint)
+            {
+                Label = nameof(Part.Footprint),
+                Items = footprints,
+            });
+
+            basicFields.Add(nameof(Part.Description), new FormControl(part.Description)
+            {
+                Label = nameof(Part.Description),
+            });
+
+            basicFields.Add(nameof(Part.Keywords), new FormControl(part.Keywords)
+            {
+                Label = nameof(Part.Keywords),
+            });
+
+            basicFields.Add(nameof(Part.Datasheet), new FormControl(part.Datasheet)
+            {
+                Label = nameof(Part.Datasheet),
+            });
+
+
+
+            FormGroup form = new FormGroup();
+            form.Add("BasicFields", basicFields);
+            form.Add("CustomFields", customFields);
 
             return form;
         }
@@ -219,11 +206,18 @@ namespace KiCadDbLib.ViewModels
 
         private async Task ExecuteSaveAsync()
         {
-            JObject part = PartForm.Controls.Values
+            if (!PartForm.Validate())
+            {
+                return;
+            }
+
+            JObject part = PartForm.Controls
+                .Select(item => item.Control)
                 .First()
                 .GetValue() as JObject;
 
-            part[nameof(Part.CustomFields)] = PartForm.Controls.Values
+            part[nameof(Part.CustomFields)] = PartForm.Controls
+                .Select(item => item.Control)
                 .Skip(1)
                 .First()
                 .GetValue() as JObject;
@@ -254,6 +248,6 @@ namespace KiCadDbLib.ViewModels
                     .Cast<object>();
             }, cancellationToken);
         }
-        
+
     }
 }

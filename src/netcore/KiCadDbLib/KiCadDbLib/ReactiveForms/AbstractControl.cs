@@ -17,22 +17,25 @@ namespace KiCadDbLib.ReactiveForms
 
         protected AbstractControl()
         {
-          
+
         }
+
+        public abstract bool HasErrors { get; }
+
+        public abstract bool IsDirty { get; }
 
         public string Label
         {
             get => _label;
             set => this.RaiseAndSetIfChanged(ref _label, value);
         }
-
-        public virtual bool IsDirty => false;
-
         public abstract JToken GetValue();
+
+        public abstract bool Validate();
 
         public T ToObject<T>()
         {
             return GetValue().ToObject<T>();
-        }                
+        }
     }
 }

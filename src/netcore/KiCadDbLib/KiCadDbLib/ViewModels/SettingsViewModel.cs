@@ -94,44 +94,42 @@ namespace KiCadDbLib.ViewModels
 
         private static FormGroup GetPathsForm(Settings settings)
         {
-            return new FormGroup()
+            var form = new FormGroup();
+
+
+            form.Add(nameof(Settings.DatabasePath), new FormControl(settings.DatabasePath)
             {
-                Controls =
-                {
-                    { nameof(Settings.DatabasePath), new FormControl(settings.DatabasePath)
-                        {
-                            Label = "Database",
-                            Validator = Validators.Compose(
-                                Validators.Required,
-                                Validators.DirectoryExists)
-                        }
-                    },
-                    { nameof(Settings.SymbolsPath), new FormControl(settings.SymbolsPath)
-                        {
-                            Label = "Symbols",
-                            Validator = Validators.Compose(
-                                Validators.Required,
-                                Validators.DirectoryExists)
-                        }
-                    },
-                    { nameof(Settings.FootprintsPath), new FormControl(settings.FootprintsPath)
-                        {
-                            Label = "Footprints",
-                            Validator = Validators.Compose(
-                                Validators.Required,
-                                Validators.DirectoryExists)
-                        }
-                    },
-                    { nameof(Settings.OutputPath), new FormControl(settings.OutputPath)
-                        {
-                            Label = "Output",
-                            Validator = Validators.Compose(
-                                Validators.Required,
-                                Validators.DirectoryExists)
-                        }
-                    },
-                }
-            };
+                Label = "Database",
+                Validator = Validators.Compose(
+                        Validators.Required,
+                        Validators.DirectoryExists)
+            });
+
+            form.Add(nameof(Settings.SymbolsPath), new FormControl(settings.SymbolsPath)
+            {
+                Label = "Symbols",
+                Validator = Validators.Compose(
+                        Validators.Required,
+                        Validators.DirectoryExists)
+            });
+            
+            form.Add(nameof(Settings.FootprintsPath), new FormControl(settings.FootprintsPath)
+            {
+                Label = "Footprints",
+                Validator = Validators.Compose(
+                        Validators.Required,
+                        Validators.DirectoryExists)
+            });
+            
+            form.Add(nameof(Settings.OutputPath), new FormControl(settings.OutputPath)
+            {
+                Label = "Output",
+                Validator = Validators.Compose(
+                        Validators.Required,
+                        Validators.DirectoryExists)
+            });
+
+            return form;
         }
 
         private void ExecuteAddCustomField()

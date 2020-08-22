@@ -7,11 +7,23 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="KiCadDbLib.Controls.FormControl">
     <Design.DataContext>
-        <f:FormControl Label="Hello" IsRequired="True" Value="World"/>
+        <f:FormControl Label="Hello" Value="World"/>
     </Design.DataContext>
     <UserControl.DataTemplates>
-        <DataTemplate DataType="{x:Type f:FormControl}">
+        <DataTemplate DataType="{x:Type f:AutoCompleteFormControl}">
             <StackPanel Spacing="5" Classes="form formControl">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Label}"/>
+                    <TextBlock Text="*" IsVisible="{Binding IsRequired}"/>
+                </StackPanel>
+                <AutoCompleteBox Text="{Binding Value, Mode=TwoWay}" 
+                                 Items="{Binding Items}" 
+                                 FilterMode="Contains"
+                                 MaxDropDownHeight="100"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type f:FormControl}">
+            <StackPanel Spacing="5" Classes="form autoCompleteformControl">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Label}"/>
                     <TextBlock Text="*" IsVisible="{Binding IsRequired}"/>
@@ -28,7 +40,7 @@
                     </ItemsRepeater.Layout>
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate>
-                                <c:FormControl Content="{Binding Value}" />
+                                <c:FormControl Content="{Binding Control}" />
                         </DataTemplate>
                     </ItemsRepeater.ItemTemplate>
                 </ItemsRepeater>

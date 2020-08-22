@@ -15,7 +15,10 @@
             <MenuItem Header="{Binding Id, StringFormat='Part \{0\}'}" Classes="heading" />
         </Menu>
         <ScrollViewer>
-            <l:FormControl Content="{Binding PartForm}" Margin="10"/>
+            <DockPanel Margin="10" LastChildFill="True" >
+                <TextBlock Text="Loading..." IsVisible="{Binding PartForm, Converter={x:Static ObjectConverters.IsNull}}"/>
+                <l:FormControl Content="{Binding PartForm}" />
+            </DockPanel>
         </ScrollViewer>
     </DockPanel>
 </UserControl>
