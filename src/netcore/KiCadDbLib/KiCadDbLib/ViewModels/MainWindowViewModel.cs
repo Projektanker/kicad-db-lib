@@ -19,9 +19,12 @@ namespace KiCadDbLib.ViewModels
             // of a view model, this allows you to pass parameters to 
             // your view models, or to reuse existing view models.
             //
-            GoNext = ReactiveCommand.CreateFromObservable(
-                () => Router.Navigate.Execute(new SettingsViewModel(this, new Services.SettingsService()))
-            );
+            GoNext = ReactiveCommand.CreateFromObservable(() =>
+                {
+                    var settingsService = new SettingsService();
+                    var partsService = new PartsService(settingsService);
+                    return Router.Navigate.Execute(new SettingsViewModel(this, settingsService, partsService));
+                });
 
             Router = new RoutingState();
             Router.NavigateAndReset.Execute(new PartsViewModel(this, Locator.Current.GetService<PartsService>()));

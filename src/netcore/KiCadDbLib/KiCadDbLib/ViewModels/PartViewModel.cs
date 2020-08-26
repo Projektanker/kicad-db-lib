@@ -18,6 +18,7 @@ using KiCadDbLib.Navigation;
 using KiCadDbLib.ReactiveForms;
 using KiCadDbLib.ReactiveForms.Validation;
 using KiCadDbLib.Services;
+using KiCadDbLib.Services.KiCad;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ReactiveUI;
@@ -84,12 +85,20 @@ namespace KiCadDbLib.ViewModels
             
 
             IObservable<Settings> settingsObservable = _settingsService.GetSettingsAsync().ToObservable();
-            IObservable<(string[] Symbols, string[] Footprints)> kicadObservable = settingsObservable.SelectMany(settings =>
+            IObservable<(LibraryItemInfo[] Symbols, LibraryItemInfo[] Footprints)> kicadObservable = settingsObservable.SelectMany(settings =>
             {
                 var kiCadReader = new KiCadLibraryReader();
-                return kiCadReader.GetSymbolsFromDirectoryAsync(settings.SymbolsPath).ToObservable()
+                IObservable<LibraryItemInfo[]> symbolsObservable = kiCadReader
+                    .GetSymbolsFromDirectoryAsync(settings.SymbolsPath)
+                    .ToObservable();
+
+                IObservable<LibraryItemInfo[]> footprintsObservable = kiCadReader
+                   .GetFootprintsFromDirectoryAsync(settings.FootprintsPath)
+                   .ToObservable();
+
+                return symbolsObservable
                     .ForkJoin(
-                        kiCadReader.GetFootprintsFromDirectoryAsync(settings.FootprintsPath).ToObservable(), 
+                       footprintsObservable, 
                         (symbols, footprints) => (Symbols: symbols, Footprints: footprints));
             });
 
@@ -99,7 +108,7 @@ namespace KiCadDbLib.ViewModels
                 .ToProperty(this, nameof(PartForm))
                 .DisposeWith(disposables);
         }
-        private static FormGroup GetPartForm(Settings settings, IEnumerable<string> symbols, IEnumerable<string> footprints, Part part)
+        private static FormGroup GetPartForm(Settings settings, IEnumerable<LibraryItemInfo> symbols, IEnumerable<LibraryItemInfo> footprints, Part part)
         {
 
             FormGroup customFields = new FormGroup()
@@ -149,13 +158,13 @@ namespace KiCadDbLib.ViewModels
             {
                 Label = nameof(Part.Symbol),
                 Validator = Validators.Required,
-                Items = symbols,
+                Items = symbols.Select(x => x.ToString()),
             });
 
             basicFields.Add(nameof(Part.Footprint), new AutoCompleteFormControl(part.Footprint)
             {
                 Label = nameof(Part.Footprint),
-                Items = footprints,
+                Items = footprints.Select(x => x.ToString()),
             });
 
             basicFields.Add(nameof(Part.Description), new FormControl(part.Description)

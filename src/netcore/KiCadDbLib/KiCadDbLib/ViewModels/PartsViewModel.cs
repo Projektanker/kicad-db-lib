@@ -28,7 +28,8 @@ namespace KiCadDbLib.ViewModels
                 hostScreen: HostScreen,
                 viewModelFactory: () => new SettingsViewModel(
                     hostScreen: HostScreen,
-                    settingsService: Locator.Current.GetService<SettingsService>()));
+                    settingsService: Locator.Current.GetService<SettingsService>(),
+                    partsService: new PartsService(Locator.Current.GetService<SettingsService>())));
 
             GoToPart = NavigationCommand.Create<Part, PartViewModel>(hostScreen: HostScreen,
                 viewModelFactory: CreatePartViewModel);
@@ -46,9 +47,9 @@ namespace KiCadDbLib.ViewModels
         public ReactiveCommand<Part, IRoutableViewModel> GoToPart { get; }
         public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
 
-        public IEnumerable<ColumnInfo> PartColumns => _partColumnsProperty?.Value ?? Enumerable.Empty<ColumnInfo>();
+        public IEnumerable<ColumnInfo> PartColumns => _partColumnsProperty?.Value;
 
-        public IEnumerable<Part> Parts => _partsProperty?.Value ?? Enumerable.Empty<Part>();
+        public IEnumerable<Part> Parts => _partsProperty?.Value;
 
         protected override void WhenActivated(CompositeDisposable disposables)
         {

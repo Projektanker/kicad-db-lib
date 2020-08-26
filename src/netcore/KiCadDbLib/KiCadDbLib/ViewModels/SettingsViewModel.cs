@@ -19,30 +19,46 @@ namespace KiCadDbLib.ViewModels
     public sealed class SettingsViewModel : RoutableViewModelBase
     {
         private readonly SettingsService _settingsService;
+        private readonly PartsService _partsService;
         private ObservableAsPropertyHelper<ObservableCollection<SettingsCustomFieldViewModel>> _customFieldsProperty;
         private string _newCustomField;
         private ObservableAsPropertyHelper<FormGroup> _pathsFormProperty;
 
-        public SettingsViewModel(IScreen hostScreen, SettingsService settingsService)
+        public SettingsViewModel(IScreen hostScreen, SettingsService settingsService, PartsService partsService)
             : base(hostScreen)
         {
             _settingsService = settingsService;
+            _partsService = partsService;
+
+            SaveSettings = ReactiveCommand.CreateFromTask(execute: ExecuteSaveSettings);
 
             var canAddCustomField = this.WhenAnyValue(vm => vm.NewCustomField, value =>
             {
                 return !string.IsNullOrWhiteSpace(value)
                     && !CustomFields.Any(vm => vm.Value.Equals(value, StringComparison.CurrentCulture));
             });
-
             AddCustomField = ReactiveCommand.Create(execute: ExecuteAddCustomField, canExecute: canAddCustomField);
-            SaveSettings = ReactiveCommand.CreateFromTask(execute: ExecuteSaveSettings);
-            GoBack = ReactiveCommand.CreateCombined(new[] {
+
+            static bool notNull(object o) => o != null;
+
+            var canImportCustomFields = this.WhenAnyValue(vm => vm.CustomFields, notNull);
+            ImportCustomFields = ReactiveCommand.CreateCombined(new[]
+            {
+                SaveSettings,
+                ReactiveCommand.CreateFromTask(
+                    execute: ImportCustomFieldsAsync,
+                    canExecute: canImportCustomFields),
+            });
+
+            GoBack = ReactiveCommand.CreateCombined(new[]
+            {
                 SaveSettings,
                 HostScreen.Router.NavigateBack
             });
         }
 
         public ReactiveCommand<Unit, Unit> AddCustomField { get; }
+        public CombinedReactiveCommand<Unit, Unit> ImportCustomFields { get; }
 
         public ObservableCollection<SettingsCustomFieldViewModel> CustomFields => _customFieldsProperty?.Value;
 
@@ -112,7 +128,7 @@ namespace KiCadDbLib.ViewModels
                         Validators.Required,
                         Validators.DirectoryExists)
             });
-            
+
             form.Add(nameof(Settings.FootprintsPath), new FormControl(settings.FootprintsPath)
             {
                 Label = "Footprints",
@@ -120,7 +136,7 @@ namespace KiCadDbLib.ViewModels
                         Validators.Required,
                         Validators.DirectoryExists)
             });
-            
+
             form.Add(nameof(Settings.OutputPath), new FormControl(settings.OutputPath)
             {
                 Label = "Output",
@@ -140,7 +156,7 @@ namespace KiCadDbLib.ViewModels
 
         private Task ExecuteSaveSettings()
         {
-            Settings settings = PathsForm.ToObject<Settings>();
+            Settings settings = PathsForm.GetValue<Settings>();
 
             settings.CustomFields.AddRange(
                 CustomFields.Select(vm => vm.Value));
@@ -152,6 +168,29 @@ namespace KiCadDbLib.ViewModels
         {
             SettingsCustomFieldViewModel vm = CustomFields.Single(vm => vm.Value.Equals(customField, StringComparison.CurrentCulture));
             CustomFields.Remove(vm);
+        }
+
+
+        private async Task ImportCustomFieldsAsync()
+        {
+            IEnumerable<string> customFields = CustomFields.Select(vm => vm.Value);
+
+            var parts = await _partsService.GetPartsAsync();
+            customFields = customFields
+                .Concat(parts.SelectMany(part => part.CustomFields.Keys))
+                .Distinct()
+                .OrderBy(s => s);
+
+            SettingsCustomFieldViewModel[] customFieldVms = customFields
+                .Select(cf => new SettingsCustomFieldViewModel(cf, RemoveCustomField))
+                .ToArray();
+
+
+            CustomFields.Clear();
+            foreach (var item in customFieldVms)
+            {
+                CustomFields.Add(item);
+            }
         }
     }
 }

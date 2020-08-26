@@ -31,11 +31,11 @@ namespace KiCadDbLib.ReactiveForms
         }
         public abstract JToken GetValue();
 
-        public abstract bool Validate();
-
-        public T ToObject<T>()
+        public T GetValue<T>()
         {
             return GetValue().ToObject<T>();
         }
+
+        public abstract bool Validate();
     }
 }

@@ -58,6 +58,7 @@
                                 <Button Classes="icon customfield" Command="{Binding AddCustomField}" i:Attached.Icon="fas fa-plus" />
                                 <TextBox Text="{Binding NewCustomField}"/>
                             </DockPanel>
+                            <Button Command="{Binding ImportCustomFields}" Content="Import"/>
                         </StackPanel>
                     </Expander>
                 </StackPanel>
