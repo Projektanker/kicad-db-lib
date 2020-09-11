@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Projektanker.Extensions;
 
 namespace KiCadDbLib.Services.KiCad
 {
@@ -23,7 +24,7 @@ namespace KiCadDbLib.Services.KiCad
             }
 
             List<LibraryItemInfo> result = new List<LibraryItemInfo>();
-            foreach (string footprintDirectory in Directory.EnumerateDirectories(directory, "*.pretty"))
+            foreach (string footprintDirectory in Directory.EnumerateDirectories(directory, $"*{FileExtensions.Pretty}"))
             {
                 LibraryItemInfo[] footprints = await GetFootprintsAsync(footprintDirectory);
                 result.AddRange(footprints);
@@ -32,68 +33,68 @@ namespace KiCadDbLib.Services.KiCad
             return result.ToArray();
         }
 
-        public async Task<string> GetSymbolAsync(string libraryDirectory, LibraryItemInfo symbolInfo, bool bufferLibrary = true)
+        public Task<string[]> GetSymbolAsync(string libraryDirectory, LibraryItemInfo symbolInfo, bool bufferLibrary = true)
         {
-            return await GetSymbolAsync(
-                libraryPath: Path.Combine(libraryDirectory, $"{symbolInfo.Item}.lib"),
-                symbol: symbolInfo.Item,
+            return GetSymbolAsync(
+                libraryFilePath: Path.Combine(libraryDirectory, symbolInfo.Library + FileExtensions.Lib),
+                symbolName: symbolInfo.Name,
                 bufferLibrary: bufferLibrary);
         }
 
-        public async Task<string> GetSymbolAsync(string libraryPath, string symbol, bool bufferLibrary = true)
+        public async Task<string[]> GetSymbolAsync(string libraryFilePath, string symbolName, bool bufferLibrary = true)
         {
-            if (!File.Exists(libraryPath))
+            if (!File.Exists(libraryFilePath))
             {
-                throw new FileNotFoundException($"Library \"{libraryPath}\" not found.");
+                throw new FileNotFoundException($"Library \"{libraryFilePath}\" not found.");
             }
 
             string[] lines;
-            if (bufferLibrary && _getSymbolLibrary.Equals(libraryPath, StringComparison.Ordinal))
+            if (bufferLibrary && _getSymbolLibrary.Equals(libraryFilePath, StringComparison.Ordinal))
             {
                 lines = _getSymbolLines;
             }
             else
             {
-                lines = await File.ReadAllLinesAsync(libraryPath, Encoding.UTF8);
-                _getSymbolLibrary = bufferLibrary ? libraryPath : null;
+                lines = await File.ReadAllLinesAsync(libraryFilePath, Encoding.UTF8);
+                _getSymbolLibrary = bufferLibrary ? libraryFilePath : null;
                 _getSymbolLines = bufferLibrary ? lines : null;
             }
 
 
             // Search begin of symbol (DEF ...)            
-            string[] start = lines
-                .SkipWhile(line => !line.StartsWith($"DEF {symbol}", StringComparison.Ordinal))
-                .ToArray();
+            var start = lines
+                .SkipWhile(line => !line.StartsWith($"DEF {symbolName}", StringComparison.Ordinal));
 
-            if (start.Length == 0)
+            if (!start.Any())
             {
-                throw new KeyNotFoundException($"Symbol \"{symbol}\" not found in library \"{libraryPath}\".");
+                throw new KeyNotFoundException($"Symbol \"{symbolName}\" not found in library \"{libraryFilePath}\".");
             }
 
             // Search end of symbol (ENDDEF)
-            string[] symbolLines = start
+            var symbolLines = start
                 .TakeWhile(line => !line.StartsWith(_endDef, StringComparison.Ordinal))
                 .ToArray();
 
             if (!symbolLines[^1].StartsWith(_endDef, StringComparison.Ordinal))
             {
-                throw new Exception($"Symbol library \"{libraryPath}\" is corrupted. \"{_endDef}\" not found.");
+                throw new Exception($"Symbol library \"{libraryFilePath}\" is corrupted. \"{_endDef}\" not found.");
             }
 
-            // Return symbol
-            StringBuilder sb = new StringBuilder();
+            string[] result = new string[symbolLines.Length + 3];
 
             // Add comment before symbol
-            sb.AppendLine($"# {symbol}").AppendLine("#");
+            result[0] = $"# {symbolName}";
+            result[1] = "#";
 
-            // Append symbol
-            sb.AppendJoin(Environment.NewLine, symbolLines);
+            // Copy symbol to result array
+            symbolLines.CopyTo(result, 2);
 
             // Add comment after symbol
-            sb.AppendLine("#");
-
-            return sb.ToString();
+            result[^1] = "#";
+            return result;
         }
+
+
 
         public async Task<LibraryItemInfo[]> GetSymbolsFromDirectoryAsync(string directory)
         {
@@ -103,7 +104,7 @@ namespace KiCadDbLib.Services.KiCad
             }
 
             List<LibraryItemInfo> result = new List<LibraryItemInfo>();
-            foreach (string libFile in Directory.EnumerateFiles(directory, "*.lib"))
+            foreach (string libFile in Directory.EnumerateFiles(directory, $"*{FileExtensions.Lib}"))
             {
                 LibraryItemInfo[] symbols = await GetSymbolsAsync(libFile);
                 result.AddRange(symbols);
@@ -122,31 +123,31 @@ namespace KiCadDbLib.Services.KiCad
             return await Task.Run(() =>
             {
                 string libraryName = Path.GetFileNameWithoutExtension(directory);
-                return Directory.EnumerateFiles(directory, "*.kicad_mod")
+                return Directory.EnumerateFiles(directory, $"*{FileExtensions.KicadMod}")
                    .Select(file => Path.GetFileNameWithoutExtension(file))
-                   .Select(footprint => new LibraryItemInfo() { Library = libraryName, Item = footprint})
+                   .Select(footprint => new LibraryItemInfo() { Library = libraryName, Name = footprint })
                    .ToArray();
             });
         }
 
-        private async Task<LibraryItemInfo[]> GetSymbolsAsync(string libraryPath)
+        private async Task<LibraryItemInfo[]> GetSymbolsAsync(string libraryFilePath)
         {
-            if (!File.Exists(libraryPath))
+            if (!File.Exists(libraryFilePath))
             {
-                throw new FileNotFoundException($"Library \"{libraryPath}\" not found.");
+                throw new FileNotFoundException($"Library \"{libraryFilePath}\" not found.");
             }
 
             Regex symbolRegex = new Regex("DEF ([^ ]+)");
 
             return await Task.Run(() =>
             {
-                string libraryName = Path.GetFileNameWithoutExtension(libraryPath);
+                string libraryName = Path.GetFileNameWithoutExtension(libraryFilePath);
 
-                var symbols = File.ReadLines(libraryPath, Encoding.UTF8)
+                var symbols = File.ReadLines(libraryFilePath, Encoding.UTF8)
                     .Select(line => symbolRegex.Match(line))
                     .Where(match => match.Success)
                     .Select(match => match.Groups[1].Value)
-                    .Select(symbolName => new LibraryItemInfo() { Library = libraryName, Item = symbolName });
+                    .Select(symbolName => new LibraryItemInfo() { Library = libraryName, Name = symbolName });
 
                 return symbols.ToArray();
             });

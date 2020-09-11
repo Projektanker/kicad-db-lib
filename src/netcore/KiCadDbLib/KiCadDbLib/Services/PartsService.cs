@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using KiCadDbLib.Models;
+using KiCadDbLib.Services.KiCad;
 using Newtonsoft.Json;
 
 namespace KiCadDbLib.Services
@@ -15,6 +16,39 @@ namespace KiCadDbLib.Services
         public PartsService(SettingsService settingsService)
         {
             _settingsService = settingsService ?? throw new ArgumentNullException(nameof(settingsService));
+        }
+
+        public async Task Build()
+        {
+            var settings = await _settingsService.GetSettingsAsync();
+            var parts = await GetPartsAsync();
+
+            await KiCadLibraryBuilder.ClearDirectoryAsync(settings.OutputPath);
+
+           var groupedParts = parts.OrderBy(part => part.Library)
+                .ThenBy(part => part.Value)
+                .GroupBy(part => part.Library);
+
+            foreach (IGrouping<string, Part> group in groupedParts)
+            {
+                using var builder = new KiCadLibraryBuilder(settings.OutputPath, group.Key);                                
+                await builder.WriteStartLibrary();
+
+                foreach (var part in group)
+                {
+                    await builder.WritePartAsync(
+                        reference: part.Reference,
+                        value: part.Value,
+                        symbol: part.Symbol,
+                        footprint: part.Footprint,
+                        description: part.Description,
+                        keywords: part.Keywords,
+                        datasheet: part.Datasheet,
+                        customFields: part.CustomFields);
+                }
+
+                await builder.WriteEndLibrary();
+            }
         }
 
         public async Task<Part[]> GetPartsAsync()
