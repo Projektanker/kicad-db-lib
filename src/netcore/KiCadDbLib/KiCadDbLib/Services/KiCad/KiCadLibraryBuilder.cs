@@ -33,85 +33,6 @@ namespace KiCadDbLib.Services.KiCad
             _libraryReader = new KiCadLibraryReader();
         }
 
-        internal async Task<IEnumerable<string>> CreateSymbolAsync(
-            string symbolLibraryDirectory,
-            LibraryItemInfo symbolInfo,
-            string reference,
-            string value,
-            string footprint,
-            string datasheet,
-            IEnumerable<KeyValuePair<string, string>> customFields,
-            bool bufferLibrary = true)
-        {
-            // Get symbol
-            string[] template = await _libraryReader.GetSymbolAsync(symbolLibraryDirectory, symbolInfo, bufferLibrary);
-
-            // Remove empty lines
-            var filtered = template.Where(line => !string.IsNullOrWhiteSpace(line));
-
-            // Remove lines starting with '#'
-            filtered = filtered.Where(line => !line.StartsWith('#'));
-
-            // Remove ALIAS
-            filtered = filtered.Where(line => !line.StartsWith("ALIAS", StringComparison.OrdinalIgnoreCase));
-
-            // Remove FPLIST
-            static bool isPartOfFPList(string line, ref bool insideFPList)
-            {
-                if (line.StartsWith("$FPLIST", StringComparison.OrdinalIgnoreCase))
-                {
-                    insideFPList = true;
-                    return true;
-                }
-                else if (line.StartsWith("$ENDFPLIST", StringComparison.OrdinalIgnoreCase))
-                {
-                    insideFPList = false;
-                    return true;
-                }
-                else
-                {
-                    return insideFPList;
-                }
-            }
-            bool insideFPList = false;
-            filtered = filtered.Where(line => !isPartOfFPList(line, ref insideFPList));
-
-            // Done filtering.
-            var result = filtered.ToList();
-
-            // DEF value reference ...
-            // F0 "Reference" ...
-            // F1 "Value" ...
-            // F2 "Footprint" ...
-            // F3 "Datasheet" ...
-            // F3+n "custom field value" ... "custom field name"
-
-            // DEF value reference ...
-            result[0] = Regex.Replace(template[0], "^DEF \\S+ \\S ", $"DEF {value} {reference} ");
-
-            // F0 - F3
-            int index;
-            string[] replacement = new[] { reference, value, footprint, datasheet };
-            for (index = 1; index < 5; index++)
-            {
-                result[index] = Regex.Replace(
-                    result[index],
-                    $"^F{index} \".*?\"",
-                    $"F{index} \"{replacement[index]}\"");
-            }
-
-            // Remove remaining F...
-            while (result[index].StartsWith('F'))
-            {
-                result.RemoveAt(index);
-            }
-
-            // Add custom fields
-            result.InsertRange(index, CreateCustomFields(customFields));
-
-            return result;
-        }
-
         public static async Task ClearDirectoryAsync(string directory)
         {
             IEnumerable<string> files = Directory.EnumerateFiles(directory, $"*{FileExtensions.Lib}")
@@ -145,7 +66,7 @@ namespace KiCadDbLib.Services.KiCad
         public async Task WritePartAsync(
             string reference,
             string value,
-            string symbol,
+            LibraryItemInfo symbol,
             string footprint,
             string description,
             string keywords,
@@ -200,6 +121,84 @@ namespace KiCadDbLib.Services.KiCad
                 .Select((field, index) => CreateCustomField(index + startIndex, field.Key, field.Value));
         }
 
+        private async Task<IEnumerable<string>> CreateSymbolAsync(
+            LibraryItemInfo symbolInfo,
+            string reference,
+            string value,
+            string footprint,
+            string datasheet,
+            IEnumerable<KeyValuePair<string, string>> customFields,
+            bool bufferLibrary = true)
+        {
+            // Get symbol
+            string[] template = await _libraryReader.GetSymbolAsync(symbolInfo, bufferLibrary);
+
+            // Remove empty lines
+            var filtered = template.Where(line => !string.IsNullOrWhiteSpace(line));
+
+            // Remove lines starting with '#'
+            filtered = filtered.Where(line => !line.StartsWith('#'));
+
+            // Remove ALIAS
+            filtered = filtered.Where(line => !line.StartsWith("ALIAS", StringComparison.OrdinalIgnoreCase));
+
+            // Remove FPLIST
+            static bool isPartOfFPList(string line, ref bool insideFPList)
+            {
+                if (line.StartsWith("$FPLIST", StringComparison.OrdinalIgnoreCase))
+                {
+                    insideFPList = true;
+                    return true;
+                }
+                else if (line.StartsWith("$ENDFPLIST", StringComparison.OrdinalIgnoreCase))
+                {
+                    insideFPList = false;
+                    return true;
+                }
+                else
+                {
+                    return insideFPList;
+                }
+            }
+            bool insideFPList = false;
+            filtered = filtered.Where(line => !isPartOfFPList(line, ref insideFPList));
+
+            // Done filtering.
+            var result = filtered.ToList();
+
+            // DEF value reference ...
+            // F0 "Reference" ...
+            // F1 "Value" ...
+            // F2 "Footprint" ...
+            // F3 "Datasheet" ...
+            // F3+n "custom field value" ... "custom field name"
+
+            // DEF value reference ...
+            result[0] = Regex.Replace(result[0], "^DEF \\S+ \\S ", $"DEF {value} {reference} ");
+
+            // F0 - F3
+            int index;
+            string[] replacement = new[] { reference, value, footprint, datasheet };
+            for (index = 1; index < 5; index++)
+            {
+                var fieldIndex = index - 1;
+                result[index] = Regex.Replace(
+                    result[index],
+                    $"^F{fieldIndex} \".*?\"",
+                    $"F{fieldIndex} \"{replacement[fieldIndex]}\"");
+            }
+
+            // Remove remaining F...
+            while (result[index].StartsWith('F'))
+            {
+                result.RemoveAt(index);
+            }
+
+            // Add custom fields
+            result.InsertRange(index, CreateCustomFields(customFields));
+
+            return result;
+        }
         private async Task WriteEndDcmAsync()
         {
             await _dcmWriter.WriteLineAsync("#End Doc Library");
@@ -252,7 +251,7 @@ namespace KiCadDbLib.Services.KiCad
         {
             await _libWriter.WriteLineAsync($"# {value}");
             await _libWriter.WriteLineAsync('#');
-            var createdSymbol = await CreateSymbolAsync("pathToLibrary", symbol, reference, value, footprint, datasheet, customFields);
+            var createdSymbol = await CreateSymbolAsync(symbol, reference, value, footprint, datasheet, customFields);
             foreach (var line in createdSymbol)
             {
                 await _libWriter.WriteLineAsync(line);
@@ -271,7 +270,7 @@ namespace KiCadDbLib.Services.KiCad
         {
             await _libWriter.WriteLineAsync("EESchema-LIBRARY Version 2.4");
             await _libWriter.WriteLineAsync("#encoding utf-8");
-            await _libWriter.WriteLineAsync("*");
+            await _libWriter.WriteLineAsync("#");
         }
     }
 }

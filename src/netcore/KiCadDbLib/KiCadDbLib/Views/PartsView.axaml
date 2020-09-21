@@ -10,7 +10,7 @@
         <Menu>
             <MenuItem Classes="right" Header="fas fa-ellipsis-v" >
                 <MenuItem Icon="fas fa-redo" Header="Reload" />
-                <MenuItem Icon="fas fa-wrench" Header="Build" />
+                <MenuItem Icon="fas fa-wrench" Header="Build" Command="{Binding BuildLibrary}" />
                 <MenuItem Icon="fas fa-info-circle" Header="About" />
             </MenuItem>
             <MenuItem Classes="right" Command="{Binding GoToSettings}" Header="fas fa-cog" />

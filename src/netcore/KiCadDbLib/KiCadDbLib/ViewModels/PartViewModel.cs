@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -89,11 +90,11 @@ namespace KiCadDbLib.ViewModels
             {
                 var kiCadReader = new KiCadLibraryReader();
                 IObservable<LibraryItemInfo[]> symbolsObservable = kiCadReader
-                    .GetSymbolsFromDirectoryAsync(settings.SymbolsPath)
+                    .GetSymbolInfosFromDirectoryAsync(settings.SymbolsPath)
                     .ToObservable();
 
                 IObservable<LibraryItemInfo[]> footprintsObservable = kiCadReader
-                   .GetFootprintsFromDirectoryAsync(settings.FootprintsPath)
+                   .GetFootprintInfosFromDirectoryAsync(settings.FootprintsPath)
                    .ToObservable();
 
                 return symbolsObservable
@@ -158,13 +159,17 @@ namespace KiCadDbLib.ViewModels
             {
                 Label = nameof(Part.Symbol),
                 Validator = Validators.Required,
-                Items = symbols.Select(x => x.ToString()),
+                Items = symbols
+                    .Select(x => new LibraryItemInfo() { Name = x.Name, Library = Path.GetFileNameWithoutExtension(x.Library) })
+                    .Select(x => x.ToString()),
             });
 
             basicFields.Add(nameof(Part.Footprint), new AutoCompleteFormControl(part.Footprint)
             {
                 Label = nameof(Part.Footprint),
-                Items = footprints.Select(x => x.ToString()),
+                Items = footprints
+                    .Select(x => new LibraryItemInfo() { Name = x.Name, Library = Path.GetFileNameWithoutExtension(x.Library) })
+                    .Select(x => x.ToString()),
             });
 
             basicFields.Add(nameof(Part.Description), new FormControl(part.Description)

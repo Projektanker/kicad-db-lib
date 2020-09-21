@@ -25,21 +25,25 @@ namespace KiCadDbLib.Services
 
             await KiCadLibraryBuilder.ClearDirectoryAsync(settings.OutputPath);
 
-           var groupedParts = parts.OrderBy(part => part.Library)
-                .ThenBy(part => part.Value)
-                .GroupBy(part => part.Library);
+            var groupedParts = parts
+                 .GroupBy(part => part.Library);
 
             foreach (IGrouping<string, Part> group in groupedParts)
             {
                 using var builder = new KiCadLibraryBuilder(settings.OutputPath, group.Key);                                
                 await builder.WriteStartLibrary();
 
-                foreach (var part in group)
+                foreach (var part in group.OrderBy(part => part.Value))
                 {
+                    LibraryItemInfo symbolInfo = LibraryItemInfo.Parse(part.Symbol);
+                    symbolInfo.Library = Path.Combine(
+                        settings.SymbolsPath,
+                        symbolInfo.Library + FileExtensions.Lib);
+
                     await builder.WritePartAsync(
                         reference: part.Reference,
                         value: part.Value,
-                        symbol: part.Symbol,
+                        symbol: symbolInfo,
                         footprint: part.Footprint,
                         description: part.Description,
                         keywords: part.Keywords,

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reactive;
@@ -33,6 +34,8 @@ namespace KiCadDbLib.ViewModels
 
             GoToPart = NavigationCommand.Create<Part, PartViewModel>(hostScreen: HostScreen,
                 viewModelFactory: CreatePartViewModel);
+
+            BuildLibrary = ReactiveCommand.CreateFromTask(partsService.Build);
         }
 
         private PartViewModel CreatePartViewModel(Part part = null)
@@ -46,6 +49,8 @@ namespace KiCadDbLib.ViewModels
 
         public ReactiveCommand<Part, IRoutableViewModel> GoToPart { get; }
         public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
+
+        public ReactiveCommand<Unit, Unit> BuildLibrary { get; }
 
         public IEnumerable<ColumnInfo> PartColumns => _partColumnsProperty?.Value;
 
