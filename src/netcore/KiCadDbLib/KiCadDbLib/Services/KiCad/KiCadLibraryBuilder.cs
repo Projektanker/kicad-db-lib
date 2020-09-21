@@ -202,13 +202,11 @@ namespace KiCadDbLib.Services.KiCad
         private async Task WriteEndDcmAsync()
         {
             await _dcmWriter.WriteLineAsync("#End Doc Library");
-            await _dcmWriter.WriteLineAsync();
         }
 
         private async Task WriteEndLibAsync()
         {
             await _libWriter.WriteLineAsync("#End Library");
-            await _libWriter.WriteLineAsync();
         }
 
         private async Task WritePartToDcmAsync(
