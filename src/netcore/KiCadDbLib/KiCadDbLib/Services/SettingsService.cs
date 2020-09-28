@@ -11,43 +11,88 @@ using Newtonsoft.Json;
 
 namespace KiCadDbLib.Services
 {
+    public class SettingsChangedEventArgs: EventArgs
+    {
+        public SettingsChangedEventArgs(Settings oldSettings, Settings newSettings)
+        {
+            OldSettings = oldSettings;
+            NewSettings = newSettings;
+        }
+
+        public Settings NewSettings { get; }
+        public Settings OldSettings { get; }
+    }
     public class SettingsService
     {
+        private readonly object _settingsLock;
+        private Settings _settings;
         public SettingsService()
         {
+            _settingsLock = new object();
             Location = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
-                Assembly.GetExecutingAssembly().GetName().Name, 
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                Assembly.GetExecutingAssembly().GetName().Name,
                 "settings.json");
         }
 
+        public event EventHandler<SettingsChangedEventArgs> SettingsChanged;
+
         public string Location { get; }
 
-        public async Task<Settings> GetSettingsAsync()
+        public Task<Settings> GetSettingsAsync()
         {
-            if (File.Exists(Location))
+            lock (_settingsLock)
             {
-                string json = await File.ReadAllTextAsync(Location);
-                return JsonConvert.DeserializeObject<Settings>(json);
-            }
-            else
-            {
-                return new Settings();
+                return Task.Run(() => GetSettings());
             }
         }
 
-        public async Task SetSettingsAsync(Settings settings)
+        public Task SetSettingsAsync(Settings settings)
+        {
+            return Task.Run(() => SetSettings(settings));
+        }
+
+        private Settings GetSettings()
+        {
+            lock (_settingsLock)
+            {
+                if(_settings != null)
+                {
+                    return _settings;
+                }
+                else if (File.Exists(Location))
+                {
+                    string json = File.ReadAllText(Location);
+                    return _settings = JsonConvert.DeserializeObject<Settings>(json);
+                }
+                else
+                {
+                    return _settings = new Settings();
+                }
+            }
+        }
+
+        private void SetSettings(Settings settings)
         {
             if (settings is null)
             {
                 throw new ArgumentNullException(nameof(settings));
             }
-            FileInfo file = new FileInfo(Location);
-            file.Directory.Create();
-            string json = JsonConvert.SerializeObject(settings);
-            using var writer = file.CreateText();
-            await writer.WriteAsync(json);
-        }
 
+            lock (_settingsLock)
+            {
+                FileInfo file = new FileInfo(Location);
+                file.Directory.Create();
+                string json = JsonConvert.SerializeObject(settings);
+                File.WriteAllText(file.FullName, json);
+
+                var oldSettings = _settings;
+                _settings = settings;
+
+                SettingsChanged?.Invoke(
+                    this,
+                    new SettingsChangedEventArgs(oldSettings, _settings));
+            }
+        }
     }
 }

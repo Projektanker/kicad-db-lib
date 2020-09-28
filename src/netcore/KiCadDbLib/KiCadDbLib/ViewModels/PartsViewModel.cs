@@ -6,6 +6,7 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
+using System.Threading.Tasks;
 using DynamicData.Alias;
 using KiCadDbLib.Models;
 using KiCadDbLib.Navigation;
@@ -19,7 +20,6 @@ namespace KiCadDbLib.ViewModels
     {
         private readonly PartsService _partsService;
         private ObservableAsPropertyHelper<IEnumerable<ColumnInfo>> _partColumnsProperty;
-        private ObservableAsPropertyHelper<IEnumerable<Part>> _partsProperty;
 
         public PartsViewModel(IScreen hostScreen, PartsService partsService)
             : base(hostScreen)
@@ -35,7 +35,12 @@ namespace KiCadDbLib.ViewModels
             GoToPart = NavigationCommand.Create<Part, PartViewModel>(hostScreen: HostScreen,
                 viewModelFactory: CreatePartViewModel);
 
+            GoToAbout = NavigationCommand.Create(hostScreen: HostScreen,
+                viewModelFactory: () => new AboutViewModel(HostScreen, Locator.Current.GetService<SettingsService>()));
+
             BuildLibrary = ReactiveCommand.CreateFromTask(partsService.Build);
+
+            LoadParts = ReactiveCommand.CreateFromTask(partsService.GetPartsAsync);
         }
 
         private PartViewModel CreatePartViewModel(Part part = null)
@@ -47,28 +52,23 @@ namespace KiCadDbLib.ViewModels
                      part: part ?? new Part());
         }
 
+
         public ReactiveCommand<Part, IRoutableViewModel> GoToPart { get; }
         public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
+        public ReactiveCommand<Unit, IRoutableViewModel> GoToAbout { get; }
 
         public ReactiveCommand<Unit, Unit> BuildLibrary { get; }
+        public ReactiveCommand<Unit, Part[]> LoadParts { get; }
 
         public IEnumerable<ColumnInfo> PartColumns => _partColumnsProperty?.Value;
-
-        public IEnumerable<Part> Parts => _partsProperty?.Value;
 
         protected override void WhenActivated(CompositeDisposable disposables)
         {
             base.WhenActivated(disposables);
 
-            _partColumnsProperty = this.WhenAnyValue(vm => vm.Parts)
+            _partColumnsProperty = LoadParts
                 .Select(parts => GetColumnInfos(parts))
-                .ToProperty(this, vm => vm.PartColumns)
-                .DisposeWith(disposables);
-
-            var partsObservable = _partsService.GetPartsAsync().ToObservable();
-            _partsProperty = partsObservable
-                .Cast<IEnumerable<Part>>()
-                .ToProperty(this, nameof(Parts))
+                .ToProperty(this, nameof(PartColumns))
                 .DisposeWith(disposables);
         }
 

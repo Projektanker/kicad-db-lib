@@ -50,6 +50,11 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
+    <Style Selector="TextBlock.h3" >
+        <Setter Property="FontSize" Value="{StaticResource FontSizeH3}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
     <!--Button-->
     <Style Selector="Button.h1" >
         <Setter Property="FontSize" Value="{StaticResource FontSizeH1}"/>

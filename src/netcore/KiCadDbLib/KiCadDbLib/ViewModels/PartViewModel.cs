@@ -88,13 +88,12 @@ namespace KiCadDbLib.ViewModels
             IObservable<Settings> settingsObservable = _settingsService.GetSettingsAsync().ToObservable();
             IObservable<(LibraryItemInfo[] Symbols, LibraryItemInfo[] Footprints)> kicadObservable = settingsObservable.SelectMany(settings =>
             {
-                var kiCadReader = new KiCadLibraryReader();
-                IObservable<LibraryItemInfo[]> symbolsObservable = kiCadReader
-                    .GetSymbolInfosFromDirectoryAsync(settings.SymbolsPath)
+                IObservable<LibraryItemInfo[]> symbolsObservable = _partsService
+                    .GetSymbolsAsync()
                     .ToObservable();
 
-                IObservable<LibraryItemInfo[]> footprintsObservable = kiCadReader
-                   .GetFootprintInfosFromDirectoryAsync(settings.FootprintsPath)
+                IObservable<LibraryItemInfo[]> footprintsObservable = _partsService
+                   .GetFootprintsAsync()
                    .ToObservable();
 
                 return symbolsObservable

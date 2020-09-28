@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Reactive.Disposables;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Utils;
@@ -16,7 +17,14 @@ namespace KiCadDbLib.Views
     {
         public PartsView()
         {
-            this.WhenActivated(disposables => { });
+            this.WhenActivated(disposables => {
+                var vm = DataContext as PartsViewModel;
+                vm.LoadParts
+                    .Execute()
+                    .Subscribe()
+                    .DisposeWith(disposables);
+            });
+
             InitializeComponent();
         }
 

@@ -39,6 +39,7 @@ namespace KiCadDbLib
             // View model
             container.RegisterSingleton<PartsViewModel>();
             container.RegisterSingleton<SettingsViewModel>();
+            container.RegisterSingleton<AboutViewModel>();
 
             // Router uses Splat.Locator to resolve views for view models, so we need to register
             // our views. Locator.CurrentMutable.Register(() => new PartsView(),
