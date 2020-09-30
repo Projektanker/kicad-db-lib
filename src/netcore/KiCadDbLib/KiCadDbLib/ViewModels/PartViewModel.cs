@@ -82,9 +82,6 @@ namespace KiCadDbLib.ViewModels
         {
             base.WhenActivated(disposables);
 
-
-            
-
             IObservable<Settings> settingsObservable = _settingsService.GetSettingsAsync().ToObservable();
             IObservable<(LibraryItemInfo[] Symbols, LibraryItemInfo[] Footprints)> kicadObservable = settingsObservable.SelectMany(settings =>
             {

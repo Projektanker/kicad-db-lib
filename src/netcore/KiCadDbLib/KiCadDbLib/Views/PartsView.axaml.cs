@@ -16,7 +16,7 @@ namespace KiCadDbLib.Views
     public class PartsView : ReactiveUserControl<PartsViewModel>
     {
         public PartsView()
-        {
+        {            
             this.WhenActivated(disposables => {
                 var vm = DataContext as PartsViewModel;
                 vm.LoadParts

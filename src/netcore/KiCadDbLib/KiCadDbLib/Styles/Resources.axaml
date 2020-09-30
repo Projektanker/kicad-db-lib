@@ -4,12 +4,30 @@
         xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
         >
     <Styles.Resources>
+        <!--Override defaults-->
+        <Color x:Key="ThemeAccentColor">#FF3F51B5</Color>
+        <Color x:Key="ThemeAccentColor2">#CC3F51B5</Color>
+        <Color x:Key="ThemeAccentColor3">#993F51B5</Color>
+        <Color x:Key="ThemeAccentColor4">#663F51B5</Color>
+
+        <sys:Double x:Key="FontSizeSmall">12</sys:Double>
+        <sys:Double x:Key="FontSizeNormal">14</sys:Double>
+        <sys:Double x:Key="FontSizeLarge">16</sys:Double>
+
+        <SolidColorBrush x:Key="ThemeAccentBrush" Color="{DynamicResource ThemeAccentColor}"></SolidColorBrush>
+        <SolidColorBrush x:Key="ThemeAccentBrush2" Color="{DynamicResource ThemeAccentColor2}"></SolidColorBrush>
+        <SolidColorBrush x:Key="ThemeAccentBrush3" Color="{DynamicResource ThemeAccentColor3}"></SolidColorBrush>
+        <SolidColorBrush x:Key="ThemeAccentBrush4" Color="{DynamicResource ThemeAccentColor4}"></SolidColorBrush>
+
+        <!--Own defaults-->
         <sys:Double x:Key="FontSizeH1">24</sys:Double>
         <sys:Double x:Key="FontSizeH2">20</sys:Double>
         <sys:Double x:Key="FontSizeH3">16</sys:Double>
+        <sys:Double x:Key="FontSize">14</sys:Double>
         <sys:Double x:Key="IconSize">24</sys:Double>
         <CornerRadius x:Key="IconRadius">24,24,24,24</CornerRadius>
         <sys:Double x:Key="TextSpacing">10</sys:Double>
+        
     </Styles.Resources>
 
 

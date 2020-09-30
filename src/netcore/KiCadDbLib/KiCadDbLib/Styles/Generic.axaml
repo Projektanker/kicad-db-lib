@@ -10,6 +10,7 @@
     <StyleInclude Source="/Styles/LabeledAutoCompleteBox.axaml"/>
     <StyleInclude Source="/Styles/SortableHeader.axaml"/>
     <StyleInclude Source="/Styles/Form.axaml"/>
+    <StyleInclude Source="/Styles/DataGrid.axaml"/>
 
     <!--Layout-->
     <Style Selector="DockPanel.root">

@@ -1,0 +1,24 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:KiCadDbLib.Controls"
+        xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia">
+
+    <StyleInclude Source="/Styles/Resources.axaml" />
+    
+    <!--Form Group-->
+    <Style Selector="DataGrid" >
+        <Setter Property="RowBackground" Value="{DynamicResource ThemeBackgroundBrush}"/>
+        <Setter Property="RowHeight" Value="48"/>
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+    </Style>
+
+    <Style Selector="DataGridRow" >
+        <Setter Property="BorderBrush" Value="Green"/>
+        <Setter Property="BorderThickness" Value="1"/>        
+    </Style>
+
+    <Style Selector="DataGridColumnHeader" >
+        <Setter Property="Height" Value="48"/>
+    </Style>
+
+</Styles>

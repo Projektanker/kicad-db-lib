@@ -8,16 +8,16 @@
              x:Class="KiCadDbLib.Views.PartView">
     <DockPanel Classes ="root">
         <Menu>
-            <MenuItem Classes="right" Command="{Binding Clone}" Header="fas fa-clone" />
-            <MenuItem Classes="right" Command="{Binding Delete}" Header="fas fa-trash" />
-            <MenuItem Classes="right" Command="{Binding Save}" Header="fas fa-check" />
-            <MenuItem Command="{Binding GoBack}" Header="fas fa-arrow-left" />
+            <MenuItem Classes="right" Command="{Binding Clone}" Icon="fas fa-clone" />
+            <MenuItem Classes="right" Command="{Binding Delete}" Icon="fas fa-trash" />
+            <MenuItem Classes="right" Command="{Binding Save}" Icon="fas fa-check" />
+            <MenuItem Command="{Binding GoBack}" Icon="fas fa-arrow-left" />
             <MenuItem Header="{Binding Id, StringFormat='Part \{0\}'}" Classes="heading" />
         </Menu>
         <ProgressBar Classes="loading" IsVisible="{Binding PartForm, Converter={x:Static ObjectConverters.IsNull}}"/>
         <ScrollViewer>
             <DockPanel>                
-                <l:FormControl Content="{Binding PartForm}" />
+                <l:FormControl Name="PartForm" Content="{Binding PartForm}" />
             </DockPanel>
         </ScrollViewer>
     </DockPanel>

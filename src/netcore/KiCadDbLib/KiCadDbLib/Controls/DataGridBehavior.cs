@@ -13,8 +13,11 @@ namespace KiCadDbLib.Controls
     public class DataGridBehavior
     {
 
+        public static readonly AttachedProperty<ICommand> CellPointerPressedCommandProperty =
+                    AvaloniaProperty.RegisterAttached<DataGridBehavior, DataGrid, ICommand>("CellPointerPressedCommand");
+
         public static readonly AttachedProperty<IEnumerable<ColumnInfo>> ColumnInfosProperty =
-            AvaloniaProperty.RegisterAttached<DataGridBehavior, DataGrid, IEnumerable<ColumnInfo>>("ColumnInfos", Enumerable.Empty<ColumnInfo>());
+                    AvaloniaProperty.RegisterAttached<DataGridBehavior, DataGrid, IEnumerable<ColumnInfo>>("ColumnInfos", Enumerable.Empty<ColumnInfo>());
 
         public static readonly AttachedProperty<ICommand> SelectionChangedCommandProperty =
                     AvaloniaProperty.RegisterAttached<DataGridBehavior, DataGrid, ICommand>("SelectionChangedCommand");
@@ -22,17 +25,12 @@ namespace KiCadDbLib.Controls
         {
             ColumnInfosProperty.Changed.Subscribe(OnColumnInfosChanged);
             SelectionChangedCommandProperty.Changed.Subscribe(OnSelectionChangedCommandChanged);
+            CellPointerPressedCommandProperty.Changed.Subscribe(OnCellPointerPressedCommandChanged);
         }
 
-        private static void OnSelectionChangedCommandChanged(AvaloniaPropertyChangedEventArgs obj)
+        public static ICommand GetCellPointerPressedCommand(DataGrid target)
         {
-            if (!(obj.Sender is DataGrid target))
-            {
-                return;
-            }
-
-            target.SelectionChanged -= OnSelectionChanged;
-            target.SelectionChanged += OnSelectionChanged;
+            return target.GetValue(CellPointerPressedCommandProperty);
         }
 
         public static IEnumerable<ColumnInfo> GetColumnInfos(DataGrid target)
@@ -45,6 +43,10 @@ namespace KiCadDbLib.Controls
             return target.GetValue(SelectionChangedCommandProperty);
         }
 
+        public static void SetCellPointerPressedCommand(DataGrid target, ICommand value)
+        {
+            target.SetValue(CellPointerPressedCommandProperty, value);
+        }
 
         public static void SetColumnInfos(DataGrid target, IEnumerable<ColumnInfo> value)
         {
@@ -56,6 +58,37 @@ namespace KiCadDbLib.Controls
             target.SetValue(SelectionChangedCommandProperty, value);
         }
 
+        private static void OnCellPointerPressed(object sender, DataGridCellPointerPressedEventArgs e)
+        {
+
+            if (!(sender is DataGrid target))
+            {
+                return;
+            }
+
+            if (e.Row is null)
+            {
+                return;
+            }
+
+            ICommand command = GetCellPointerPressedCommand(target);
+
+            if (command?.CanExecute(e.Row.DataContext) ?? false)
+            {
+                command.Execute(e.Row.DataContext);
+            }
+        }
+
+        private static void OnCellPointerPressedCommandChanged(AvaloniaPropertyChangedEventArgs obj)
+        {
+            if (!(obj.Sender is DataGrid target))
+            {
+                return;
+            }
+
+            target.CellPointerPressed -= OnCellPointerPressed;
+            target.CellPointerPressed += OnCellPointerPressed;
+        }
         private static void OnColumnInfosChanged(AvaloniaPropertyChangedEventArgs e)
         {
             if (!(e.Sender is DataGrid dg))
@@ -67,7 +100,6 @@ namespace KiCadDbLib.Controls
             {
                 return;
             }
-
             dg.Columns.Clear();
             foreach (ColumnInfo columnInfo in columnInfos)
             {
@@ -88,17 +120,40 @@ namespace KiCadDbLib.Controls
                 return;
             }
 
-            if (target.SelectedItem is null)
+            Debug.WriteLine($"Added: {e.AddedItems.Count}");
+            foreach (var item in e.AddedItems)
+            {
+                Debug.WriteLine($"  {item}");
+            }
+            Debug.WriteLine($"Removed: {e.RemovedItems.Count}");
+            foreach (var item in e.RemovedItems)
+            {
+                Debug.WriteLine($"  {item}");
+            }
+            Debug.WriteLine($"Selected: {target.SelectedItem}");
+
+            if (e.AddedItems.Count == 0 || target.SelectedItem is null)
             {
                 return;
             }
 
             ICommand command = GetSelectionChangedCommand(target);
 
-            if (command?.CanExecute(target.SelectedItem) == true)
+            if (command?.CanExecute(target.SelectedItem) ?? false)
             {
                 command.Execute(target.SelectedItem);
             }
+        }
+
+        private static void OnSelectionChangedCommandChanged(AvaloniaPropertyChangedEventArgs obj)
+        {
+            if (!(obj.Sender is DataGrid target))
+            {
+                return;
+            }
+
+            target.SelectionChanged -= OnSelectionChanged;
+            target.SelectionChanged += OnSelectionChanged;
         }
     }
 }

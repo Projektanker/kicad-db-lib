@@ -11,19 +11,20 @@
     </Design.DataContext>
     <UserControl.DataTemplates>
         <DataTemplate DataType="{x:Type f:AutoCompleteFormControl}">
-            <StackPanel Spacing="5" Classes="form formControl">
+            <StackPanel Spacing="5" Classes="form autoCompleteFormControl">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Label}"/>
                     <TextBlock Text="*" IsVisible="{Binding IsRequired}"/>
                 </StackPanel>
-                <AutoCompleteBox Text="{Binding Value, Mode=TwoWay}" 
-                                 Items="{Binding Items}" 
-                                 FilterMode="Contains"
-                                 MaxDropDownHeight="100"/>
+                <AutoCompleteBox Text="{Binding Value, Mode=TwoWay}"
+                          Items="{Binding Items}"
+                          FilterMode="Contains"
+                          MaxDropDownHeight="100"
+                                 c:AutoCompleteBoxBehaviour.FocusDropDown="true"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate DataType="{x:Type f:FormControl}">
-            <StackPanel Spacing="5" Classes="form autoCompleteformControl">
+            <StackPanel Spacing="5" Classes="form formControl">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Label}"/>
                     <TextBlock Text="*" IsVisible="{Binding IsRequired}"/>
@@ -40,7 +41,7 @@
                     </ItemsRepeater.Layout>
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate>
-                                <c:FormControl Content="{Binding Control}" />
+                            <c:FormControl Content="{Binding Control}" />
                         </DataTemplate>
                     </ItemsRepeater.ItemTemplate>
                 </ItemsRepeater>

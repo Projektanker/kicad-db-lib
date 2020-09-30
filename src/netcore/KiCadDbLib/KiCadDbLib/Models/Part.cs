@@ -63,5 +63,9 @@ namespace KiCadDbLib.Models
         /// </summary>
         public string Value { get; set; }
 
+        public override string ToString()
+        {
+            return Id;
+        }
     }
 }
