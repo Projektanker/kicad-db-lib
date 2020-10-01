@@ -28,11 +28,11 @@
     </UserControl.Styles>
     <DockPanel Classes="root">
         <Menu>
-            <MenuItem Command="{Binding GoBack}" Header="fas fa-arrow-left" />
+            <MenuItem Command="{Binding GoBack}" Icon="fas fa-arrow-left" />
             <MenuItem Header="About" Classes="heading" />
         </Menu>
         <ScrollViewer>
-            <DockPanel>
+            <DockPanel Classes="content">
                 <TextBlock Text="KiCad Database Library" Classes="h2"/>
                 <TextBlock Text="Info" Classes="h3"/>
                 <StackPanel >

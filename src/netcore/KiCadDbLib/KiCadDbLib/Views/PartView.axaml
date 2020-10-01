@@ -14,11 +14,13 @@
             <MenuItem Command="{Binding GoBack}" Icon="fas fa-arrow-left" />
             <MenuItem Header="{Binding Id, StringFormat='Part \{0\}'}" Classes="heading" />
         </Menu>
-        <ProgressBar Classes="loading" IsVisible="{Binding PartForm, Converter={x:Static ObjectConverters.IsNull}}"/>
-        <ScrollViewer>
-            <DockPanel>                
-                <l:FormControl Name="PartForm" Content="{Binding PartForm}" />
-            </DockPanel>
-        </ScrollViewer>
+        <Panel>
+            <ProgressBar Classes="loading" IsVisible="{Binding PartForm, Converter={x:Static ObjectConverters.IsNull}}"/>
+            <ScrollViewer>
+                <DockPanel Classes="content">
+                    <l:FormControl Name="PartForm" Content="{Binding PartForm}" />
+                </DockPanel>
+            </ScrollViewer>
+        </Panel>
     </DockPanel>
 </UserControl>

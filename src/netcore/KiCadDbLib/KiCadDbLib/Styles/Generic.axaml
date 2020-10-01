@@ -3,7 +3,7 @@
         xmlns:sys="clr-namespace:System;assembly=netstandard"
         xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
         >
-   
+
     <StyleInclude Source="/Styles/Resources.axaml"/>
     <StyleInclude Source="/Styles/Menu.axaml"/>
     <StyleInclude Source="/Styles/LabeledTextBox.axaml"/>
@@ -16,27 +16,18 @@
     <Style Selector="DockPanel.root">
         <Setter Property="LastChildFill" Value="True" />
     </Style>
-    
+
     <Style Selector="DockPanel.root > :is(Control)">
-        <Setter Property="DockPanel.Dock" Value="Top" />        
-    </Style>
-
-    <!--Layout -> Content-->
-    <Style Selector="DockPanel.root > ScrollViewer > DockPanel">
-        <Setter Property="Margin" Value="10" />
-        <Setter Property="LastChildFill" Value="True" />
-    </Style>
-
-    <Style Selector="DockPanel.root > ScrollViewer > DockPanel > :is(Control)">
         <Setter Property="DockPanel.Dock" Value="Top" />
     </Style>
 
-    <Style Selector="DockPanel.root > DockPanel">
+    <!--Layout -> Content-->
+    <Style Selector="DockPanel.content">
         <Setter Property="Margin" Value="10" />
         <Setter Property="LastChildFill" Value="True" />
     </Style>
 
-    <Style Selector="DockPanel.root > DockPanel > :is(Control)">
+    <Style Selector="DockPanel.content > :is(Control)">
         <Setter Property="DockPanel.Dock" Value="Top" />
     </Style>
 
@@ -57,32 +48,33 @@
     </Style>
 
     <!--Button-->
-    <Style Selector="Button.h1" >
-        <Setter Property="FontSize" Value="{StaticResource FontSizeH1}"/>
-    </Style>
-
-    <Style Selector="Button.h2" >
-        <Setter Property="FontSize" Value="{StaticResource FontSizeH2}"/>
-    </Style>
-
-    <Style Selector="Button.icon" >
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0" />
+    <Style Selector="Button" >
+        <Setter Property="Foreground" Value="{DynamicResource HighlightForegroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}"/>
+        <Setter Property="Padding" Value="6" />
         <Setter Property="Cursor" Value="Hand"/>
     </Style>
 
-    <Style Selector="Button.icon /template/ ContentPresenter" >
-        <Setter Property="CornerRadius" Value="{DynamicResource IconRadius}"/>
+    <Style Selector="Button /template/ ContentPresenter" >
+        <Setter Property="CornerRadius" Value="24"/>
     </Style>
 
-    <Style Selector="Grid.parts > :is(Control)">
-        <Setter Property="Margin" Value="0 0 0 20"/>
+    <Style Selector="Button:pressed /template/ ContentPresenter" >
+        <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2}"/>
+    </Style>
+
+    <Style Selector="Button.icon" >
+        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0" />        
     </Style>
 
 
     <!--Loading spinner-->
-    <Style Selector="ProgressBar.loading">        
+    <Style Selector="ProgressBar.loading">
         <Setter Property="IsIndeterminate" Value="True"/>
         <Setter Property="Height" Value="5"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="ZIndex" Value="255" />
     </Style>
 </Styles>
