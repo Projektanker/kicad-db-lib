@@ -207,7 +207,7 @@ namespace KiCadDbLib.ViewModels
 
         private async Task ExecuteGoBackAsync()
         {
-            if (!PartForm.IsDirty
+            if (!(PartForm?.IsDirty ?? false)
                 || await DiscardChangesConfirmation.Handle(default).Catch(Observable.Return(true)))
             {
                 await HostScreen.Router.NavigateBack.Execute();
