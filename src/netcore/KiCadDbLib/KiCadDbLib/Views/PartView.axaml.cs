@@ -1,11 +1,17 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.ReactiveUI;
 using KiCadDbLib.ViewModels;
 using MessageBox.Avalonia;
@@ -18,6 +24,8 @@ namespace KiCadDbLib.Views
 {
     public class PartView : ReactiveUserControl<PartViewModel>, IHosted
     {
+        private Avalonia.Media.Imaging.Bitmap _iconBitmap;
+
         public PartView()
         {
             this.InitializeComponent();
@@ -51,6 +59,21 @@ namespace KiCadDbLib.Views
                         .DisposeWith(disposables);
                 }
             });
+
+            System.Drawing.Bitmap systemBitmap = null;
+            var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+            using (var iconStream = assets.Open(new Uri("avares://KiCadDbLib/Assets/avalonia-logo.ico")))
+            {
+                var icon = new System.Drawing.Icon(iconStream);
+                systemBitmap = icon.ToBitmap();
+            }
+
+            using (var bitmapStream = new MemoryStream())
+            {
+                systemBitmap.Save(bitmapStream, ImageFormat.Bmp);
+                bitmapStream.Position = 0;
+                _iconBitmap = new Avalonia.Media.Imaging.Bitmap(bitmapStream);
+            }
         }
 
         public Window Host { get; set; }
@@ -64,6 +87,7 @@ namespace KiCadDbLib.Views
                     ContentMessage = "Delete?",
                     WindowStartupLocation = WindowStartupLocation.CenterOwner,
                     CanResize = false,
+                    WindowIcon = _iconBitmap,
                 });
 
             var buttonResult = await msb.ShowDialog(Host);
@@ -79,6 +103,7 @@ namespace KiCadDbLib.Views
                     ContentMessage = "Discard changes?",
                     WindowStartupLocation = WindowStartupLocation.CenterOwner,
                     CanResize = false,
+                    WindowIcon = _iconBitmap,
                 });
 
             var buttonResult = await msb.ShowDialog(Host);
