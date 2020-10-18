@@ -14,17 +14,17 @@
             <Setter Property="Margin" Value="-10 0 -10 0" />
             <Setter Property="Padding" Value="10" />
         </Style>
-        <Style Selector="Expander /template/ ToggleButton" >
-            <Setter Property="FontSize" Value="{StaticResource FontSizeH2}"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
+        <Style Selector="Expander /template/ ToggleButton">
+            <Setter Property="FontSize" Value="{StaticResource FontSizeH2}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <!--Custom fields-->
         <Style Selector="Border.customField">
-            <Setter Property="BorderThickness" Value="0 0 0 1"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderMidBrush}"/>
+            <Setter Property="BorderThickness" Value="0 0 0 1" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderMidBrush}" />
         </Style>
-        <Style Selector="DockPanel.customField" >
-            <Setter Property="LastChildFill" Value="True"/>
+        <Style Selector="DockPanel.customField">
+            <Setter Property="LastChildFill" Value="True" />
         </Style>
         <Style Selector="Button.customfield">
             <Setter Property="DockPanel.Dock" Value="Right" />
@@ -45,29 +45,25 @@
             <MenuItem Header="Settings" Classes="heading" />
         </Menu>
         <Panel>
-            <ProgressBar Classes="loading" IsVisible="{Binding PathsForm, Converter={x:Static ObjectConverters.IsNull}}"/>
+            <ProgressBar Classes="loading" IsVisible="{Binding PathsForm, Converter={x:Static ObjectConverters.IsNull}}" />
             <ScrollViewer>
                 <DockPanel Classes="content">
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                        <TextBlock Text="Your settings are stored here:" />
-                        <TextBlock Text="{Binding SettingsLocation}" />
-                    </StackPanel>
                     <StackPanel>
-                        <Expander Header="Paths" >
-                            <l:FormControl Content="{Binding PathsForm}"/>
+                        <Expander Header="Paths">
+                            <l:FormControl Content="{Binding PathsForm}" />
                         </Expander>
-                        <Expander Header="Custom fields" >
+                        <Expander Header="Custom fields">
                             <StackPanel Spacing="10">
                                 <ItemsRepeater Items="{Binding CustomFields}">
                                     <ItemsRepeater.Layout>
-                                        <StackLayout Orientation="Vertical" Spacing="10"/>
+                                        <StackLayout Orientation="Vertical" Spacing="10" />
                                     </ItemsRepeater.Layout>
                                     <ItemsRepeater.ItemTemplate>
                                         <DataTemplate>
                                             <Border Classes="customField">
                                                 <DockPanel Classes="customField">
                                                     <Button Classes="icon customfield" Command="{Binding Remove}" i:Attached.Icon="fas fa-times" />
-                                                    <TextBlock Classes="customfield" Text="{Binding Value}"/>
+                                                    <TextBlock Classes="customfield" Text="{Binding Value}" />
                                                 </DockPanel>
                                             </Border>
                                         </DataTemplate>
@@ -75,9 +71,9 @@
                                 </ItemsRepeater>
                                 <DockPanel Classes="customField">
                                     <Button Classes="icon customfield" Command="{Binding AddCustomField}" i:Attached.Icon="fas fa-plus" />
-                                    <TextBox Classes="customfield" Text="{Binding NewCustomField}"/>
+                                    <TextBox Classes="customfield" Text="{Binding NewCustomField}" />
                                 </DockPanel>
-                                <Button Command="{Binding ImportCustomFields}" Content="Import" HorizontalAlignment="Right"/>
+                                <Button Command="{Binding ImportCustomFields}" Content="Import" HorizontalAlignment="Right" />
                             </StackPanel>
                         </Expander>
                     </StackPanel>

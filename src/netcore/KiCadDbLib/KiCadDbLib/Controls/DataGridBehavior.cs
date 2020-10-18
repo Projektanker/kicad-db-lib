@@ -12,7 +12,6 @@ namespace KiCadDbLib.Controls
 {
     public class DataGridBehavior
     {
-
         public static readonly AttachedProperty<ICommand> CellPointerPressedCommandProperty =
                     AvaloniaProperty.RegisterAttached<DataGridBehavior, DataGrid, ICommand>("CellPointerPressedCommand");
 
@@ -21,6 +20,7 @@ namespace KiCadDbLib.Controls
 
         public static readonly AttachedProperty<ICommand> SelectionChangedCommandProperty =
                     AvaloniaProperty.RegisterAttached<DataGridBehavior, DataGrid, ICommand>("SelectionChangedCommand");
+
         static DataGridBehavior()
         {
             ColumnInfosProperty.Changed.Subscribe(OnColumnInfosChanged);
@@ -60,7 +60,6 @@ namespace KiCadDbLib.Controls
 
         private static void OnCellPointerPressed(object sender, DataGridCellPointerPressedEventArgs e)
         {
-
             if (!(sender is DataGrid target))
             {
                 return;
@@ -89,6 +88,7 @@ namespace KiCadDbLib.Controls
             target.CellPointerPressed -= OnCellPointerPressed;
             target.CellPointerPressed += OnCellPointerPressed;
         }
+
         private static void OnColumnInfosChanged(AvaloniaPropertyChangedEventArgs e)
         {
             if (!(e.Sender is DataGrid dg))
@@ -100,6 +100,7 @@ namespace KiCadDbLib.Controls
             {
                 return;
             }
+
             dg.Columns.Clear();
             foreach (ColumnInfo columnInfo in columnInfos)
             {

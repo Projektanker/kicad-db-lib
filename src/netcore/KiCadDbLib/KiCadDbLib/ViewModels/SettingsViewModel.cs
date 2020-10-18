@@ -38,17 +38,14 @@ namespace KiCadDbLib.ViewModels
                 return !string.IsNullOrWhiteSpace(value)
                     && !CustomFields.Any(vm => vm.Value.Equals(value, StringComparison.CurrentCulture));
             });
+
             AddCustomField = ReactiveCommand.Create(execute: ExecuteAddCustomField, canExecute: canAddCustomField);
 
-            static bool notNull(object o) => o != null;
-
-            var canImportCustomFields = this.WhenAnyValue(vm => vm.CustomFields, notNull);
             ImportCustomFields = ReactiveCommand.CreateCombined(new[]
             {
                 SaveSettings,
                 ReactiveCommand.CreateFromTask(
-                    execute: ImportCustomFieldsAsync,
-                    canExecute: canImportCustomFields),
+                    execute: ImportCustomFieldsAsync),
             });
 
             GoBack = ReactiveCommand.CreateCombined(new[]

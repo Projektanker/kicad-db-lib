@@ -82,30 +82,34 @@ namespace KiCadDbLib.ViewModels
             base.WhenActivated(disposables);
 
             IObservable<Settings> settingsObservable = _settingsService.GetSettingsAsync().ToObservable();
-            IObservable<(LibraryItemInfo[] Symbols, LibraryItemInfo[] Footprints)> kicadObservable = settingsObservable.SelectMany(settings =>
-            {
-                IObservable<LibraryItemInfo[]> symbolsObservable = _partsService
-                    .GetSymbolsAsync()
-                    .ToObservable();
+            IObservable<LibraryItemInfo[]> symbolsObservable = _partsService
+                .GetSymbolsAsync()
+                .ToObservable();
 
-                IObservable<LibraryItemInfo[]> footprintsObservable = _partsService
-                   .GetFootprintsAsync()
-                   .ToObservable();
+            IObservable<LibraryItemInfo[]> footprintsObservable = _partsService
+                .GetFootprintsAsync()
+                .ToObservable();
 
-                return symbolsObservable
-                    .ForkJoin(
-                       footprintsObservable,
-                        (symbols, footprints) => (Symbols: symbols, Footprints: footprints));
-            });
+            IObservable<string[]> librariesObservable = _partsService
+                .GetLibrariesAsync()
+                .ToObservable();
+
+            IObservable<(LibraryItemInfo[] Symbols, LibraryItemInfo[] Footprints, string[] Libraries)> kicadObservable = symbolsObservable
+                .ForkJoin(
+                    second: footprintsObservable,
+                    resultSelector: (symbols, footprints) => (Symbols: symbols, Footprints: footprints))
+                .ForkJoin(
+                    second: librariesObservable,
+                    resultSelector: (sf, libraries) => (sf.Symbols, sf.Footprints, Libraries: libraries));
 
             _partFormProperty = settingsObservable
                 .ForkJoin(kicadObservable, (settings, kicad) => (Settings: settings, KiCad: kicad))
-                .Select(joined => GetPartForm(joined.Settings, joined.KiCad.Symbols, joined.KiCad.Footprints, _part))
+                .Select(joined => GetPartForm(joined.Settings, joined.KiCad.Symbols, joined.KiCad.Footprints, joined.KiCad.Libraries, _part))
                 .ToProperty(this, nameof(PartForm))
                 .DisposeWith(disposables);
         }
 
-        private static FormGroup GetPartForm(Settings settings, IEnumerable<LibraryItemInfo> symbols, IEnumerable<LibraryItemInfo> footprints, Part part)
+        private static FormGroup GetPartForm(Settings settings, IEnumerable<LibraryItemInfo> symbols, IEnumerable<LibraryItemInfo> footprints, IEnumerable<string> libraries, Part part)
         {
             FormGroup customFields = new FormGroup()
             {
@@ -130,7 +134,7 @@ namespace KiCadDbLib.ViewModels
                 Validator = Validators.Compose(
                         Validators.Required,
                         Validators.Pattern(new Regex(@"^[a-zA-Z0-9_\-\. ]*$"))),
-                Items = new[] { "1", "2", "3" },
+                Items = libraries,
             });
 
             basicFields.Add(nameof(Part.Reference), new FormControl(part.Reference)

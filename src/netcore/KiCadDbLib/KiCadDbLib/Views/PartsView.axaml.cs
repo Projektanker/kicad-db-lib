@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Avalonia.Controls;
@@ -51,18 +50,6 @@ namespace KiCadDbLib.Views
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
-            InitializePartsGrid();
-        }
-
-        private void InitializePartsGrid()
-        {
-            DataGrid partsGrid = this.FindControl<DataGrid>("partsGrid");
-            partsGrid.SelectionChanged += PartsGridSelectionChanged;
-        }
-
-        private void PartsGridSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            return;
         }
     }
 }

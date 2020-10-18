@@ -36,7 +36,7 @@ namespace KiCadDbLib.ViewModels
 
             BuildLibrary = ReactiveCommand.CreateFromTask(_partsService.Build);
 
-            LoadParts = ReactiveCommand.CreateFromTask(_partsService.GetPartsAsync);
+            LoadParts = ReactiveCommand.CreateFromTask(async () => (await _partsService.GetPartsAsync()).OrderBy(part => part.Library).ToArray());
         }
 
         private PartViewModel CreatePartViewModel(Part part = null)
@@ -69,7 +69,7 @@ namespace KiCadDbLib.ViewModels
         {
             List<ColumnInfo> columnInfos = new List<ColumnInfo>()
             {
-                new ColumnInfo(nameof(Part.Id)),
+                // new ColumnInfo(nameof(Part.Id)),
                 new ColumnInfo(nameof(Part.Library)),
                 new ColumnInfo(nameof(Part.Reference)),
                 new ColumnInfo(nameof(Part.Value)),

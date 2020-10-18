@@ -95,7 +95,6 @@ namespace KiCadDbLib.Services
         {
             if (_cachedFootprints is null)
             {
-
                 var settings = await _settingsService.GetSettingsAsync();
                 _cachedFootprints = await new KiCadLibraryReader()
                     .GetFootprintInfosFromDirectoryAsync(settings.FootprintsPath);
@@ -114,6 +113,15 @@ namespace KiCadDbLib.Services
                 .Max() + 1;
 
             return newId.ToString();
+        }
+
+        public async Task<string[]> GetLibrariesAsync()
+        {
+            return (await GetPartsAsync())
+                .Select(part => part.Library)
+                .Distinct()
+                .OrderBy(lib => lib)
+                .ToArray();
         }
 
         public async Task<Part[]> GetPartsAsync()
@@ -138,7 +146,6 @@ namespace KiCadDbLib.Services
         {
             if (_cachedSymbols is null)
             {
-
                 var settings = await _settingsService.GetSettingsAsync();
                 _cachedSymbols = await new KiCadLibraryReader()
                     .GetSymbolInfosFromDirectoryAsync(settings.SymbolsPath);
