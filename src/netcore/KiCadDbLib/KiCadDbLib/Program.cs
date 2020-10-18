@@ -1,10 +1,13 @@
 ﻿using System.Reflection;
 using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Dialogs;
 using Avalonia.Logging.Serilog;
 using Avalonia.ReactiveUI;
 using KiCadDbLib.Services;
 using KiCadDbLib.Services.KiCad;
 using KiCadDbLib.ViewModels;
+using KiCadDbLib.Views;
 using Projektanker.Icons.Avalonia;
 using Projektanker.Icons.Avalonia.FontAwesome;
 using ReactiveUI;
@@ -37,21 +40,21 @@ namespace KiCadDbLib
             container.RegisterSingleton<KiCadLibraryReader>();
 
             // View model
+            container.RegisterSingleton<MainWindowViewModel>();
             container.RegisterSingleton<PartsViewModel>();
             container.RegisterSingleton<SettingsViewModel>();
             container.RegisterSingleton<AboutViewModel>();
 
-            // Router uses Splat.Locator to resolve views for view models, so we need to register
-            // our views. Locator.CurrentMutable.Register(() => new PartsView(),
-            // typeof(IViewFor<PartsViewModel>)); Locator.CurrentMutable.Register(() => new
-            // SettingsView(), typeof(IViewFor<SettingsViewModel>));
-            Locator.CurrentMutable.RegisterViewsForViewModels(Assembly.GetCallingAssembly());
+            // Register views
+            container.Register(typeof(IViewFor<>), Assembly.GetCallingAssembly());
+            container.RegisterInitializer<IHosted>(hosted => hosted.Host = Locator.Current.GetService<Window>());
 
             // Chain them up
             var chain = new LocatorChain(Locator.GetLocator(), container);
             Locator.SetLocator(chain);
 
-            return AppBuilder.Configure<App>()
+            return AppBuilder
+                .Configure<App>()
                 .AfterSetup(AfterSetupCallback)
                 .UseReactiveUI()
                 .UsePlatformDetect()

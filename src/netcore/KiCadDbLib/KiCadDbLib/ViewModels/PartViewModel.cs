@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive;
@@ -11,18 +10,14 @@ using System.Reactive.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Controls.Templates;
-using Avalonia.Media;
-using Avalonia.Rendering.SceneGraph;
 using KiCadDbLib.Models;
-using KiCadDbLib.Navigation;
 using KiCadDbLib.ReactiveForms;
 using KiCadDbLib.ReactiveForms.Validation;
 using KiCadDbLib.Services;
 using KiCadDbLib.Services.KiCad;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ReactiveUI;
+using Splat;
 
 namespace KiCadDbLib.ViewModels
 {
@@ -33,13 +28,17 @@ namespace KiCadDbLib.ViewModels
         private string _id;
         private Part _part;
         private ObservableAsPropertyHelper<FormGroup> _partFormProperty;
-        public PartViewModel(IScreen hostScreen, SettingsService settingsService, PartsService partsService, Part part)
+
+        public PartViewModel(
+            IScreen hostScreen,
+            Part part)
             : base(hostScreen)
         {
-            _settingsService = settingsService ?? throw new ArgumentNullException(nameof(settingsService));
-            _partsService = partsService ?? throw new ArgumentNullException(nameof(partsService));
             _part = part ?? new Part();
             Id = _part.Id;
+
+            _settingsService = Locator.Current.GetService<SettingsService>();
+            _partsService = Locator.Current.GetService<PartsService>();
 
             GoBack = ReactiveCommand.CreateFromTask(ExecuteGoBackAsync);
 
@@ -51,6 +50,7 @@ namespace KiCadDbLib.ViewModels
             DiscardChangesConfirmation = new Interaction<Unit, bool>();
             DeletePartConfirmation = new Interaction<Unit, bool>();
         }
+
         public Func<string, CancellationToken, Task<IEnumerable<object>>> AsyncAvailableFootprintsPopulator => GetAvailableFootrpintsAsync;
 
         public Func<string, CancellationToken, Task<IEnumerable<object>>> AsyncAvailableSymbolsPopulator => GetAvailableSymbolsAsync;
@@ -72,11 +72,10 @@ namespace KiCadDbLib.ViewModels
             get => _id;
             set => this.RaiseAndSetIfChanged(ref _id, value);
         }
+
         public FormGroup PartForm => _partFormProperty?.Value;
 
-
         public ReactiveCommand<Unit, Unit> Save { get; }
-
 
         protected override void WhenActivated(CompositeDisposable disposables)
         {
@@ -95,19 +94,19 @@ namespace KiCadDbLib.ViewModels
 
                 return symbolsObservable
                     .ForkJoin(
-                       footprintsObservable, 
+                       footprintsObservable,
                         (symbols, footprints) => (Symbols: symbols, Footprints: footprints));
             });
 
             _partFormProperty = settingsObservable
-                .ForkJoin(kicadObservable, (settings, kicad) => (Settings: settings, KiCad: kicad))      
+                .ForkJoin(kicadObservable, (settings, kicad) => (Settings: settings, KiCad: kicad))
                 .Select(joined => GetPartForm(joined.Settings, joined.KiCad.Symbols, joined.KiCad.Footprints, _part))
                 .ToProperty(this, nameof(PartForm))
                 .DisposeWith(disposables);
         }
+
         private static FormGroup GetPartForm(Settings settings, IEnumerable<LibraryItemInfo> symbols, IEnumerable<LibraryItemInfo> footprints, Part part)
         {
-
             FormGroup customFields = new FormGroup()
             {
                 Label = "Custom fields",
@@ -131,8 +130,7 @@ namespace KiCadDbLib.ViewModels
                 Validator = Validators.Compose(
                         Validators.Required,
                         Validators.Pattern(new Regex(@"^[a-zA-Z0-9_\-\. ]*$"))),
-                Items = new [] {"1", "2", "3"},
-
+                Items = new[] { "1", "2", "3" },
             });
 
             basicFields.Add(nameof(Part.Reference), new FormControl(part.Reference)
@@ -183,14 +181,13 @@ namespace KiCadDbLib.ViewModels
                 Label = nameof(Part.Datasheet),
             });
 
-
-
             FormGroup form = new FormGroup();
             form.Add("BasicFields", basicFields);
             form.Add("CustomFields", customFields);
 
             return form;
         }
+
         private void ExecuteClone()
         {
             Id = null;
@@ -218,7 +215,7 @@ namespace KiCadDbLib.ViewModels
         {
             if (!PartForm.Validate())
             {
-                return;
+                throw new ValidationException("Input is invalid.");
             }
 
             JObject part = PartForm.Controls
@@ -236,6 +233,7 @@ namespace KiCadDbLib.ViewModels
             _part.Id = Id;
 
             await _partsService.AddOrUpdateAsync(_part);
+            await _partsService.Build();
             await HostScreen.Router.NavigateBack.Execute();
         }
 
@@ -258,6 +256,5 @@ namespace KiCadDbLib.ViewModels
                     .Cast<object>();
             }, cancellationToken);
         }
-
     }
 }

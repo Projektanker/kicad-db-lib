@@ -1,16 +1,16 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=netstandard"
-        xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
-        >
+        xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia">
 
-    <StyleInclude Source="/Styles/Resources.axaml"/>
-    <StyleInclude Source="/Styles/Menu.axaml"/>
-    <StyleInclude Source="/Styles/LabeledTextBox.axaml"/>
-    <StyleInclude Source="/Styles/LabeledAutoCompleteBox.axaml"/>
-    <StyleInclude Source="/Styles/SortableHeader.axaml"/>
-    <StyleInclude Source="/Styles/Form.axaml"/>
-    <StyleInclude Source="/Styles/DataGrid.axaml"/>
+    <StyleInclude Source="/Styles/Resources.axaml" />
+    <StyleInclude Source="/Styles/Menu.axaml" />
+    <StyleInclude Source="/Styles/NotificationCard.axaml" />
+    <StyleInclude Source="/Styles/LabeledTextBox.axaml" />
+    <StyleInclude Source="/Styles/LabeledAutoCompleteBox.axaml" />
+    <StyleInclude Source="/Styles/SortableHeader.axaml" />
+    <StyleInclude Source="/Styles/Form.axaml" />
+    <StyleInclude Source="/Styles/DataGrid.axaml" />
 
     <!--Layout-->
     <Style Selector="DockPanel.root">
@@ -32,49 +32,48 @@
     </Style>
 
     <!--TextBlock-->
-    <Style Selector="TextBlock.h1" >
-        <Setter Property="FontSize" Value="{StaticResource FontSizeH1}"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
+    <Style Selector="TextBlock.h1">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeH1}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
-    <Style Selector="TextBlock.h2" >
-        <Setter Property="FontSize" Value="{StaticResource FontSizeH2}"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
+    <Style Selector="TextBlock.h2">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeH2}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
-    <Style Selector="TextBlock.h3" >
-        <Setter Property="FontSize" Value="{StaticResource FontSizeH3}"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
+    <Style Selector="TextBlock.h3">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeH3}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
     <!--Button-->
-    <Style Selector="Button" >
+    <Style Selector="Button">
         <Setter Property="Foreground" Value="{DynamicResource HighlightForegroundBrush}" />
-        <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush}" />
         <Setter Property="Padding" Value="6" />
-        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Cursor" Value="Hand" />
     </Style>
 
-    <Style Selector="Button /template/ ContentPresenter" >
-        <Setter Property="CornerRadius" Value="24"/>
+    <Style Selector="Button /template/ ContentPresenter">
+        <Setter Property="CornerRadius" Value="24" />
     </Style>
 
-    <Style Selector="Button:pressed /template/ ContentPresenter" >
-        <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2}"/>
+    <Style Selector="Button:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource ThemeAccentBrush2}" />
     </Style>
 
-    <Style Selector="Button.icon" >
+    <Style Selector="Button.icon">
         <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0" />        
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
     </Style>
-
 
     <!--Loading spinner-->
     <Style Selector="ProgressBar.loading">
-        <Setter Property="IsIndeterminate" Value="True"/>
-        <Setter Property="Height" Value="5"/>
-        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="IsIndeterminate" Value="True" />
+        <Setter Property="Height" Value="5" />
+        <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="ZIndex" Value="255" />
     </Style>
 </Styles>

@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
-using DynamicData;
 using KiCadDbLib.Models;
 using Newtonsoft.Json;
+using Splat;
 
 namespace KiCadDbLib.Services
 {
-    public class SettingsChangedEventArgs: EventArgs
+    public class SettingsChangedEventArgs : EventArgs
     {
         public SettingsChangedEventArgs(Settings oldSettings, Settings newSettings)
         {
@@ -22,10 +19,12 @@ namespace KiCadDbLib.Services
         public Settings NewSettings { get; }
         public Settings OldSettings { get; }
     }
+
     public class SettingsService
     {
         private readonly object _settingsLock;
         private Settings _settings;
+
         public SettingsService()
         {
             _settingsLock = new object();
@@ -47,16 +46,16 @@ namespace KiCadDbLib.Services
             }
         }
 
-        public Task SetSettingsAsync(Settings settings)
+        public async Task SetSettingsAsync(Settings settings)
         {
-            return Task.Run(() => SetSettings(settings));
+            await Task.Run(() => SetSettings(settings));
         }
 
         private Settings GetSettings()
         {
             lock (_settingsLock)
             {
-                if(_settings != null)
+                if (_settings != null)
                 {
                     return _settings;
                 }

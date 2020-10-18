@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using KiCadDbLib.ViewModels;
 using KiCadDbLib.Views;
+using Splat;
 
 namespace KiCadDbLib
 {
@@ -14,13 +15,15 @@ namespace KiCadDbLib
         }
 
         public override void OnFrameworkInitializationCompleted()
-        {            
+        {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow
+                desktop.MainWindow = new MainWindow()
                 {
-                    DataContext = new MainWindowViewModel(),
+                    DataContext = Locator.Current.GetService<MainWindowViewModel>(),
                 };
+
+                Locator.CurrentMutable.RegisterConstant(desktop.MainWindow);
             }
 
             base.OnFrameworkInitializationCompleted();

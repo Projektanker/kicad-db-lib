@@ -40,14 +40,9 @@ namespace KiCadDbLib
             return services;
         }
 
-        private bool ContainerHasRegistration(Type serviceType)
-        {
-            return _container.GetCurrentRegistrations().Any(x => x.ServiceType == serviceType);
-        }
-
         public bool HasRegistration(Type serviceType, string contract = null)
         {
-            return _dependencyResolver.HasRegistration(serviceType, contract) 
+            return _dependencyResolver.HasRegistration(serviceType, contract)
                 || ContainerHasRegistration(serviceType);
         }
 
@@ -69,6 +64,11 @@ namespace KiCadDbLib
         public void UnregisterCurrent(Type serviceType, string contract = null)
         {
             _dependencyResolver.UnregisterCurrent(serviceType, contract);
+        }
+
+        private bool ContainerHasRegistration(Type serviceType)
+        {
+            return _container.GetCurrentRegistrations().Any(x => x.ServiceType == serviceType);
         }
     }
 }

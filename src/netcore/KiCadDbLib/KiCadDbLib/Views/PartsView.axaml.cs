@@ -1,28 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
+using System.Reactive;
 using System.Reactive.Disposables;
-using Avalonia;
+using System.Reactive.Linq;
 using Avalonia.Controls;
-using Avalonia.Controls.Utils;
-using Avalonia.Data;
+using Avalonia.Controls.Notifications;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using KiCadDbLib.ViewModels;
 using ReactiveUI;
+using Splat;
 
 namespace KiCadDbLib.Views
 {
     public class PartsView : ReactiveUserControl<PartsViewModel>
     {
         public PartsView()
-        {            
-            this.WhenActivated(disposables => {
-                var vm = DataContext as PartsViewModel;
-                vm.LoadParts
+        {
+            this.WhenActivated(disposables =>
+            {
+                ViewModel.LoadParts
                     .Execute()
                     .Subscribe()
                     .DisposeWith(disposables);
+
+                INotificationManager notificationManager = Locator.Current.GetService<INotificationManager>();
+                if (notificationManager != null)
+                {
+                    ViewModel.BuildLibrary.IsExecuting
+                        .Where(isExecuting => isExecuting)
+                        .Do(_ => notificationManager.ShowInformation("Build", "Start of build."))
+                        .Subscribe()
+                        .DisposeWith(disposables);
+
+                    ViewModel.BuildLibrary
+                        .Do(_ => notificationManager.ShowSuccess("Build", "Build successful."))
+                        .Subscribe()
+                        .DisposeWith(disposables);
+
+                    ViewModel.BuildLibrary
+                        .ThrownExceptions
+                        .Do(exception => notificationManager.ShowError("Build", exception.Message))
+                        .Subscribe()
+                        .DisposeWith(disposables);
+                }
             });
 
             InitializeComponent();

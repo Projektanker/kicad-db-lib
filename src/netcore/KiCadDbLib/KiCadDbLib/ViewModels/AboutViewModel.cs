@@ -2,6 +2,7 @@
 using System.Reactive;
 using KiCadDbLib.Services;
 using ReactiveUI;
+using Splat;
 
 namespace KiCadDbLib.ViewModels
 {
@@ -9,10 +10,10 @@ namespace KiCadDbLib.ViewModels
     {
         private readonly SettingsService _settingsService;
 
-        public AboutViewModel(IScreen hostScreen, SettingsService settingsService)
+        public AboutViewModel(IScreen hostScreen)
             : base(hostScreen)
         {
-            _settingsService = settingsService;
+            _settingsService = Locator.Current.GetService<SettingsService>();
             GoBack = HostScreen.Router.NavigateBack;
             License = "MIT";
             GitHub = @"https://github.com/projektanker";

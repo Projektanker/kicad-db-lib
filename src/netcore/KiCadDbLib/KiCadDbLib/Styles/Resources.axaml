@@ -1,11 +1,9 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=netstandard"
-        xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
-        >
+        xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia">
     <Styles.Resources>
         <!--Override defaults-->
-       
 
         <!--Pink-->
         <Color x:Key="ThemeAccentColor">#FFE91E63</Color>
@@ -17,12 +15,16 @@
         <sys:Double x:Key="FontSizeNormal">14</sys:Double>
         <sys:Double x:Key="FontSizeLarge">16</sys:Double>
 
-
-
         <SolidColorBrush x:Key="ThemeAccentBrush" Color="{DynamicResource ThemeAccentColor}"></SolidColorBrush>
         <SolidColorBrush x:Key="ThemeAccentBrush2" Color="{DynamicResource ThemeAccentColor2}"></SolidColorBrush>
         <SolidColorBrush x:Key="ThemeAccentBrush3" Color="{DynamicResource ThemeAccentColor3}"></SolidColorBrush>
         <SolidColorBrush x:Key="ThemeAccentBrush4" Color="{DynamicResource ThemeAccentColor4}"></SolidColorBrush>
+
+        <SolidColorBrush x:Key="NotificationCardBackgroundBrush" Color="#444444" Opacity="0.9" />
+        <SolidColorBrush x:Key="NotificationCardInformationBackgroundBrush" Color="#444444" Opacity="0.9" />
+        <SolidColorBrush x:Key="NotificationCardSuccessBackgroundBrush" Color="#1F9E45" Opacity="0.9" />
+        <SolidColorBrush x:Key="NotificationCardWarningBackgroundBrush" Color="#FDB328" Opacity="0.9" />
+        <SolidColorBrush x:Key="NotificationCardErrorBackgroundBrush" Color="#BD202C" Opacity="0.9" />
 
         <!--Own defaults-->
         <!--Indigo-->
@@ -42,8 +44,5 @@
         <sys:Double x:Key="FontSize">14</sys:Double>
         <sys:Double x:Key="IconSize">24</sys:Double>
         <sys:Double x:Key="TextSpacing">10</sys:Double>
-        
     </Styles.Resources>
-
-
 </Styles>

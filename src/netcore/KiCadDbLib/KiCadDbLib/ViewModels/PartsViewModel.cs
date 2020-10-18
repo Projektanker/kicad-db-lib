@@ -5,8 +5,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
-using System.Threading.Tasks;
+using Avalonia.Controls.Notifications;
 using DynamicData.Alias;
 using KiCadDbLib.Models;
 using KiCadDbLib.Navigation;
@@ -21,37 +20,31 @@ namespace KiCadDbLib.ViewModels
         private readonly PartsService _partsService;
         private ObservableAsPropertyHelper<IEnumerable<ColumnInfo>> _partColumnsProperty;
 
-        public PartsViewModel(IScreen hostScreen, PartsService partsService)
+        public PartsViewModel(IScreen hostScreen)
             : base(hostScreen)
         {
-            _partsService = partsService;
+            _partsService = Locator.Current.GetService<PartsService>();
             GoToSettings = NavigationCommand.Create(
                 hostScreen: HostScreen,
-                viewModelFactory: () => new SettingsViewModel(
-                    hostScreen: HostScreen,
-                    settingsService: Locator.Current.GetService<SettingsService>(),
-                    partsService: new PartsService(Locator.Current.GetService<SettingsService>())));
+                viewModelFactory: () => new SettingsViewModel(hostScreen: HostScreen));
 
             GoToPart = NavigationCommand.Create<Part, PartViewModel>(hostScreen: HostScreen,
                 viewModelFactory: CreatePartViewModel);
 
             GoToAbout = NavigationCommand.Create(hostScreen: HostScreen,
-                viewModelFactory: () => new AboutViewModel(HostScreen, Locator.Current.GetService<SettingsService>()));
+                viewModelFactory: () => new AboutViewModel(HostScreen));
 
-            BuildLibrary = ReactiveCommand.CreateFromTask(partsService.Build);
+            BuildLibrary = ReactiveCommand.CreateFromTask(_partsService.Build);
 
-            LoadParts = ReactiveCommand.CreateFromTask(partsService.GetPartsAsync);
+            LoadParts = ReactiveCommand.CreateFromTask(_partsService.GetPartsAsync);
         }
 
         private PartViewModel CreatePartViewModel(Part part = null)
         {
             return new PartViewModel(
                      hostScreen: HostScreen,
-                     settingsService: Locator.Current.GetService<SettingsService>(),
-                     partsService: Locator.Current.GetService<PartsService>(),
                      part: part ?? new Part());
         }
-
 
         public ReactiveCommand<Part, IRoutableViewModel> GoToPart { get; }
         public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }

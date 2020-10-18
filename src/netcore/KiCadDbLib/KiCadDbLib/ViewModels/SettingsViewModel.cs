@@ -13,6 +13,7 @@ using KiCadDbLib.ReactiveForms;
 using KiCadDbLib.ReactiveForms.Validation;
 using KiCadDbLib.Services;
 using ReactiveUI;
+using Splat;
 
 namespace KiCadDbLib.ViewModels
 {
@@ -24,11 +25,11 @@ namespace KiCadDbLib.ViewModels
         private string _newCustomField;
         private ObservableAsPropertyHelper<FormGroup> _pathsFormProperty;
 
-        public SettingsViewModel(IScreen hostScreen, SettingsService settingsService, PartsService partsService)
+        public SettingsViewModel(IScreen hostScreen)
             : base(hostScreen)
         {
-            _settingsService = settingsService;
-            _partsService = partsService;
+            _settingsService = Locator.Current.GetService<SettingsService>();
+            _partsService = Locator.Current.GetService<PartsService>(); ;
 
             SaveSettings = ReactiveCommand.CreateFromTask(execute: ExecuteSaveSettings);
 
@@ -112,7 +113,6 @@ namespace KiCadDbLib.ViewModels
         {
             var form = new FormGroup();
 
-
             form.Add(nameof(Settings.DatabasePath), new FormControl(settings.DatabasePath)
             {
                 Label = "Database",
@@ -170,7 +170,6 @@ namespace KiCadDbLib.ViewModels
             CustomFields.Remove(vm);
         }
 
-
         private async Task ImportCustomFieldsAsync()
         {
             IEnumerable<string> customFields = CustomFields.Select(vm => vm.Value);
@@ -184,7 +183,6 @@ namespace KiCadDbLib.ViewModels
             SettingsCustomFieldViewModel[] customFieldVms = customFields
                 .Select(cf => new SettingsCustomFieldViewModel(cf, RemoveCustomField))
                 .ToArray();
-
 
             CustomFields.Clear();
             foreach (var item in customFieldVms)

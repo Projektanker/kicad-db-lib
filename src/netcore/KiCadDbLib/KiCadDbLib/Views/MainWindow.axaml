@@ -17,14 +17,16 @@
     <Window.Styles>
         <StyleInclude Source="/Styles/Generic.axaml" />
     </Window.Styles>
-    <rxui:RoutedViewHost Router="{Binding Router}"                             >
-        <rxui:RoutedViewHost.PageTransition>
-            <CrossFade Duration="0.1"/>
-        </rxui:RoutedViewHost.PageTransition>
-        <rxui:RoutedViewHost.DefaultContent>
-            <TextBlock Text="Default content"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center" />
-        </rxui:RoutedViewHost.DefaultContent>
-    </rxui:RoutedViewHost>
+    <Grid>
+        <rxui:RoutedViewHost Router="{Binding Router}">
+            <rxui:RoutedViewHost.PageTransition>
+                <CrossFade Duration="0.1" />
+            </rxui:RoutedViewHost.PageTransition>
+            <rxui:RoutedViewHost.DefaultContent>
+                <TextBlock Text="Default content"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+            </rxui:RoutedViewHost.DefaultContent>
+        </rxui:RoutedViewHost>
+    </Grid>
 </Window>

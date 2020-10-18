@@ -23,7 +23,6 @@ namespace KiCadDbLib.ReactiveForms
         public FormControl()
             : this(null)
         {
-
         }
 
         public FormControl(string initialState)
@@ -49,6 +48,7 @@ namespace KiCadDbLib.ReactiveForms
         }
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
         public IEnumerable<string> Errors
         {
             get => _errors;
@@ -58,6 +58,7 @@ namespace KiCadDbLib.ReactiveForms
         public override bool HasErrors => _hasErrorProperty.Value;
         public override bool IsDirty => _isDirtyProperty.Value;
         public bool IsRequired => _isRequiredProperty.Value;
+
         public IValidator Validator
         {
             get => _validator;
@@ -85,7 +86,7 @@ namespace KiCadDbLib.ReactiveForms
         public override bool Validate()
         {
             Errors = (Validator ?? Validators.None).Validate(this).ToArray();
-            return HasErrors;
+            return !HasErrors;
         }
     }
 }
