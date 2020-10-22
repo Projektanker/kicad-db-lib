@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace KiCadDbLib.Models
@@ -16,7 +14,7 @@ namespace KiCadDbLib.Models
         /// <summary>
         /// Gets a dictionary of the custom fields with it's values.
         /// </summary>
-        public Dictionary<string, string> CustomFields { get; }
+        public IReadOnlyDictionary<string, string> CustomFields { get; set; }
 
         /// <summary>
         /// Gets or sets the datasheet location.

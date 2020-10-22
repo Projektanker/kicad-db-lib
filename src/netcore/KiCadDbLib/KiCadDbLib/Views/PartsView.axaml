@@ -3,23 +3,27 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:l="clr-namespace:KiCadDbLib.Controls"
+             xmlns:c="clr-namespace:KiCadDbLib.Converters"
              xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="KiCadDbLib.Views.PartsView">
+    <UserControl.Resources>
+        <c:PartsConverter x:Key="PartsConverter" />
+    </UserControl.Resources>
     <DockPanel Classes="root">
         <Menu>
-            <MenuItem Classes="right" Icon="fas fa-ellipsis-v" >
+            <MenuItem Classes="right" Icon="fas fa-ellipsis-v">
                 <MenuItem Icon="fas fa-redo" Header="Reload" Command="{Binding LoadParts}" />
                 <MenuItem Icon="fas fa-wrench" Header="Build" Command="{Binding BuildLibrary}" />
                 <MenuItem Icon="fas fa-info-circle" Header="About" Command="{Binding GoToAbout}" />
             </MenuItem>
             <MenuItem Classes="right" Command="{Binding GoToSettings}" Header="Settings" Icon="fas fa-cog" />
-            <MenuItem Classes="right" Command="{Binding GoToPart}" Header="Add" Icon="fas fa-plus"/>
+            <MenuItem Classes="right" Command="{Binding GoToPart}" Header="Add" Icon="fas fa-plus" />
             <MenuItem Header="Parts" Classes="heading" />
         </Menu>
         <Panel>
-            <ProgressBar Classes="loading" IsVisible="{Binding LoadParts.IsExecuting^}"/>
-            <DataGrid Items="{Binding LoadParts^}" IsReadOnly="True" x:Name="partsGrid"
+            <ProgressBar Classes="loading" IsVisible="{Binding LoadParts.IsExecuting^}" />
+            <DataGrid Items="{Binding LoadParts^, Converter={StaticResource PartsConverter}}" IsReadOnly="True" x:Name="partsGrid"
                       l:DataGridBehavior.ColumnInfos="{Binding PartColumns}"
                       l:DataGridBehavior.CellPointerPressedCommand="{Binding GoToPart}">
             </DataGrid>

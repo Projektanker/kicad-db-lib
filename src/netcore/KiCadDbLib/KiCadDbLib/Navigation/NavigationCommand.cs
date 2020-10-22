@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
+using System.Threading.Tasks;
 using ReactiveUI;
 
 namespace KiCadDbLib.Navigation
@@ -21,6 +23,21 @@ namespace KiCadDbLib.Navigation
             return ReactiveCommand.CreateFromObservable(
                 execute: (TParam param) => hostScreen.Router.Navigate.Execute(viewModelFactory.Invoke(param)),
                 canExecute: GetCanExecute<TViewModel>(hostScreen));
+        }
+
+        public static ReactiveCommand<TParam, IRoutableViewModel> Create<TParam, TViewModel>(IScreen hostScreen, Func<TParam, Task<TViewModel>> viewModelFactory)
+            where TViewModel : IRoutableViewModel
+        {
+            return ReactiveCommand.CreateFromTask(
+                execute: (TParam param) => NavigateAsync(hostScreen, viewModelFactory, param),
+                canExecute: GetCanExecute<TViewModel>(hostScreen));
+        }
+
+        private static async Task<IRoutableViewModel> NavigateAsync<TParam, TViewModel>(IScreen hostScreen, Func<TParam, Task<TViewModel>> viewModelFactory, TParam param)
+            where TViewModel : IRoutableViewModel
+        {
+            TViewModel vm = await viewModelFactory(param);
+            return await hostScreen.Router.Navigate.Execute(vm);
         }
 
         private static IObservable<bool> GetCanExecute<TViewModel>(IScreen hostScreen)

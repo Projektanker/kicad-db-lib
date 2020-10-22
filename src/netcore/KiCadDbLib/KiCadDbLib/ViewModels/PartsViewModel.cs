@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls.Notifications;
 using DynamicData.Alias;
 using KiCadDbLib.Models;
@@ -39,11 +40,20 @@ namespace KiCadDbLib.ViewModels
             LoadParts = ReactiveCommand.CreateFromTask(async () => (await _partsService.GetPartsAsync()).OrderBy(part => part.Library).ToArray());
         }
 
-        private PartViewModel CreatePartViewModel(Part part = null)
+        private async Task<PartViewModel> CreatePartViewModel(Part part = null)
         {
+            if (part is null)
+            {
+                part = new Part();
+            }
+            else
+            {
+                part = await _partsService.GetPartAsync(part.Id);
+            }
+
             return new PartViewModel(
                      hostScreen: HostScreen,
-                     part: part ?? new Part());
+                     part: part);
         }
 
         public ReactiveCommand<Part, IRoutableViewModel> GoToPart { get; }

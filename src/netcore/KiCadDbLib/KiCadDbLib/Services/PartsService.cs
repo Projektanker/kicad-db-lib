@@ -78,11 +78,18 @@ namespace KiCadDbLib.Services
                         description: part.Description,
                         keywords: part.Keywords,
                         datasheet: part.Datasheet,
-                        customFields: part.CustomFields);
+                        customFields: part.CustomFields.Where(cf => settings.CustomFields.Contains(cf.Key)));
                 }
 
                 await builder.WriteEndLibrary();
             }
+        }
+
+        public async Task<Part> GetPartAsync(string id)
+        {
+            var settings = await _settingsService.GetSettingsAsync();
+            string filePath = await GetFilePathAsync(id, settings);
+            return await GetPartAsync(filePath, settings);
         }
 
         public async Task DeleteAsync(string id)
@@ -103,6 +110,15 @@ namespace KiCadDbLib.Services
             return _cachedFootprints;
         }
 
+        public async Task<string[]> GetLibrariesAsync()
+        {
+            return (await GetPartsAsync())
+                .Select(part => part.Library)
+                .Distinct()
+                .OrderBy(lib => lib)
+                .ToArray();
+        }
+
         public async Task<string> GetNewId(Settings settings = null)
         {
             settings ??= await _settingsService.GetSettingsAsync();
@@ -115,28 +131,12 @@ namespace KiCadDbLib.Services
             return newId.ToString();
         }
 
-        public async Task<string[]> GetLibrariesAsync()
-        {
-            return (await GetPartsAsync())
-                .Select(part => part.Library)
-                .Distinct()
-                .OrderBy(lib => lib)
-                .ToArray();
-        }
-
         public async Task<Part[]> GetPartsAsync()
         {
             var settings = await _settingsService.GetSettingsAsync();
 
-            JsonSerializer serializer = JsonSerializer.Create();
             IEnumerable<Task<Part>> tasks = Directory.EnumerateFiles(settings.DatabasePath)
-                .Select(file => Task.Run(() =>
-                {
-                    using StreamReader fileReader = File.OpenText(file);
-                    using JsonTextReader jsonReader = new JsonTextReader(fileReader);
-                    Part part = serializer.Deserialize<Part>(jsonReader);
-                    return part;
-                }));
+                .Select(file => GetPartAsync(file, settings));
 
             Part[] parts = await Task.WhenAll(tasks);
             return parts;
@@ -158,6 +158,17 @@ namespace KiCadDbLib.Services
         {
             settings ??= await _settingsService.GetSettingsAsync();
             return Path.Combine(settings.DatabasePath, $"{id}.json");
+        }
+
+        private async Task<Part> GetPartAsync(string file, Settings settings)
+        {
+            string json = await File.ReadAllTextAsync(file).ConfigureAwait(false);
+            Part part = JsonConvert.DeserializeObject<Part>(json);
+            part.CustomFields = part.CustomFields
+                .Where(cf => settings.CustomFields.Contains(cf.Key))
+                .ToDictionary(kv => kv.Key, kv => kv.Value);
+
+            return part;
         }
 
         private void SettingsService_SettingsChanged(object sender, SettingsChangedEventArgs e)
