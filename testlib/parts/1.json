@@ -1,1 +1,1 @@
-{"customFields":{"Hersteller":"","OC_FARNELL":"123465","OC_MOUSER":"m123465"},"datasheet":"-","description":"Resistor 1K 0603 75V","footprint":"Resistor_SMD:R_0603_1608Metric","id":1,"keywords":"Res Resistor 1K 0603","library":"R_0603","reference":"R","symbol":"Device:R","value":"1K"}
+{"CustomFields":{"Hersteller":"","OC_FARNELL":"123465","OC_MOUSER":"m123465"},"Datasheet":"-","Description":"Resistor 1K 0603 75V","Footprint":"Resistor_SMD:R_0603_1608Metric","Id":"1","Keywords":"Res Resistor 1K 0603","Library":"R_0603","Reference":"R","Symbol":"Device:R","Value":"1K"}

@@ -1,8 +1,0 @@
-EESchema-DOCLIB  Version 2.0
-#
-$CMP 100n_50V
-D Capacitor 100nF 50V 0603
-K Cap Capacitor 100n 0603
-$ENDCMP
-#
-#End Doc Library

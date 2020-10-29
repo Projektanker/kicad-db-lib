@@ -1,0 +1,14 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:KiCadDbLib.Controls"
+        xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia">
+
+    <StyleInclude Source="/Styles/Resources.axaml" />
+    
+    <!--Form Group-->
+    <Style Selector="StackPanel.formGroup > TextBlock" >
+        <Setter Property="FontSize" Value="{StaticResource FontSizeH2}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+</Styles>

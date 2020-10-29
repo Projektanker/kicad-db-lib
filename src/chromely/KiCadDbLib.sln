@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChromelyAngular", "KiCadDbLib\ChromelyAngular.csproj", "{E524EE49-501D-461A-B498-0D4BBB6F876F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E524EE49-501D-461A-B498-0D4BBB6F876F}.Debug|x64.ActiveCfg = Debug|x64
+		{E524EE49-501D-461A-B498-0D4BBB6F876F}.Debug|x64.Build.0 = Debug|x64
+		{E524EE49-501D-461A-B498-0D4BBB6F876F}.Release|x64.ActiveCfg = Release|x64
+		{E524EE49-501D-461A-B498-0D4BBB6F876F}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {84A86677-53C8-41B2-B339-D115AB67781D}
+	EndGlobalSection
+EndGlobal
