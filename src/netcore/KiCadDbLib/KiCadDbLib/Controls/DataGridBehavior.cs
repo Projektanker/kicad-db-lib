@@ -30,31 +30,61 @@ namespace KiCadDbLib.Controls
 
         public static ICommand GetCellPointerPressedCommand(DataGrid target)
         {
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
             return target.GetValue(CellPointerPressedCommandProperty);
         }
 
         public static IEnumerable<ColumnInfo> GetColumnInfos(DataGrid target)
         {
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
             return target.GetValue(ColumnInfosProperty);
         }
 
         public static ICommand GetSelectionChangedCommand(DataGrid target)
         {
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
             return target.GetValue(SelectionChangedCommandProperty);
         }
 
         public static void SetCellPointerPressedCommand(DataGrid target, ICommand value)
         {
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
             target.SetValue(CellPointerPressedCommandProperty, value);
         }
 
         public static void SetColumnInfos(DataGrid target, IEnumerable<ColumnInfo> value)
         {
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
             target.SetValue(ColumnInfosProperty, value);
         }
 
         public static void SetSelectionChangedCommand(DataGrid target, ICommand value)
         {
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
             target.SetValue(SelectionChangedCommandProperty, value);
         }
 
@@ -126,11 +156,13 @@ namespace KiCadDbLib.Controls
             {
                 Debug.WriteLine($"  {item}");
             }
+
             Debug.WriteLine($"Removed: {e.RemovedItems.Count}");
             foreach (var item in e.RemovedItems)
             {
                 Debug.WriteLine($"  {item}");
             }
+
             Debug.WriteLine($"Selected: {target.SelectedItem}");
 
             if (e.AddedItems.Count == 0 || target.SelectedItem is null)

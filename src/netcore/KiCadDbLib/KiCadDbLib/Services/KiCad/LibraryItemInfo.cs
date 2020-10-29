@@ -18,6 +18,11 @@ namespace KiCadDbLib.Services.KiCad
 
         public static LibraryItemInfo Parse(string value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             int lastIndex = value.LastIndexOf(_separator);
             if (lastIndex < 1)
             {
@@ -36,6 +41,7 @@ namespace KiCadDbLib.Services.KiCad
             return string.Join(_separator, library, item);
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return string.Join(_separator, Library, Name);

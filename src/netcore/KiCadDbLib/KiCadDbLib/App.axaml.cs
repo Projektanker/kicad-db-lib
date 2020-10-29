@@ -9,11 +9,13 @@ namespace KiCadDbLib
 {
     public class App : Application
     {
+        /// <inheritdoc/>
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
         }
 
+        /// <inheritdoc/>
         public override void OnFrameworkInitializationCompleted()
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

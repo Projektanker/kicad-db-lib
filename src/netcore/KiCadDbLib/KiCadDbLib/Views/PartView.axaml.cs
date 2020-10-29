@@ -26,7 +26,7 @@ namespace KiCadDbLib.Views
     {
         public PartView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             this.WhenActivated(disposables =>
             {
                 ViewModel.DeletePartConfirmation
@@ -59,6 +59,7 @@ namespace KiCadDbLib.Views
             });
         }
 
+        /// <inheritdoc/>
         public Window Host { get; set; }
 
         private async Task HandleDeletePartConfirmationAsync(InteractionContext<Unit, bool> interactionContext)
@@ -70,10 +71,12 @@ namespace KiCadDbLib.Views
                     ContentMessage = "Delete?",
                     WindowStartupLocation = WindowStartupLocation.CenterOwner,
                     CanResize = false,
+
                     // WindowIcon = Host.Icon,
                 });
 
-            var buttonResult = await msb.ShowDialog(Host);
+            var buttonResult = await msb.ShowDialog(Host)
+                .ConfigureAwait(false);
             interactionContext.SetOutput(buttonResult == ButtonResult.Yes);
         }
 
@@ -86,10 +89,12 @@ namespace KiCadDbLib.Views
                     ContentMessage = "Discard changes?",
                     WindowStartupLocation = WindowStartupLocation.CenterOwner,
                     CanResize = false,
+
                     // WindowIcon = _iconBitmap,
                 });
 
-            var buttonResult = await msb.ShowDialog(Host);
+            var buttonResult = await msb.ShowDialog(Host)
+                .ConfigureAwait(false);
             interactionContext.SetOutput(buttonResult == ButtonResult.Yes);
         }
 

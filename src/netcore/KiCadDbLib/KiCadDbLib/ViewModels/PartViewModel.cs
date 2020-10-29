@@ -51,10 +51,6 @@ namespace KiCadDbLib.ViewModels
             DeletePartConfirmation = new Interaction<Unit, bool>();
         }
 
-        public Func<string, CancellationToken, Task<IEnumerable<object>>> AsyncAvailableFootprintsPopulator => GetAvailableFootrpintsAsync;
-
-        public Func<string, CancellationToken, Task<IEnumerable<object>>> AsyncAvailableSymbolsPopulator => GetAvailableSymbolsAsync;
-
         public ReactiveCommand<Unit, Unit> Clone { get; }
 
         public ReactiveCommand<Unit, Unit> Delete { get; }
@@ -77,6 +73,7 @@ namespace KiCadDbLib.ViewModels
 
         public ReactiveCommand<Unit, Unit> Save { get; }
 
+        /// <inheritdoc/>
         protected override void WhenActivated(CompositeDisposable disposables)
         {
             base.WhenActivated(disposables);
@@ -201,7 +198,7 @@ namespace KiCadDbLib.ViewModels
         {
             if (await DeletePartConfirmation.Handle(default).Catch(Observable.Return(true)))
             {
-                await _partsService.DeleteAsync(_part.Id);
+                await _partsService.DeleteAsync(_part.Id).ConfigureAwait(false);
                 await HostScreen.Router.NavigateBack.Execute();
             }
         }
@@ -236,29 +233,9 @@ namespace KiCadDbLib.ViewModels
             _part = part.ToObject<Part>();
             _part.Id = Id;
 
-            await _partsService.AddOrUpdateAsync(_part);
-            await _partsService.Build();
+            await _partsService.AddOrUpdateAsync(_part).ConfigureAwait(false);
+            await _partsService.Build().ConfigureAwait(false);
             await HostScreen.Router.NavigateBack.Execute();
-        }
-
-        private async Task<IEnumerable<object>> GetAvailableFootrpintsAsync(string searchText, CancellationToken cancellationToken)
-        {
-            return await Task.Run(() =>
-            {
-                return new[] { "Device:C", "Device:R", "Device:L" }
-                    .Where(symbol => symbol.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                    .Cast<object>();
-            }, cancellationToken);
-        }
-
-        private async Task<IEnumerable<object>> GetAvailableSymbolsAsync(string searchText, CancellationToken cancellationToken)
-        {
-            return await Task.Run(() =>
-            {
-                return new[] { "Device:C", "Device:R", "Device:L" }
-                    .Where(symbol => symbol.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                    .Cast<object>();
-            }, cancellationToken);
         }
     }
 }

@@ -11,8 +11,8 @@ namespace KiCadDbLib.Models
         public ColumnInfo(string headerAndPath)
             : this(headerAndPath, headerAndPath)
         {
-
         }
+
         public ColumnInfo(string header, string path)
         {
             Header = header;
@@ -35,11 +35,13 @@ namespace KiCadDbLib.Models
             return EqualityComparer<ColumnInfo>.Default.Equals(left, right);
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             return Equals(obj as ColumnInfo);
         }
 
+        /// <inheritdoc/>
         public bool Equals(ColumnInfo other)
         {
             return other != null &&
@@ -47,6 +49,7 @@ namespace KiCadDbLib.Models
                    Path == other.Path;
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return HashCode.Combine(Header, Path);

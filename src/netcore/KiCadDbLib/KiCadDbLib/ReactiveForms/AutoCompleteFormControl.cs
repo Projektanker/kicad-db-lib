@@ -5,14 +5,13 @@ namespace KiCadDbLib.ReactiveForms
 {
     public class AutoCompleteFormControl : FormControl
     {
-
         private IEnumerable<string> _items;
 
         public AutoCompleteFormControl()
         {
         }
 
-        public AutoCompleteFormControl(string initialState) 
+        public AutoCompleteFormControl(string initialState)
             : base(initialState)
         {
         }

@@ -9,6 +9,7 @@ namespace KiCadDbLib.ViewModels
             Activator = new ViewModelActivator();
         }
 
+        /// <inheritdoc/>
         public ViewModelActivator Activator { get; }
     }
 }

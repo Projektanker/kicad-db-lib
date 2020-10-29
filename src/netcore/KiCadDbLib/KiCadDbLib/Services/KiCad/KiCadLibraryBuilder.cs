@@ -11,16 +11,11 @@ namespace KiCadDbLib.Services.KiCad
     internal sealed class KiCadLibraryBuilder : IDisposable, IAsyncDisposable
     {
         private readonly TextWriter _dcmWriter;
-        private readonly string _libraryName;
         private readonly KiCadLibraryReader _libraryReader;
         private readonly TextWriter _libWriter;
-        private readonly string _outputDirectory;
 
         public KiCadLibraryBuilder(string outputDirectory, string libraryName)
         {
-            _outputDirectory = outputDirectory;
-            _libraryName = libraryName;
-
             _libWriter = new StreamWriter(
                 path: Path.Combine(outputDirectory, libraryName + FileExtensions.Lib),
                 append: false,
@@ -40,27 +35,29 @@ namespace KiCadDbLib.Services.KiCad
 
             foreach (string file in files)
             {
-                await Task.Run(() => File.Delete(file));
+                await Task.Run(() => File.Delete(file)).ConfigureAwait(false);
             }
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             _libWriter.Dispose();
             _dcmWriter.Dispose();
         }
 
+        /// <inheritdoc/>
         public async ValueTask DisposeAsync()
         {
-            await _libWriter.DisposeAsync();
-            await _dcmWriter.DisposeAsync();
+            await _libWriter.DisposeAsync().ConfigureAwait(false);
+            await _dcmWriter.DisposeAsync().ConfigureAwait(false);
         }
 
         public async Task WriteEndLibrary()
         {
             await Task.WhenAll(
                 WriteEndDcmAsync(),
-                WriteEndLibAsync());
+                WriteEndLibAsync()).ConfigureAwait(false);
         }
 
         public async Task WritePartAsync(
@@ -87,17 +84,17 @@ namespace KiCadDbLib.Services.KiCad
                 datasheet: datasheet,
                 customFields: customFields);
 
-            await Task.WhenAll(dcm, lib);
+            await Task.WhenAll(dcm, lib).ConfigureAwait(false);
         }
 
         public async Task WriteStartLibrary()
         {
             await Task.WhenAll(
                 WriteStartDcmAsync(),
-                WriteStartLibAsync());
+                WriteStartLibAsync()).ConfigureAwait(false);
         }
 
-        private string CreateCustomField(int fieldNumber, string key, string value)
+        private static string CreateCustomField(int fieldNumber, string key, string value)
         {
             if (fieldNumber < 4)
             {
@@ -109,7 +106,7 @@ namespace KiCadDbLib.Services.KiCad
                 $"50 H I C CNN \"{key}\"";
         }
 
-        private IEnumerable<string> CreateCustomFields(IEnumerable<KeyValuePair<string, string>> fields)
+        private static IEnumerable<string> CreateCustomFields(IEnumerable<KeyValuePair<string, string>> fields)
         {
             if (fields is null)
             {
@@ -131,7 +128,7 @@ namespace KiCadDbLib.Services.KiCad
             bool bufferLibrary = true)
         {
             // Get symbol
-            string[] template = await _libraryReader.GetSymbolAsync(symbolInfo, bufferLibrary);
+            string[] template = await _libraryReader.GetSymbolAsync(symbolInfo, bufferLibrary).ConfigureAwait(false);
 
             // Remove empty lines
             var filtered = template.Where(line => !string.IsNullOrWhiteSpace(line));
@@ -143,7 +140,7 @@ namespace KiCadDbLib.Services.KiCad
             filtered = filtered.Where(line => !line.StartsWith("ALIAS", StringComparison.OrdinalIgnoreCase));
 
             // Remove FPLIST
-            static bool isPartOfFPList(string line, ref bool insideFPList)
+            static bool IsPartOfFPList(string line, ref bool insideFPList)
             {
                 if (line.StartsWith("$FPLIST", StringComparison.OrdinalIgnoreCase))
                 {
@@ -160,18 +157,15 @@ namespace KiCadDbLib.Services.KiCad
                     return insideFPList;
                 }
             }
+
             bool insideFPList = false;
-            filtered = filtered.Where(line => !isPartOfFPList(line, ref insideFPList));
+            filtered = filtered.Where(line => !IsPartOfFPList(line, ref insideFPList));
 
             // Done filtering.
             var result = filtered.ToList();
 
-            // DEF value reference ...
-            // F0 "Reference" ...
-            // F1 "Value" ...
-            // F2 "Footprint" ...
-            // F3 "Datasheet" ...
-            // F3+n "custom field value" ... "custom field name"
+            // DEF value reference ... F0 "Reference" ... F1 "Value" ... F2 "Footprint" ... F3
+            // "Datasheet" ... F3+n "custom field value" ... "custom field name"
 
             // DEF value reference ...
             result[0] = Regex.Replace(result[0], "^DEF \\S+ \\S ", $"DEF {value} {reference} ");
@@ -199,14 +193,15 @@ namespace KiCadDbLib.Services.KiCad
 
             return result;
         }
+
         private async Task WriteEndDcmAsync()
         {
-            await _dcmWriter.WriteLineAsync("#End Doc Library");
+            await _dcmWriter.WriteLineAsync("#End Doc Library").ConfigureAwait(false);
         }
 
         private async Task WriteEndLibAsync()
         {
-            await _libWriter.WriteLineAsync("#End Library");
+            await _libWriter.WriteLineAsync("#End Library").ConfigureAwait(false);
         }
 
         private async Task WritePartToDcmAsync(
@@ -217,26 +212,26 @@ namespace KiCadDbLib.Services.KiCad
         {
             if (!string.IsNullOrWhiteSpace(value))
             {
-                await _dcmWriter.WriteLineAsync($"$CMP {value}");
+                await _dcmWriter.WriteLineAsync($"$CMP {value}").ConfigureAwait(false);
             }
 
             if (!string.IsNullOrWhiteSpace(description))
             {
-                await _dcmWriter.WriteLineAsync($"D { description}");
+                await _dcmWriter.WriteLineAsync($"D {description}").ConfigureAwait(false);
             }
 
             if (!string.IsNullOrWhiteSpace(keywords))
             {
-                await _dcmWriter.WriteLineAsync($"K { keywords}");
+                await _dcmWriter.WriteLineAsync($"K {keywords}").ConfigureAwait(false);
             }
 
             if (!string.IsNullOrWhiteSpace(datasheet))
             {
-                await _dcmWriter.WriteLineAsync($"F { datasheet}");
+                await _dcmWriter.WriteLineAsync($"F {datasheet}").ConfigureAwait(false);
             }
 
-            await _dcmWriter.WriteLineAsync("$ENDCMP");
-            await _dcmWriter.WriteLineAsync('#');
+            await _dcmWriter.WriteLineAsync("$ENDCMP").ConfigureAwait(false);
+            await _dcmWriter.WriteLineAsync('#').ConfigureAwait(false);
         }
 
         private async Task WritePartToLibAsync(
@@ -247,28 +242,28 @@ namespace KiCadDbLib.Services.KiCad
             string datasheet,
             IEnumerable<KeyValuePair<string, string>> customFields)
         {
-            await _libWriter.WriteLineAsync($"# {value}");
-            await _libWriter.WriteLineAsync('#');
-            var createdSymbol = await CreateSymbolAsync(symbol, reference, value, footprint, datasheet, customFields);
+            await _libWriter.WriteLineAsync($"# {value}").ConfigureAwait(false);
+            await _libWriter.WriteLineAsync('#').ConfigureAwait(false);
+            var createdSymbol = await CreateSymbolAsync(symbol, reference, value, footprint, datasheet, customFields).ConfigureAwait(false);
             foreach (var line in createdSymbol)
             {
-                await _libWriter.WriteLineAsync(line);
+                await _libWriter.WriteLineAsync(line).ConfigureAwait(false);
             }
 
-            await _libWriter.WriteLineAsync('#');
+            await _libWriter.WriteLineAsync('#').ConfigureAwait(false);
         }
 
         private async Task WriteStartDcmAsync()
         {
-            await _dcmWriter.WriteLineAsync("EESchema-DOCLIB  Version 2.0");
-            await _dcmWriter.WriteLineAsync("*");
+            await _dcmWriter.WriteLineAsync("EESchema-DOCLIB  Version 2.0").ConfigureAwait(false);
+            await _dcmWriter.WriteLineAsync("*").ConfigureAwait(false);
         }
 
         private async Task WriteStartLibAsync()
         {
-            await _libWriter.WriteLineAsync("EESchema-LIBRARY Version 2.4");
-            await _libWriter.WriteLineAsync("#encoding utf-8");
-            await _libWriter.WriteLineAsync("#");
+            await _libWriter.WriteLineAsync("EESchema-LIBRARY Version 2.4").ConfigureAwait(false);
+            await _libWriter.WriteLineAsync("#encoding utf-8").ConfigureAwait(false);
+            await _libWriter.WriteLineAsync("#").ConfigureAwait(false);
         }
     }
 }

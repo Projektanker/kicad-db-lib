@@ -5,25 +5,45 @@ using Avalonia.Controls.Notifications;
 
 namespace KiCadDbLib.Views
 {
-    public static class INotificationManagerExtension
+    public static class INotificationManagerExtensions
     {
         public static void ShowError(this INotificationManager notificationManager, string title, string message)
         {
+            if (notificationManager is null)
+            {
+                throw new ArgumentNullException(nameof(notificationManager));
+            }
+
             notificationManager.Show(new Notification(title, message, NotificationType.Error, TimeSpan.Zero));
         }
 
         public static void ShowInformation(this INotificationManager notificationManager, string title, string message)
         {
+            if (notificationManager is null)
+            {
+                throw new ArgumentNullException(nameof(notificationManager));
+            }
+
             notificationManager.Show(new Notification(title, message, NotificationType.Information));
         }
 
         public static void ShowSuccess(this INotificationManager notificationManager, string title, string message)
         {
+            if (notificationManager is null)
+            {
+                throw new ArgumentNullException(nameof(notificationManager));
+            }
+
             notificationManager.Show(new Notification(title, message, NotificationType.Success));
         }
 
         public static void ShowWarning(this INotificationManager notificationManager, string title, string message)
         {
+            if (notificationManager is null)
+            {
+                throw new ArgumentNullException(nameof(notificationManager));
+            }
+
             notificationManager.Show(new Notification(title, message, NotificationType.Warning));
         }
     }

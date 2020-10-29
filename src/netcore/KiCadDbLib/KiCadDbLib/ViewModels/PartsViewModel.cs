@@ -6,7 +6,6 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Avalonia.Controls.Notifications;
 using DynamicData.Alias;
 using KiCadDbLib.Models;
 using KiCadDbLib.Navigation;
@@ -29,42 +28,37 @@ namespace KiCadDbLib.ViewModels
                 hostScreen: HostScreen,
                 viewModelFactory: () => new SettingsViewModel(hostScreen: HostScreen));
 
-            GoToPart = NavigationCommand.Create<Part, PartViewModel>(hostScreen: HostScreen,
+            GoToPart = NavigationCommand.Create<Part, PartViewModel>(
+                hostScreen: HostScreen,
                 viewModelFactory: CreatePartViewModel);
 
-            GoToAbout = NavigationCommand.Create(hostScreen: HostScreen,
+            GoToAbout = NavigationCommand.Create(
+                hostScreen: HostScreen,
                 viewModelFactory: () => new AboutViewModel(HostScreen));
 
             BuildLibrary = ReactiveCommand.CreateFromTask(_partsService.Build);
 
-            LoadParts = ReactiveCommand.CreateFromTask(async () => (await _partsService.GetPartsAsync()).OrderBy(part => part.Library).ToArray());
-        }
-
-        private async Task<PartViewModel> CreatePartViewModel(Part part = null)
-        {
-            if (part is null)
+            LoadParts = ReactiveCommand.CreateFromTask(async () =>
             {
-                part = new Part();
-            }
-            else
-            {
-                part = await _partsService.GetPartAsync(part.Id);
-            }
-
-            return new PartViewModel(
-                     hostScreen: HostScreen,
-                     part: part);
+                return (await _partsService.GetPartsAsync().ConfigureAwait(false))
+                    .OrderBy(part => part.Library)
+                    .ToArray();
+            });
         }
-
-        public ReactiveCommand<Part, IRoutableViewModel> GoToPart { get; }
-        public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
-        public ReactiveCommand<Unit, IRoutableViewModel> GoToAbout { get; }
 
         public ReactiveCommand<Unit, Unit> BuildLibrary { get; }
+
+        public ReactiveCommand<Unit, IRoutableViewModel> GoToAbout { get; }
+
+        public ReactiveCommand<Part, IRoutableViewModel> GoToPart { get; }
+
+        public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
+
         public ReactiveCommand<Unit, Part[]> LoadParts { get; }
 
         public IEnumerable<ColumnInfo> PartColumns => _partColumnsProperty?.Value;
 
+        /// <inheritdoc/>
         protected override void WhenActivated(CompositeDisposable disposables)
         {
             base.WhenActivated(disposables);
@@ -102,6 +96,23 @@ namespace KiCadDbLib.ViewModels
             }
 
             return columnInfos;
+        }
+
+        private async Task<PartViewModel> CreatePartViewModel(Part part = null)
+        {
+            if (part is null)
+            {
+                part = new Part();
+            }
+            else
+            {
+                part = await _partsService.GetPartAsync(part.Id)
+                    .ConfigureAwait(false);
+            }
+
+            return new PartViewModel(
+                     hostScreen: HostScreen,
+                     part: part);
         }
     }
 }

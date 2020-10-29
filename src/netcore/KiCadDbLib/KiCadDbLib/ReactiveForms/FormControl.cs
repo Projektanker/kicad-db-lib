@@ -47,6 +47,7 @@ namespace KiCadDbLib.ReactiveForms
                 .ToProperty(this, nameof(HasErrors));
         }
 
+        /// <inheritdoc/>
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
         public IEnumerable<string> Errors
@@ -55,8 +56,12 @@ namespace KiCadDbLib.ReactiveForms
             set => this.RaiseAndSetIfChanged(ref _errors, value);
         }
 
+        /// <inheritdoc/>
         public override bool HasErrors => _hasErrorProperty.Value;
+
+        /// <inheritdoc/>
         public override bool IsDirty => _isDirtyProperty.Value;
+
         public bool IsRequired => _isRequiredProperty.Value;
 
         public IValidator Validator
@@ -71,18 +76,26 @@ namespace KiCadDbLib.ReactiveForms
             set => this.RaiseAndSetIfChanged(ref _value, value);
         }
 
+        /// <inheritdoc/>
         public IEnumerable GetErrors(string propertyName)
         {
+            if (propertyName is null)
+            {
+                throw new ArgumentNullException(nameof(propertyName));
+            }
+
             return propertyName.Equals(nameof(Value), StringComparison.OrdinalIgnoreCase)
                 ? _errors
                 : Enumerable.Empty<string>();
         }
 
+        /// <inheritdoc/>
         public override JToken GetValue()
         {
             return new JValue(Value);
         }
 
+        /// <inheritdoc/>
         public override bool Validate()
         {
             Errors = (Validator ?? Validators.None).Validate(this).ToArray();

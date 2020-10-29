@@ -2,14 +2,18 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using ReactiveUI;
 
 namespace KiCadDbLib.ReactiveForms.Validation
 {
     public static class Validators
     {
+        public static IValidator DirectoryExists { get; }
+            = new ValidatorFn(control => Directory.Exists(control.Value) ? Sucess : Error(control, "does not exist"));
+
         public static IValidator None { get; } = new ValidatorFn(_ => Sucess);
+
         public static IValidator Required { get; } = new ValidatorFn(RequiredCallback);
+
         private static IEnumerable<string> Sucess => Enumerable.Empty<string>();
 
         public static IValidator Compose(params IValidator[] validators)
@@ -24,12 +28,14 @@ namespace KiCadDbLib.ReactiveForms.Validation
 
         public static IValidator Pattern(Regex regex)
         {
-            return new ValidatorFn(control => regex.IsMatch(control.Value ?? string.Empty) ? Sucess : Error(control, "contains invalid characters"));        
+            return new ValidatorFn(control => regex.IsMatch(control.Value ?? string.Empty) ? Sucess : Error(control, "contains invalid characters"));
         }
 
-        public static IValidator DirectoryExists { get; } 
-            = new ValidatorFn(control => Directory.Exists(control.Value) ? Sucess : Error(control, "does not exist"));
-        
+        internal static bool IsRequired(IValidator validator)
+        {
+            return validator == Required
+                || (validator is CompositeValidator compositeValidator && compositeValidator.Validators.Any(v => IsRequired(v)));
+        }
 
         private static IEnumerable<string> Error(FormControl control, string error)
         {
@@ -41,12 +47,6 @@ namespace KiCadDbLib.ReactiveForms.Validation
             return string.IsNullOrEmpty(control.Value)
                 ? Error(control, "is required")
                 : Sucess;
-        }
-        
-        internal static bool IsRequired(IValidator validator)
-        {
-            return validator == Required
-                || (validator is CompositeValidator compositeValidator && compositeValidator.Validators.Any(v => IsRequired(v)));
         }
     }
 }

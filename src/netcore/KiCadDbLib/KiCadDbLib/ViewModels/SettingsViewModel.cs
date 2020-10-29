@@ -29,14 +29,14 @@ namespace KiCadDbLib.ViewModels
             : base(hostScreen)
         {
             _settingsService = Locator.Current.GetService<SettingsService>();
-            _partsService = Locator.Current.GetService<PartsService>(); ;
+            _partsService = Locator.Current.GetService<PartsService>();
 
             SaveSettings = ReactiveCommand.CreateFromTask(execute: ExecuteSaveSettings);
 
             var canAddCustomField = this.WhenAnyValue(vm => vm.NewCustomField, value =>
             {
                 return !string.IsNullOrWhiteSpace(value)
-                    && !CustomFields.Any(vm => vm.Value.Equals(value, StringComparison.CurrentCulture));
+                    && !CustomFields.Any(vm => vm.Value.Equals(value, StringComparison.Ordinal));
             });
 
             AddCustomField = ReactiveCommand.Create(execute: ExecuteAddCustomField, canExecute: canAddCustomField);
@@ -51,11 +51,12 @@ namespace KiCadDbLib.ViewModels
             GoBack = ReactiveCommand.CreateCombined(new[]
             {
                 SaveSettings,
-                HostScreen.Router.NavigateBack
+                HostScreen.Router.NavigateBack,
             });
         }
 
         public ReactiveCommand<Unit, Unit> AddCustomField { get; }
+
         public CombinedReactiveCommand<Unit, Unit> ImportCustomFields { get; }
 
         public ObservableCollection<SettingsCustomFieldViewModel> CustomFields => _customFieldsProperty?.Value;
@@ -74,6 +75,7 @@ namespace KiCadDbLib.ViewModels
 
         public string SettingsLocation => _settingsService?.Location;
 
+        /// <inheritdoc/>
         protected override void WhenActivated(CompositeDisposable disposables)
         {
             base.WhenActivated(disposables);
@@ -115,7 +117,7 @@ namespace KiCadDbLib.ViewModels
                 Label = "Database",
                 Validator = Validators.Compose(
                         Validators.Required,
-                        Validators.DirectoryExists)
+                        Validators.DirectoryExists),
             });
 
             form.Add(nameof(Settings.SymbolsPath), new FormControl(settings.SymbolsPath)
@@ -123,7 +125,7 @@ namespace KiCadDbLib.ViewModels
                 Label = "Symbols",
                 Validator = Validators.Compose(
                         Validators.Required,
-                        Validators.DirectoryExists)
+                        Validators.DirectoryExists),
             });
 
             form.Add(nameof(Settings.FootprintsPath), new FormControl(settings.FootprintsPath)
@@ -131,7 +133,7 @@ namespace KiCadDbLib.ViewModels
                 Label = "Footprints",
                 Validator = Validators.Compose(
                         Validators.Required,
-                        Validators.DirectoryExists)
+                        Validators.DirectoryExists),
             });
 
             form.Add(nameof(Settings.OutputPath), new FormControl(settings.OutputPath)
@@ -139,7 +141,7 @@ namespace KiCadDbLib.ViewModels
                 Label = "Output",
                 Validator = Validators.Compose(
                         Validators.Required,
-                        Validators.DirectoryExists)
+                        Validators.DirectoryExists),
             });
 
             return form;
@@ -163,7 +165,7 @@ namespace KiCadDbLib.ViewModels
 
         private void RemoveCustomField(string customField)
         {
-            SettingsCustomFieldViewModel vm = CustomFields.Single(vm => vm.Value.Equals(customField, StringComparison.CurrentCulture));
+            SettingsCustomFieldViewModel vm = CustomFields.Single(vm => vm.Value.Equals(customField, StringComparison.Ordinal));
             CustomFields.Remove(vm);
         }
 
@@ -171,7 +173,7 @@ namespace KiCadDbLib.ViewModels
         {
             IEnumerable<string> customFields = CustomFields.Select(vm => vm.Value);
 
-            var parts = await _partsService.GetPartsAsync();
+            var parts = await _partsService.GetPartsAsync().ConfigureAwait(false);
             customFields = customFields
                 .Concat(parts.SelectMany(part => part.CustomFields.Keys))
                 .Distinct()

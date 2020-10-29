@@ -1,10 +1,7 @@
-﻿
-using System;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using DynamicData.Binding;
-using Projektanker.Icons.Avalonia;
 
 namespace KiCadDbLib.Controls
 {
@@ -15,18 +12,6 @@ namespace KiCadDbLib.Controls
 
         public static readonly StyledProperty<SortDirection?> SortDirectionProperty =
             AvaloniaProperty.Register<SortableHeader, SortDirection?>(nameof(SortDirection));
-
-        protected override void OnPointerReleased(PointerReleasedEventArgs e)
-        {
-            base.OnPointerReleased(e);
-            SortDirection = SortDirection switch
-            {
-                DynamicData.Binding.SortDirection.Ascending => DynamicData.Binding.SortDirection.Descending,
-                DynamicData.Binding.SortDirection.Descending => null,
-                _ => DynamicData.Binding.SortDirection.Ascending,
-            };
-        }
-
 
         public string Header
         {
@@ -40,5 +25,16 @@ namespace KiCadDbLib.Controls
             set => SetValue(SortDirectionProperty, value);
         }
 
+        /// <inheritdoc/>
+        protected override void OnPointerReleased(PointerReleasedEventArgs e)
+        {
+            base.OnPointerReleased(e);
+            SortDirection = SortDirection switch
+            {
+                DynamicData.Binding.SortDirection.Ascending => DynamicData.Binding.SortDirection.Descending,
+                DynamicData.Binding.SortDirection.Descending => null,
+                _ => DynamicData.Binding.SortDirection.Ascending,
+            };
+        }
     }
 }

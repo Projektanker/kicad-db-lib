@@ -9,7 +9,7 @@ namespace KiCadDbLib.Controls
     {
         public FormControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private void InitializeComponent()

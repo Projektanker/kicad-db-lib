@@ -25,7 +25,6 @@ namespace KiCadDbLib.ViewModels
             get;
         }
 
-
         private void ExecuteRemove()
         {
             _removeAction(Value);

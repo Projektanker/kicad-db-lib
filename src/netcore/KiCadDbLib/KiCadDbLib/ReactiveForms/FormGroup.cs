@@ -17,10 +17,12 @@ namespace KiCadDbLib.ReactiveForms
 
         public IEnumerable<FormGroupControl> Controls => _controls;
 
+        /// <inheritdoc/>
         public override bool IsDirty => Controls
             .Select(item => item.Control)
             .Any(control => control.IsDirty);
 
+        /// <inheritdoc/>
         public override bool HasErrors => Controls
             .Select(item => item.Control)
             .Any(control => control.HasErrors);
@@ -43,6 +45,7 @@ namespace KiCadDbLib.ReactiveForms
             return _controls.Any(item => item.Name.Equals(name, StringComparison.Ordinal));
         }
 
+        /// <inheritdoc/>
         public override JToken GetValue()
         {
             return new JObject(
@@ -66,6 +69,7 @@ namespace KiCadDbLib.ReactiveForms
             }
         }
 
+        /// <inheritdoc/>
         public override bool Validate()
         {
             bool[] areValid = Controls.Select(item => item.Control)

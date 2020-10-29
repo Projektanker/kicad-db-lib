@@ -9,14 +9,14 @@ using static MoreLinq.Extensions.TakeUntilExtension;
 
 namespace KiCadDbLib.Services.KiCad
 {
-    class KiCadLibraryReader
+    internal class KiCadLibraryReader
     {
         private const string _endDef = "ENDDEF";
 
         private string _getSymbolLibrary;
         private string[] _getSymbolLines;
 
-        public async Task<LibraryItemInfo[]> GetFootprintInfosFromDirectoryAsync(string directory)
+        public static async Task<LibraryItemInfo[]> GetFootprintInfosFromDirectoryAsync(string directory)
         {
             if (!Directory.Exists(directory))
             {
@@ -26,8 +26,25 @@ namespace KiCadDbLib.Services.KiCad
             List<LibraryItemInfo> result = new List<LibraryItemInfo>();
             foreach (string footprintDirectory in Directory.EnumerateDirectories(directory, $"*{FileExtensions.Pretty}"))
             {
-                LibraryItemInfo[] footprints = await GetFootprintInfosAsync(footprintDirectory);
+                LibraryItemInfo[] footprints = await GetFootprintInfosAsync(footprintDirectory).ConfigureAwait(false);
                 result.AddRange(footprints);
+            }
+
+            return result.ToArray();
+        }
+
+        public static async Task<LibraryItemInfo[]> GetSymbolInfosFromDirectoryAsync(string directory)
+        {
+            if (!Directory.Exists(directory))
+            {
+                throw new DirectoryNotFoundException($"Directory \"{directory}\" not found.");
+            }
+
+            List<LibraryItemInfo> result = new List<LibraryItemInfo>();
+            foreach (string libFile in Directory.EnumerateFiles(directory, $"*{FileExtensions.Lib}"))
+            {
+                LibraryItemInfo[] symbols = await GetSymbolInfosAsync(libFile).ConfigureAwait(false);
+                result.AddRange(symbols);
             }
 
             return result.ToArray();
@@ -55,13 +72,12 @@ namespace KiCadDbLib.Services.KiCad
             }
             else
             {
-                lines = await File.ReadAllLinesAsync(libraryFilePath, Encoding.UTF8);
+                lines = await File.ReadAllLinesAsync(libraryFilePath, Encoding.UTF8).ConfigureAwait(false);
                 _getSymbolLibrary = bufferLibrary ? libraryFilePath : null;
                 _getSymbolLines = bufferLibrary ? lines : null;
             }
 
-
-            // Search begin of symbol (DEF ...)            
+            // Search begin of symbol (DEF ...)
             var start = lines
                 .SkipWhile(line => !line.StartsWith($"DEF {symbolName}", StringComparison.Ordinal));
 
@@ -77,7 +93,7 @@ namespace KiCadDbLib.Services.KiCad
 
             if (!symbolLines[^1].StartsWith(_endDef, StringComparison.Ordinal))
             {
-                throw new Exception($"Symbol library \"{libraryFilePath}\" is corrupted. \"{_endDef}\" not found.");
+                throw new FormatException($"Symbol library \"{libraryFilePath}\" is corrupted. \"{_endDef}\" not found.");
             }
 
             string[] result = new string[symbolLines.Length + 3];
@@ -94,26 +110,7 @@ namespace KiCadDbLib.Services.KiCad
             return result;
         }
 
-
-
-        public async Task<LibraryItemInfo[]> GetSymbolInfosFromDirectoryAsync(string directory)
-        {
-            if (!Directory.Exists(directory))
-            {
-                throw new DirectoryNotFoundException($"Directory \"{directory}\" not found.");
-            }
-
-            List<LibraryItemInfo> result = new List<LibraryItemInfo>();
-            foreach (string libFile in Directory.EnumerateFiles(directory, $"*{FileExtensions.Lib}"))
-            {
-                LibraryItemInfo[] symbols = await GetSymbolInfosAsync(libFile);
-                result.AddRange(symbols);
-            }
-
-            return result.ToArray();
-        }
-
-        private async Task<LibraryItemInfo[]> GetFootprintInfosAsync(string directory)
+        private static async Task<LibraryItemInfo[]> GetFootprintInfosAsync(string directory)
         {
             if (!Directory.Exists(directory))
             {
@@ -126,10 +123,10 @@ namespace KiCadDbLib.Services.KiCad
                    .Select(file => Path.GetFileNameWithoutExtension(file))
                    .Select(footprint => new LibraryItemInfo() { Library = directory, Name = footprint })
                    .ToArray();
-            });
+            }).ConfigureAwait(false);
         }
 
-        private async Task<LibraryItemInfo[]> GetSymbolInfosAsync(string libraryFilePath)
+        private static async Task<LibraryItemInfo[]> GetSymbolInfosAsync(string libraryFilePath)
         {
             if (!File.Exists(libraryFilePath))
             {
@@ -147,7 +144,7 @@ namespace KiCadDbLib.Services.KiCad
                     .Select(symbolName => new LibraryItemInfo() { Library = libraryFilePath, Name = symbolName });
 
                 return symbols.ToArray();
-            });
+            }).ConfigureAwait(false);
         }
     }
 }

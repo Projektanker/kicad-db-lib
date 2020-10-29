@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive;
+using System.Reflection;
 using KiCadDbLib.Services;
 using ReactiveUI;
 using Splat;
@@ -15,16 +16,22 @@ namespace KiCadDbLib.ViewModels
         {
             _settingsService = Locator.Current.GetService<SettingsService>();
             GoBack = HostScreen.Router.NavigateBack;
+            var entryAssembly = Assembly.GetEntryAssembly();
             License = "MIT";
-            GitHub = @"https://github.com/projektanker";
-            Version = new Version(1, 4, 0, 4);
+            GitHub = @"https://github.com/projektanker/kicad-db-lib";
+            Version = entryAssembly
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                .InformationalVersion;
         }
 
         public string GitHub { get; }
+
         public ReactiveCommand<Unit, Unit> GoBack { get; }
 
         public string License { get; }
+
         public string SettingsLocation => _settingsService?.Location;
-        public Version Version { get; }
+
+        public string Version { get; }
     }
 }
