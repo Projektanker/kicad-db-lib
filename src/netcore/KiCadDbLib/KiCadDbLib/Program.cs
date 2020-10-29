@@ -1,13 +1,10 @@
 ﻿using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Dialogs;
-using Avalonia.Logging.Serilog;
 using Avalonia.ReactiveUI;
 using KiCadDbLib.Services;
 using KiCadDbLib.Services.KiCad;
 using KiCadDbLib.ViewModels;
-using KiCadDbLib.Views;
 using Projektanker.Icons.Avalonia;
 using Projektanker.Icons.Avalonia.FontAwesome;
 using ReactiveUI;
@@ -58,7 +55,7 @@ namespace KiCadDbLib
                 .AfterSetup(AfterSetupCallback)
                 .UseReactiveUI()
                 .UsePlatformDetect()
-                .LogToDebug();
+                .LogToTrace();
         }
 
         private static void AfterSetupCallback(AppBuilder appBuilder)

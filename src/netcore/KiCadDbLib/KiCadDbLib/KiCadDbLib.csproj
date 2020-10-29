@@ -7,16 +7,16 @@
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.9.12" />
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="0.9.12" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.9.12" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.12" />
-    <PackageReference Include="MessageBox.Avalonia" Version="0.9.6.1" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="0.10.0-preview6" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.0-preview6" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.0-preview6" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.0-preview6" />
+    <PackageReference Include="MessageBox.Avalonia" Version="0.10.0-prev2" />
     <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="2.0.2" />
-    <PackageReference Include="ReactiveUI.Validation" Version="1.5.5" />
-    <PackageReference Include="SimpleInjector" Version="5.0.3" />
+    <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="3.0.0-pre" />
+    <PackageReference Include="ReactiveUI.Validation" Version="1.8.6" />
+    <PackageReference Include="SimpleInjector" Version="5.1.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Projektanker.Core\Projektanker.Core.csproj" />
