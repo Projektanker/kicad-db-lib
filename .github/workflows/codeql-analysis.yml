@@ -25,7 +25,10 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: src/netcore/KiCadDbLib
+    
     strategy:
       fail-fast: false
       matrix:
