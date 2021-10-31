@@ -4,18 +4,24 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:l="clr-namespace:KiCadDbLib.Controls"
              xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="KiCadDbLib.Views.PartView">
     <DockPanel Classes ="root">
-        <Menu>
-            <MenuItem Classes="right" Command="{Binding Clone}" Icon="fas fa-clone" />
-            <MenuItem Classes="right" Command="{Binding Delete}" Icon="fas fa-trash" />
-            <MenuItem Classes="right" Command="{Binding Save}" Icon="fas fa-check" />
-            <MenuItem Command="{Binding GoBack}" Icon="fas fa-arrow-left" />
-            <MenuItem Header="{Binding Id, StringFormat='Part \{0\}'}" Classes="heading" />
-        </Menu>
+        <styles:ColorZone Height="56" Padding="12" DockPanel.Dock="Top" Mode="PrimaryMid">
+            <Grid ColumnDefinitions="Auto,24,*,Auto">
+                <Button Grid.Column="0" Classes="Flat" Padding="4" Content="{avalonia:MaterialIconExt ArrowLeft, Size=24}" Command="{Binding GoBack}" />
+                <TextBlock Grid.Column="2" Classes="Headline6" VerticalAlignment="Center" Text="{Binding Id, StringFormat='Part \{0\}'}" />
+                <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="12">
+                    <Button Classes="Flat" Padding="4" ToolTip.Tip="Save" Content="{avalonia:MaterialIconExt Check, Size=24}" Command="{Binding Save}" />
+                    <Button Classes="Flat" Padding="4" ToolTip.Tip="Delete" Content="{avalonia:MaterialIconExt Trash, Size=24}" Command="{Binding Delete}" />
+                    <Button Classes="Flat" Padding="4" ToolTip.Tip="Clone" Content="{avalonia:MaterialIconExt ContentCopy, Size=24}" Command="{Binding Clone}" />
+                </StackPanel>
+            </Grid>
+        </styles:ColorZone>
         <Panel>
-            <ProgressBar Classes="loading" IsVisible="{Binding PartForm, Converter={x:Static ObjectConverters.IsNull}}"/>
+            <ProgressBar Classes="loading" IsVisible="{Binding PartForm, Converter={x:Static ObjectConverters.IsNull}}" />
             <ScrollViewer>
                 <DockPanel Classes="content">
                     <l:FormControl Name="PartForm" Content="{Binding PartForm}" />

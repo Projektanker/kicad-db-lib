@@ -233,8 +233,8 @@ namespace KiCadDbLib.ViewModels
             _part = part.ToObject<Part>();
             _part.Id = Id;
 
-            await _partsService.AddOrUpdateAsync(_part).ConfigureAwait(false);
-            await _partsService.Build().ConfigureAwait(false);
+            await _partsService.AddOrUpdateAsync(_part).ConfigureAwait(true);
+            await _partsService.Build().ConfigureAwait(true);
             await HostScreen.Router.NavigateBack.Execute();
         }
     }

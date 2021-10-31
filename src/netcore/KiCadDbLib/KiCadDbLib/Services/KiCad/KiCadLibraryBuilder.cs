@@ -16,14 +16,15 @@ namespace KiCadDbLib.Services.KiCad
 
         public KiCadLibraryBuilder(string outputDirectory, string libraryName)
         {
+            var uft8WithoutBOM = new UTF8Encoding(false);
             _libWriter = new StreamWriter(
                 path: Path.Combine(outputDirectory, libraryName + FileExtensions.Lib),
                 append: false,
-                encoding: Encoding.UTF8);
+                encoding: uft8WithoutBOM);
             _dcmWriter = new StreamWriter(
                 path: Path.Combine(outputDirectory, libraryName + FileExtensions.Dcm),
                 append: false,
-                encoding: Encoding.UTF8);
+                encoding: uft8WithoutBOM);
 
             _libraryReader = new KiCadLibraryReader();
         }
@@ -256,7 +257,7 @@ namespace KiCadDbLib.Services.KiCad
         private async Task WriteStartDcmAsync()
         {
             await _dcmWriter.WriteLineAsync("EESchema-DOCLIB  Version 2.0").ConfigureAwait(false);
-            await _dcmWriter.WriteLineAsync("*").ConfigureAwait(false);
+            await _dcmWriter.WriteLineAsync("#").ConfigureAwait(false);
         }
 
         private async Task WriteStartLibAsync()

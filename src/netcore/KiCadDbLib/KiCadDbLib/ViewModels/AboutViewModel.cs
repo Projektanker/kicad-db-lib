@@ -25,7 +25,7 @@ namespace KiCadDbLib.ViewModels
 
         public string GitHub { get; }
 
-        public ReactiveCommand<Unit, Unit> GoBack { get; }
+        public ReactiveCommand<Unit, IRoutableViewModel?> GoBack { get; }
 
         public string License { get; }
 

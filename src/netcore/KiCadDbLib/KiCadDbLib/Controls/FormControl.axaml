@@ -4,40 +4,45 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:f="clr-namespace:KiCadDbLib.ReactiveForms"
              xmlns:c="clr-namespace:KiCadDbLib.Controls"
+             xmlns:wpf="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="KiCadDbLib.Controls.FormControl">
     <Design.DataContext>
-        <f:FormControl Label="Hello" Value="World"/>
+        <f:FormControl Label="Hello Again" Required="True" Value="World" />
     </Design.DataContext>
+    <UserControl.Resources>
+        <c:LabelConverter x:Key="LabelConverter" />
+    </UserControl.Resources>
     <UserControl.DataTemplates>
         <DataTemplate DataType="{x:Type f:AutoCompleteFormControl}">
-            <StackPanel Spacing="5" Classes="form autoCompleteFormControl">
+            <StackPanel Classes="form autoCompleteFormControl">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Label}"/>
-                    <TextBlock Text="*" IsVisible="{Binding IsRequired}"/>
+                    <TextBlock Text="{Binding Label}" />
+                    <TextBlock Text="*" IsVisible="{Binding IsRequired}" />
                 </StackPanel>
-                <AutoCompleteBox Text="{Binding Value, Mode=TwoWay}"
+                <AutoCompleteBox Text="{Binding Value, Mode=TwoWay}" BorderThickness="0"
                           Items="{Binding Items}"
                           FilterMode="Contains"
                           MaxDropDownHeight="100"
-                                 c:AutoCompleteBoxBehaviour.FocusDropDown="true"/>
+                          Watermark="Search..."
+                          c:AutoCompleteBoxBehaviour.FocusDropDown="true" />
             </StackPanel>
         </DataTemplate>
         <DataTemplate DataType="{x:Type f:FormControl}">
-            <StackPanel Spacing="5" Classes="form formControl">
+            <StackPanel Classes="form formControl">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Label}"/>
-                    <TextBlock Text="*" IsVisible="{Binding IsRequired}"/>
+                    <TextBlock Text="{Binding Label}" />
+                    <TextBlock Text="*" IsVisible="{Binding IsRequired}" />
                 </StackPanel>
-                <TextBox Text="{Binding Value, Mode=TwoWay}"/>
+                <TextBox Text="{Binding Value, Mode=TwoWay}" />
             </StackPanel>
         </DataTemplate>
         <DataTemplate DataType="{x:Type f:FormGroup}">
-            <StackPanel Spacing="5" Classes="form formGroup">
-                <TextBlock Text="{Binding Label}"/>
+            <StackPanel Spacing="12" Classes="form formGroup">
+                <TextBlock Text="{Binding Label}" />
                 <ItemsRepeater Items="{Binding Controls}">
                     <ItemsRepeater.Layout>
-                        <StackLayout Orientation="Vertical" Spacing="10"/>
+                        <StackLayout Orientation="Vertical" Spacing="6" />
                     </ItemsRepeater.Layout>
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate>

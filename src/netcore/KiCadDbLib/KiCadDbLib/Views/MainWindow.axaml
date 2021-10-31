@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:l="clr-namespace:KiCadDbLib.Controls"
         xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+        xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="KiCadDbLib.Views.MainWindow"
         Icon="/Assets/kicad-db-lib.ico"
@@ -18,15 +19,17 @@
         <StyleInclude Source="/Styles/Generic.axaml" />
     </Window.Styles>
     <Grid>
-        <rxui:RoutedViewHost Router="{Binding Router}">
-            <rxui:RoutedViewHost.PageTransition>
-                <CrossFade Duration="0.1" />
-            </rxui:RoutedViewHost.PageTransition>
-            <rxui:RoutedViewHost.DefaultContent>
-                <TextBlock Text="Default content"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center" />
-            </rxui:RoutedViewHost.DefaultContent>
-        </rxui:RoutedViewHost>
+        <styles:SnackbarHost HostName="Root">
+            <rxui:RoutedViewHost Router="{Binding Router}">
+                <rxui:RoutedViewHost.PageTransition>
+                    <CrossFade Duration="0.1" />
+                </rxui:RoutedViewHost.PageTransition>
+                <rxui:RoutedViewHost.DefaultContent>
+                    <TextBlock Text="Default content"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </rxui:RoutedViewHost.DefaultContent>
+            </rxui:RoutedViewHost>
+        </styles:SnackbarHost>
     </Grid>
 </Window>

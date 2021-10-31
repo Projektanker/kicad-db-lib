@@ -17,7 +17,7 @@ using Splat;
 
 namespace KiCadDbLib.ViewModels
 {
-    public sealed class SettingsViewModel : RoutableViewModelBase
+    public sealed class SettingsViewModel : RoutableViewModelBase, IDisposable
     {
         private readonly SettingsService _settingsService;
         private readonly PartsService _partsService;
@@ -48,11 +48,13 @@ namespace KiCadDbLib.ViewModels
                     execute: ImportCustomFieldsAsync),
             });
 
-            GoBack = ReactiveCommand.CreateCombined(new[]
-            {
-                SaveSettings,
-                HostScreen.Router.NavigateBack,
-            });
+            GoBack = ReactiveCommand.CreateFromTask(GoBackAsync);
+        }
+
+        private async Task GoBackAsync()
+        {
+            await ExecuteSaveSettings().ConfigureAwait(false);
+            await HostScreen.Router.NavigateBack.Execute();
         }
 
         public ReactiveCommand<Unit, Unit> AddCustomField { get; }
@@ -61,7 +63,7 @@ namespace KiCadDbLib.ViewModels
 
         public ObservableCollection<SettingsCustomFieldViewModel> CustomFields => _customFieldsProperty?.Value;
 
-        public CombinedReactiveCommand<Unit, Unit> GoBack { get; }
+        public ReactiveCommandBase<Unit, Unit> GoBack { get; }
 
         public string NewCustomField
         {
@@ -188,6 +190,10 @@ namespace KiCadDbLib.ViewModels
             {
                 CustomFields.Add(item);
             }
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

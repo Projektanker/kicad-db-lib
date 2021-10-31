@@ -4,11 +4,25 @@
         xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia">
 
     <StyleInclude Source="/Styles/Resources.axaml" />
-    
+
     <!--Form Group-->
-    <Style Selector="StackPanel.formGroup > TextBlock" >
-        <Setter Property="FontSize" Value="{StaticResource FontSizeH2}"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
+    <Style Selector="StackPanel.formGroup > TextBlock">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="Regular" />
+        <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
+    <!--Auto complete box-->
+
+    <Style Selector="AutoCompleteBox Popup">
+        <Setter Property="VerticalOffset" Value="-12" />
+    </Style>
+
+    <Style Selector="AutoCompleteBox PopupRoot">
+        <Setter Property="Background" Value="White" />
+    </Style>
+
+    <Style Selector="AutoCompleteBox Border#PART_RootBorder">
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
 </Styles>
