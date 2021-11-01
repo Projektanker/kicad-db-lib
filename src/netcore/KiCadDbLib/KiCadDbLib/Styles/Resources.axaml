@@ -1,0 +1,48 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=netstandard"
+        xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia">
+    <Styles.Resources>
+        <!--Override defaults-->
+
+        <!--Pink-->
+        <Color x:Key="ThemeAccentColor">#FFE91E63</Color>
+        <Color x:Key="ThemeAccentColor2">#CCE91E63</Color>
+        <Color x:Key="ThemeAccentColor3">#99E91E63</Color>
+        <Color x:Key="ThemeAccentColor4">#66E91E63</Color>
+
+        <sys:Double x:Key="FontSizeSmall">12</sys:Double>
+        <sys:Double x:Key="FontSizeNormal">14</sys:Double>
+        <sys:Double x:Key="FontSizeLarge">16</sys:Double>
+
+        <SolidColorBrush x:Key="ThemeAccentBrush" Color="{DynamicResource ThemeAccentColor}"></SolidColorBrush>
+        <SolidColorBrush x:Key="ThemeAccentBrush2" Color="{DynamicResource ThemeAccentColor2}"></SolidColorBrush>
+        <SolidColorBrush x:Key="ThemeAccentBrush3" Color="{DynamicResource ThemeAccentColor3}"></SolidColorBrush>
+        <SolidColorBrush x:Key="ThemeAccentBrush4" Color="{DynamicResource ThemeAccentColor4}"></SolidColorBrush>
+
+        <SolidColorBrush x:Key="NotificationCardBackgroundBrush" Color="#444444" Opacity="0.9" />
+        <SolidColorBrush x:Key="NotificationCardInformationBackgroundBrush" Color="#444444" Opacity="0.9" />
+        <SolidColorBrush x:Key="NotificationCardSuccessBackgroundBrush" Color="#1F9E45" Opacity="0.9" />
+        <SolidColorBrush x:Key="NotificationCardWarningBackgroundBrush" Color="#FDB328" Opacity="0.9" />
+        <SolidColorBrush x:Key="NotificationCardErrorBackgroundBrush" Color="#BD202C" Opacity="0.9" />
+
+        <!--Own defaults-->
+        <!--Indigo-->
+        <Color x:Key="ThemePrimaryColor">#FF3F51B5</Color>
+        <Color x:Key="ThemePrimaryColor2">#CC3F51B5</Color>
+        <Color x:Key="ThemePrimaryColor3">#993F51B5</Color>
+        <Color x:Key="ThemePrimaryColor4">#663F51B5</Color>
+
+        <SolidColorBrush x:Key="ThemePrimaryBrush" Color="{DynamicResource ThemePrimaryColor}"></SolidColorBrush>
+        <SolidColorBrush x:Key="ThemePrimaryBrush2" Color="{DynamicResource ThemePrimaryColor2}"></SolidColorBrush>
+        <SolidColorBrush x:Key="ThemePrimaryBrush3" Color="{DynamicResource ThemePrimaryColor3}"></SolidColorBrush>
+        <SolidColorBrush x:Key="ThemePrimaryBrush4" Color="{DynamicResource ThemePrimaryColor4}"></SolidColorBrush>
+
+        <sys:Double x:Key="FontSizeH1">24</sys:Double>
+        <sys:Double x:Key="FontSizeH2">20</sys:Double>
+        <sys:Double x:Key="FontSizeH3">16</sys:Double>
+        <sys:Double x:Key="FontSize">14</sys:Double>
+        <sys:Double x:Key="IconSize">24</sys:Double>
+        <sys:Double x:Key="TextSpacing">10</sys:Double>
+    </Styles.Resources>
+</Styles>

@@ -1,0 +1,50 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:l="clr-namespace:KiCadDbLib.Controls"
+             xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+             xmlns:md="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="KiCadDbLib.Views.AboutView">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/Resources.axaml" />
+        <Style Selector="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="Spacing" Value="10" />
+            <Setter Property="Margin" Value="10 0 0 0" />
+        </Style>
+    </UserControl.Styles>
+    <DockPanel Classes="root">
+        <md:ColorZone Height="56" Padding="12" DockPanel.Dock="Top" Mode="PrimaryMid">
+            <Grid ColumnDefinitions="Auto,24,*">
+                <Button Grid.Column="0" Classes="Flat" Padding="4" Content="{avalonia:MaterialIconExt ArrowLeft, Size=24}" Command="{Binding GoBack}" />
+                <TextBlock Grid.Column="2" Classes="Headline6" VerticalAlignment="Center" Text="About" />
+            </Grid>
+        </md:ColorZone>
+        <ScrollViewer>
+            <DockPanel Classes="content">
+                <TextBlock Text="KiCad Database Library" Classes="Subtitle1" />
+                <TextBlock Text="Info" Classes="Subtitle2" />
+                <StackPanel>
+                    <TextBlock Text="Version:" />
+                    <TextBlock Text="{Binding Version}" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="License:" />
+                    <TextBlock Text="{Binding License}" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Your settings are stored here:" />
+                    <TextBlock Text="{Binding SettingsLocation}" />
+                </StackPanel>
+                <TextBlock Text="Contact" Classes="Subtitle2" />
+                <StackPanel>
+                    <TextBlock Text="GitHub:" />
+                    <TextBlock Text="{Binding GitHub}" />
+                </StackPanel>
+            </DockPanel>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

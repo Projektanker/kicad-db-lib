@@ -1,0 +1,35 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+		xmlns:rxui="http://reactiveui.net"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:KiCadDbLib.ViewModels;assembly=KiCadDbLib"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:l="clr-namespace:KiCadDbLib.Controls"
+        xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+        xmlns:md="clr-namespace:Material.Styles;assembly=Material.Styles"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="KiCadDbLib.Views.MainWindow"
+        Icon="/Assets/kicad-db-lib.ico"
+        Title="KiCadDbLib">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+    <Window.Styles>
+        <StyleInclude Source="/Styles/Generic.axaml" />
+    </Window.Styles>
+    <Grid>
+        <md:SnackbarHost HostName="Root">
+            <rxui:RoutedViewHost Router="{Binding Router}">
+                <rxui:RoutedViewHost.PageTransition>
+                    <CrossFade Duration="0.1" />
+                </rxui:RoutedViewHost.PageTransition>
+                <rxui:RoutedViewHost.DefaultContent>
+                    <TextBlock Text="Default content"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </rxui:RoutedViewHost.DefaultContent>
+            </rxui:RoutedViewHost>
+        </md:SnackbarHost>
+    </Grid>
+</Window>

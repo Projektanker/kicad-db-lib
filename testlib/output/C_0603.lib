@@ -1,4 +1,4 @@
-EESchema-LIBRARY Version 2.4
+﻿EESchema-LIBRARY Version 2.4
 #encoding utf-8
 #
 # 100n_50V
@@ -7,13 +7,13 @@ DEF 100n_50V C 0 10 N Y 1 F N
 F0 "C" 25 100 50 H V L CNN
 F1 "100n_50V" 25 -100 50 H V L CNN
 F2 "Capacitor_SMD:C_0603_1608Metric" 38 -150 50 H I C CNN
-F3 "no datasheet" 0 0 50 H I C CNN
-F4 "" 100 200 50 H I C CNN "Hersteller"
-F5 "" 200 300 50 H I C CNN "OC_FARNELL"
-F6 "" 300 400 50 H I C CNN "OC_MOUSER"
-$FPLIST
- C_*
-$ENDFPLIST
+F3 "C:/test/AOA0000C331-1141874.pdf" 0 0 50 H I C CNN
+F4 "Hallo" 100 200 50 H I C CNN "Hersteller"
+F5 "" 200 300 50 H I C CNN "MF"
+F6 "" 300 400 50 H I C CNN "MPN"
+F7 "Hallo" 400 500 50 H I C CNN "OC_FARNELL"
+F8 "hhhhhaaaallllloooo" 500 600 50 H I C CNN "OC_MOUSER"
+F9 "" 600 700 50 H I C CNN "OC_REICHELT"
 DRAW
 P 2 0 1 20 -80 -30 80 -30 N
 P 2 0 1 20 -80 30 80 30 N

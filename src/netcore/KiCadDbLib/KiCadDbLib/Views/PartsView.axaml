@@ -1,0 +1,62 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:l="clr-namespace:KiCadDbLib.Controls"
+             xmlns:c="clr-namespace:KiCadDbLib.Converters"
+             xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+             xmlns:md="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="KiCadDbLib.Views.PartsView">
+    <UserControl.Resources>
+        <c:PartsConverter x:Key="PartsConverter" />
+    </UserControl.Resources>
+    <DockPanel Classes="root">
+        <md:ColorZone Name="PART_AppBarContainer" VerticalAlignment="Top" HorizontalAlignment="Stretch"
+                          DockPanel.Dock="Top"
+                          Height="56" Padding="12" Mode="PrimaryMid" ZIndex="1">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+
+                <TextBlock Grid.Column="0" Classes="Headline6" Text="Parts"
+                           VerticalAlignment="Center" />
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="12">
+                    <Button Classes="Flat" Width="32" Height="32" Padding="4"
+                            Command="{Binding GoToPart}" ToolTip.Tip="Add new part">
+                        <avalonia:MaterialIcon Kind="Plus" Width="24" Height="24" />
+                    </Button>
+                    <Button Classes="Flat" Width="32" Height="32" Padding="4"
+                            Command="{Binding GoToSettings}" ToolTip.Tip="Go to settings">
+                        <avalonia:MaterialIcon Kind="Cog" Width="24" Height="24" />
+                    </Button>
+                    <Menu Grid.Column="2" Height="32" Padding="0" Margin="0">
+                        <MenuItem Height="32" Width="32" Header="{avalonia:MaterialIconExt DotsVertical, Size=24}">
+                            <MenuItem Header="Reload" Command="{Binding LoadParts}">
+                                <MenuItem.Icon>
+                                    <avalonia:MaterialIcon Kind="Redo" Width="24" Height="24" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Build" Command="{Binding BuildLibrary}">
+                                <MenuItem.Icon>
+                                    <avalonia:MaterialIcon Kind="Wrench" Width="24" Height="24" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="About" Command="{Binding GoToAbout}">
+                                <MenuItem.Icon>
+                                    <avalonia:MaterialIcon Kind="Information" Width="24" Height="24" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuItem>
+                    </Menu>
+                </StackPanel>
+            </Grid>
+        </md:ColorZone>
+        <Panel>
+            <ProgressBar Classes="loading" IsVisible="{Binding LoadParts.IsExecuting^}" />
+            <DataGrid Items="{Binding LoadParts^, Converter={StaticResource PartsConverter}}" IsReadOnly="True" x:Name="partsGrid"
+                      l:DataGridBehavior.ColumnInfos="{Binding PartColumns}"
+                      l:DataGridBehavior.CellPointerPressedCommand="{Binding GoToPart}">
+            </DataGrid>
+        </Panel>
+    </DockPanel>
+</UserControl>

@@ -1,0 +1,39 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=netstandard"
+        xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia">
+
+    <StyleInclude Source="/Styles/Resources.axaml" />
+    <StyleInclude Source="/Styles/NotificationCard.axaml" />
+    <StyleInclude Source="/Styles/SortableHeader.axaml" />
+    <StyleInclude Source="/Styles/Form.axaml" />
+    <StyleInclude Source="/Styles/DataGrid.axaml" />
+
+    <!--Layout-->
+    <Style Selector="DockPanel.root">
+        <Setter Property="LastChildFill" Value="True" />
+        <Setter Property="Background" Value="White" />
+    </Style>
+
+    <Style Selector="DockPanel.root > :is(Control)">
+        <Setter Property="DockPanel.Dock" Value="Top" />
+    </Style>
+
+    <!--Layout -> Content-->
+    <Style Selector="DockPanel.content">
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="LastChildFill" Value="True" />
+    </Style>
+
+    <Style Selector="DockPanel.content > :is(Control)">
+        <Setter Property="DockPanel.Dock" Value="Top" />
+    </Style>
+
+    <!--Loading spinner-->
+    <Style Selector="ProgressBar.loading">
+        <Setter Property="IsIndeterminate" Value="True" />
+        <Setter Property="Height" Value="5" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="ZIndex" Value="255" />
+    </Style>
+</Styles>
