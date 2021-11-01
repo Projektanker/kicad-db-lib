@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
+using KiCadDbLib.Services;
 using KiCadDbLib.ViewModels;
 using ReactiveUI;
 using Splat;
@@ -22,23 +23,23 @@ namespace KiCadDbLib.Views
                     .Subscribe()
                     .DisposeWith(disposables);
 
-                INotificationManager notificationManager = Locator.Current.GetService<INotificationManager>();
-                if (notificationManager != null)
+                var notifications = Locator.Current.GetService<INotificationPoster>();
+                if (notifications != null)
                 {
                     ViewModel.BuildLibrary.IsExecuting
                         .Where(isExecuting => isExecuting)
-                        .Do(_ => notificationManager.ShowInformation("Build", "Start of build."))
+                        .Do(_ => notifications.ShowInformation("Build", "Start of build."))
                         .Subscribe()
                         .DisposeWith(disposables);
 
                     ViewModel.BuildLibrary
-                        .Do(_ => notificationManager.ShowSuccess("Build", "Build successful."))
+                        .Do(_ => notifications.ShowSuccess("Build", "Build successful."))
                         .Subscribe()
                         .DisposeWith(disposables);
 
                     ViewModel.BuildLibrary
                         .ThrownExceptions
-                        .Do(exception => notificationManager.ShowError("Build", exception.Message))
+                        .Do(exception => notifications.ShowError("Build", exception.Message))
                         .Subscribe()
                         .DisposeWith(disposables);
                 }

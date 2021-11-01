@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:l="clr-namespace:KiCadDbLib.Controls"
              xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
-             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:md="clr-namespace:Material.Styles;assembly=Material.Styles"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="KiCadDbLib.Views.SettingsView">
@@ -13,8 +13,15 @@
 
         <Style Selector="Expander">
             <Setter Property="IsExpanded" Value="True" />
+            <Setter Property="Margin" Value="-10 0 -10 0" />
             <Setter Property="Padding" Value="12" />
         </Style>
+
+        <Style Selector="Expander ToggleButton TextBlock">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
         <!--Custom fields-->
         <Style Selector="DockPanel.customField">
             <Setter Property="LastChildFill" Value="True" />
@@ -31,12 +38,12 @@
         </Style>
     </UserControl.Styles>
     <DockPanel Classes="root">
-        <styles:ColorZone Height="56" Padding="12" DockPanel.Dock="Top" Mode="PrimaryMid">
+        <md:ColorZone Height="56" Padding="12" DockPanel.Dock="Top" Mode="PrimaryMid">
             <Grid ColumnDefinitions="Auto,24,*">
                 <Button Grid.Column="0" Classes="Flat" Padding="4" Content="{avalonia:MaterialIconExt ArrowLeft, Size=24}" Command="{Binding GoBack}" />
                 <TextBlock Grid.Column="2" Classes="Headline6" VerticalAlignment="Center" Text="Settings" />
             </Grid>
-        </styles:ColorZone>
+        </md:ColorZone>
         <Panel>
             <ProgressBar Classes="loading" IsVisible="{Binding PathsForm, Converter={x:Static ObjectConverters.IsNull}}" />
             <ScrollViewer>
@@ -55,7 +62,7 @@
                                         <DataTemplate>
                                             <DockPanel Classes="customField">
                                                 <Button Classes="Flat customfield" Command="{Binding Remove}" Content="{avalonia:MaterialIconExt Close, Size=24}" />
-                                                <TextBox IsReadOnly="True" Classes="customfield" Text="{Binding Value}" />
+                                                <TextBox IsReadOnly="True" Focusable="False" Classes="customfield" Text="{Binding Value}" />
                                             </DockPanel>
                                         </DataTemplate>
                                     </ItemsRepeater.ItemTemplate>
@@ -64,7 +71,7 @@
                                     <Button Classes="Flat customfield" Command="{Binding AddCustomField}" Content="{avalonia:MaterialIconExt Plus, Size=24}" />
                                     <TextBox Classes="customfield" Text="{Binding NewCustomField}" />
                                 </DockPanel>
-                                <styles:FloatingButton IsExtended="True" Classes="Accent" Command="{Binding ImportCustomFields}" HorizontalAlignment="Right">
+                                <md:FloatingButton IsExtended="True" Classes="Accent" Command="{Binding ImportCustomFields}" HorizontalAlignment="Right">
                                     <StackPanel Orientation="Horizontal">
                                         <Viewbox Stretch="Fill"
                                                  HorizontalAlignment="Stretch"
@@ -73,7 +80,7 @@
                                         </Viewbox>
                                         <TextBlock Margin="8,0" Text="Import" VerticalAlignment="Center" />
                                     </StackPanel>
-                                </styles:FloatingButton>
+                                </md:FloatingButton>
                             </StackPanel>
                         </Expander>
                     </StackPanel>

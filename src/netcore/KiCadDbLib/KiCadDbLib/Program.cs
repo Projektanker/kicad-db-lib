@@ -5,8 +5,9 @@ using Avalonia.ReactiveUI;
 using KiCadDbLib.Services;
 using KiCadDbLib.Services.KiCad;
 using KiCadDbLib.ViewModels;
+using KiCadDbLib.Views;
 using Projektanker.Icons.Avalonia;
-using Projektanker.Icons.Avalonia.FontAwesome;
+using Projektanker.Icons.Avalonia.MaterialDesign;
 using ReactiveUI;
 using SimpleInjector;
 using Splat;
@@ -27,6 +28,8 @@ namespace KiCadDbLib
         // Avalonia configuration, don't remove; also used by visual designer.
         public static AppBuilder BuildAvaloniaApp()
         {
+            IconProvider.Register<MaterialDesignIconProvider>();
+
             Container container = new Container();
             container.Options.AllowOverridingRegistrations = true;
             container.Options.EnableAutoVerification = false;
@@ -35,6 +38,7 @@ namespace KiCadDbLib
             container.RegisterSingleton<SettingsService>();
             container.RegisterSingleton<PartsService>();
             container.RegisterSingleton<KiCadLibraryReader>();
+            container.RegisterSingleton<INotificationPoster, SnackbarNotificationPoster>();
 
             // View model
             container.RegisterSingleton<MainWindowViewModel>();
@@ -52,15 +56,9 @@ namespace KiCadDbLib
 
             return AppBuilder
                 .Configure<App>()
-                .AfterSetup(AfterSetupCallback)
                 .UseReactiveUI()
                 .UsePlatformDetect()
                 .LogToTrace();
-        }
-
-        private static void AfterSetupCallback(AppBuilder appBuilder)
-        {
-            IconProvider.Register<FontAwesomeIconProvider>();
         }
     }
 }

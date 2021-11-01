@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:l="clr-namespace:KiCadDbLib.Controls"
         xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
-        xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:md="clr-namespace:Material.Styles;assembly=Material.Styles"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="KiCadDbLib.Views.MainWindow"
         Icon="/Assets/kicad-db-lib.ico"
@@ -19,7 +19,7 @@
         <StyleInclude Source="/Styles/Generic.axaml" />
     </Window.Styles>
     <Grid>
-        <styles:SnackbarHost HostName="Root">
+        <md:SnackbarHost HostName="Root">
             <rxui:RoutedViewHost Router="{Binding Router}">
                 <rxui:RoutedViewHost.PageTransition>
                     <CrossFade Duration="0.1" />
@@ -30,6 +30,6 @@
                                VerticalAlignment="Center" />
                 </rxui:RoutedViewHost.DefaultContent>
             </rxui:RoutedViewHost>
-        </styles:SnackbarHost>
+        </md:SnackbarHost>
     </Grid>
 </Window>

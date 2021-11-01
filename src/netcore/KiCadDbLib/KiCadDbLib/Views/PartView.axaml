@@ -4,12 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:l="clr-namespace:KiCadDbLib.Controls"
              xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
-             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:md="clr-namespace:Material.Styles;assembly=Material.Styles"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="KiCadDbLib.Views.PartView">
     <DockPanel Classes ="root">
-        <styles:ColorZone Height="56" Padding="12" DockPanel.Dock="Top" Mode="PrimaryMid">
+        <md:ColorZone Height="56" Padding="12" DockPanel.Dock="Top" Mode="PrimaryMid">
             <Grid ColumnDefinitions="Auto,24,*,Auto">
                 <Button Grid.Column="0" Classes="Flat" Padding="4" Content="{avalonia:MaterialIconExt ArrowLeft, Size=24}" Command="{Binding GoBack}" />
                 <TextBlock Grid.Column="2" Classes="Headline6" VerticalAlignment="Center" Text="{Binding Id, StringFormat='Part \{0\}'}" />
@@ -19,7 +19,7 @@
                     <Button Classes="Flat" Padding="4" ToolTip.Tip="Clone" Content="{avalonia:MaterialIconExt ContentCopy, Size=24}" Command="{Binding Clone}" />
                 </StackPanel>
             </Grid>
-        </styles:ColorZone>
+        </md:ColorZone>
         <Panel>
             <ProgressBar Classes="loading" IsVisible="{Binding PartForm, Converter={x:Static ObjectConverters.IsNull}}" />
             <ScrollViewer>

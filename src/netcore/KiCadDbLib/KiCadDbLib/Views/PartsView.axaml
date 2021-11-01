@@ -5,7 +5,7 @@
              xmlns:l="clr-namespace:KiCadDbLib.Controls"
              xmlns:c="clr-namespace:KiCadDbLib.Converters"
              xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
-             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:md="clr-namespace:Material.Styles;assembly=Material.Styles"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="KiCadDbLib.Views.PartsView">
@@ -13,7 +13,7 @@
         <c:PartsConverter x:Key="PartsConverter" />
     </UserControl.Resources>
     <DockPanel Classes="root">
-        <styles:ColorZone Name="PART_AppBarContainer" VerticalAlignment="Top" HorizontalAlignment="Stretch"
+        <md:ColorZone Name="PART_AppBarContainer" VerticalAlignment="Top" HorizontalAlignment="Stretch"
                           DockPanel.Dock="Top"
                           Height="56" Padding="12" Mode="PrimaryMid" ZIndex="1">
             <Grid ColumnDefinitions="Auto,*,Auto">
@@ -31,12 +31,6 @@
                     </Button>
                     <Menu Grid.Column="2" Height="32" Padding="0" Margin="0">
                         <MenuItem Height="32" Width="32" Header="{avalonia:MaterialIconExt DotsVertical, Size=24}">
-                            <MenuItem Header="Hello!">
-                                <MenuItem.Icon>
-                                    <avalonia:MaterialIcon Kind="Hand" Width="24" Height="24" />
-                                </MenuItem.Icon>
-                            </MenuItem>
-                            <Separator />
                             <MenuItem Header="Reload" Command="{Binding LoadParts}">
                                 <MenuItem.Icon>
                                     <avalonia:MaterialIcon Kind="Redo" Width="24" Height="24" />
@@ -56,7 +50,7 @@
                     </Menu>
                 </StackPanel>
             </Grid>
-        </styles:ColorZone>
+        </md:ColorZone>
         <Panel>
             <ProgressBar Classes="loading" IsVisible="{Binding LoadParts.IsExecuting^}" />
             <DataGrid Items="{Binding LoadParts^, Converter={StaticResource PartsConverter}}" IsReadOnly="True" x:Name="partsGrid"
