@@ -13,8 +13,9 @@ namespace KiCadDbLib.Services.KiCad
         private readonly TextWriter _dcmWriter;
         private readonly KiCadLibraryReader _libraryReader;
         private readonly TextWriter _libWriter;
+        private readonly string _symbolsDirectory;
 
-        public KiCadLibraryBuilder(string outputDirectory, string libraryName)
+        public KiCadLibraryBuilder(string symbolsDirectory, string outputDirectory, string libraryName)
         {
             var uft8WithoutBOM = new UTF8Encoding(false);
             _libWriter = new StreamWriter(
@@ -27,6 +28,7 @@ namespace KiCadDbLib.Services.KiCad
                 encoding: uft8WithoutBOM);
 
             _libraryReader = new KiCadLibraryReader();
+            _symbolsDirectory = symbolsDirectory;
         }
 
         public static async Task ClearDirectoryAsync(string directory)
@@ -129,7 +131,7 @@ namespace KiCadDbLib.Services.KiCad
             bool bufferLibrary = true)
         {
             // Get symbol
-            string[] template = await _libraryReader.GetSymbolAsync(symbolInfo, bufferLibrary).ConfigureAwait(false);
+            string[] template = await _libraryReader.GetSymbolAsync(_symbolsDirectory, symbolInfo, bufferLibrary).ConfigureAwait(false);
 
             // Remove empty lines
             var filtered = template.Where(line => !string.IsNullOrWhiteSpace(line));

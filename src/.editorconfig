@@ -1,18 +1,70 @@
 ﻿# top-most EditorConfig file
 root = true
 
+charset = utf-8
+
+[*.json]
+indent_size = 2
+
+[*.{csproj,props}]
+indent_size = 2
+
+[**/*{Query,Command}.cs]
+# CA1034: Do not nest types
+dotnet_diagnostic.CA1034.severity = silent
+
 [*.cs]
+# CA1031: Do not catch general exception types
+dotnet_diagnostic.CA1031.severity = suggestion
+
+# CA1032: Implement standard exception constructors
+dotnet_diagnostic.CA1032.severity = suggestion
+dotnet_diagnostic.RCS1194.severity = suggestion
+
+# CA1062: Null check in externally visible methods
+dotnet_diagnostic.CA1062.severity = none
+
+# CA1303: Do not pass literals as localized parameters
+dotnet_diagnostic.CA1303.severity = suggestion
+
+# CA1305: ToString() with IFormatProvider
+dotnet_diagnostic.CA1305.severity = silent
+
+# CA1711: Identifiers should not have incorrect suffix
+dotnet_diagnostic.CA1711.severity = silent
+
+# CA1716: Identifiers should not match keywords
+dotnet_diagnostic.CA1716.severity = suggestion
+
+# CA5394: Do not use insecure randomness
+dotnet_diagnostic.CA5394.severity = silent
+
+# IDE0005: Remove unnecessary using
+dotnet_diagnostic.IDE0005.severity = warning
+
+# IDE0010: Populate switch statement
+dotnet_diagnostic.IDE0010.severity = suggestion
+
+# IDE0072: Populate switch expression
+dotnet_diagnostic.IDE0072.severity = suggestion
+
+# S1121: Assignments should not be made from within sub-expressions
+dotnet_diagnostic.S1121.severity = none
+
 # SA0001: XML comment analysis is disabled due to project configuration
 dotnet_diagnostic.SA0001.severity = none
+
+# SA1011: Closing square brackets must be spaced correctly
+dotnet_diagnostic.SA1011.severity = none
 
 # SA1101: Prefix local calls with this
 dotnet_diagnostic.SA1101.severity = none
 
-# SA1123: Region should not be located within a code element
-dotnet_diagnostic.SA1123.severity = suggestion
+# SA1128: Constructor initializers should be on their own line
+dotnet_diagnostic.SA1128.severity = none
 
-# SA1124: Do not use regions
-dotnet_diagnostic.SA1124.severity = suggestion
+# SA1127 Generic type constraints should be on their own line
+dotnet_diagnostic.SA1127.severity = none
 
 # SA1200: Using directives should be placed correctly
 dotnet_diagnostic.SA1200.severity = none
@@ -20,29 +72,55 @@ dotnet_diagnostic.SA1200.severity = none
 # SA1309: Field names must not begin with underscore
 dotnet_diagnostic.SA1309.severity = none
 
+# SA1413: Use trailing comma in multi-line initializers
+dotnet_diagnostic.SA1413.severity = none
+
+# SA1516: Elements must be separated by blank line
+dotnet_diagnostic.SA1516.severity = none
+
+# SA1600: Elements should be documented
+dotnet_diagnostic.SA1600.severity = none
+
+# SA1601: Partial elements should be documented
+dotnet_diagnostic.SA1601.severity = none
+
+# SA1602: Enumeration items should be documented
+dotnet_diagnostic.SA1602.severity = none
+
 # SA1633: File should have header
 dotnet_diagnostic.SA1633.severity = none
 
 # SX1101: Do not prefix local members with this
 dotnet_diagnostic.SX1101.severity = warning
 
-# SX1309: Field names must begin with underscore
-dotnet_diagnostic.SX1309.severity = warning
-
-# SX1309S: Static field names must begin with underscore
-dotnet_diagnostic.SX1309S.severity = warning
-
 # .NET naming symbols: 
 # private_field
 dotnet_naming_symbols.private_field.applicable_kinds           = field
 dotnet_naming_symbols.private_field.applicable_accessibilities = private
 
-# .NET naming style: underscore_camel_case 
+# private_constant
+dotnet_naming_symbols.private_constant.applicable_kinds           = field
+dotnet_naming_symbols.private_constant.applicable_accessibilities = private
+dotnet_naming_symbols.private_constant.required_modifiers         = const
+
+
+# .NET naming style: 
+#underscore_camel_case 
 dotnet_naming_style.underscore_camel_case.required_prefix = _
 dotnet_naming_style.underscore_camel_case.capitalization  = camel_case
 
-#.NET naming rule: private_fields_underscore_camelcase
+#upper_case 
+dotnet_naming_style.upper_case.capitalization  = all_upper
+dotnet_naming_style.upper_case.word_separator = _
+
+#.NET naming rule: 
+#private_fields_underscore_camelcase
 dotnet_naming_rule.private_fields_underscore_camelcase.symbols  = private_field
 dotnet_naming_rule.private_fields_underscore_camelcase.style    = underscore_camel_case
 dotnet_naming_rule.private_fields_underscore_camelcase.severity = suggestion
+
+#private_constants_upper_case
+dotnet_naming_rule.private_constants_upper_case.symbols  = private_field
+dotnet_naming_rule.private_constants_upper_case.style    = underscore_camel_case
+dotnet_naming_rule.private_constants_upper_case.severity = suggestion
 

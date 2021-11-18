@@ -14,9 +14,9 @@ namespace KiCadDbLib.Services
     {
         private readonly SettingsService _settingsService;
 
-        private LibraryItemInfo[] _cachedFootprints;
+        private LibraryItemInfo[]? _cachedFootprints;
 
-        private LibraryItemInfo[] _cachedSymbols;
+        private LibraryItemInfo[]? _cachedSymbols;
 
         public PartsService(SettingsService settingsService)
         {
@@ -26,27 +26,17 @@ namespace KiCadDbLib.Services
 
         public async Task AddOrUpdateAsync(Part part)
         {
-            if (part is null)
-            {
-                throw new ArgumentNullException(nameof(part));
-            }
-
-            var settings = await _settingsService.GetSettingsAsync().ConfigureAwait(false);
+            var settings = await _settingsService.GetSettingsAsync()
+                .ConfigureAwait(false);
 
             if (string.IsNullOrEmpty(part.Id))
             {
                 part.Id = await GetNewId(settings).ConfigureAwait(false);
             }
 
-            string filePath = await GetFilePathAsync(part.Id, settings).ConfigureAwait(false);
-
-            await Task.Run(() =>
-            {
-                JsonSerializer serializer = JsonSerializer.Create();
-                using StreamWriter fileWriter = File.CreateText(filePath);
-                using JsonTextWriter jsonWriter = new JsonTextWriter(fileWriter);
-                serializer.Serialize(jsonWriter, part);
-            }).ConfigureAwait(false);
+            var filePath = await GetFilePathAsync(part.Id, settings).ConfigureAwait(false);
+            var json = JsonConvert.SerializeObject(part);
+            await File.WriteAllTextAsync(filePath, json).ConfigureAwait(false);
         }
 
         public async Task Build()
@@ -61,15 +51,12 @@ namespace KiCadDbLib.Services
 
             foreach (IGrouping<string, Part> group in groupedParts)
             {
-                using var builder = new KiCadLibraryBuilder(settings.OutputPath, group.Key);
+                using var builder = new KiCadLibraryBuilder(settings.SymbolsPath, settings.OutputPath, group.Key);
                 await builder.WriteStartLibrary().ConfigureAwait(false);
 
                 foreach (var part in group.OrderBy(part => part.Value))
                 {
-                    LibraryItemInfo symbolInfo = LibraryItemInfo.Parse(part.Symbol);
-                    symbolInfo.Library = Path.Combine(
-                        settings.SymbolsPath,
-                        symbolInfo.Library + FileExtensions.Lib);
+                    var symbolInfo = LibraryItemInfo.Parse(part.Symbol);
 
                     await builder.WritePartAsync(
                         reference: part.Reference,
@@ -88,7 +75,7 @@ namespace KiCadDbLib.Services
 
         public async Task DeleteAsync(string id)
         {
-            string filePath = await GetFilePathAsync(id).ConfigureAwait(false);
+            var filePath = await GetFilePathAsync(id).ConfigureAwait(false);
             File.Delete(filePath);
         }
 
@@ -114,22 +101,10 @@ namespace KiCadDbLib.Services
                 .ToArray();
         }
 
-        public async Task<string> GetNewId(Settings settings = null)
-        {
-            settings ??= await _settingsService.GetSettingsAsync().ConfigureAwait(false);
-            int newId = Directory.EnumerateFiles(settings.DatabasePath)
-                .Select(file => Path.GetFileNameWithoutExtension(file))
-                .Select(id => int.TryParse(id, out int result) ? result : default)
-                .DefaultIfEmpty()
-                .Max() + 1;
-
-            return newId.ToString(CultureInfo.InvariantCulture);
-        }
-
         public async Task<Part> GetPartAsync(string id)
         {
             var settings = await _settingsService.GetSettingsAsync().ConfigureAwait(false);
-            string filePath = await GetFilePathAsync(id, settings).ConfigureAwait(false);
+            var filePath = await GetFilePathAsync(id, settings).ConfigureAwait(false);
             return await GetPartAsync(filePath, settings).ConfigureAwait(false);
         }
 
@@ -159,29 +134,41 @@ namespace KiCadDbLib.Services
 
         private static async Task<Part> GetPartAsync(string file, Settings settings)
         {
-            string json = await File.ReadAllTextAsync(file).ConfigureAwait(false);
-            Part part = JsonConvert.DeserializeObject<Part>(json);
-            part.CustomFields = part.CustomFields
-                .Where(cf => settings.CustomFields.Contains(cf.Key))
+            var json = await File.ReadAllTextAsync(file).ConfigureAwait(false);
+            var part = JsonConvert.DeserializeObject<Part>(json);
+            part!.CustomFields = part.CustomFields
+                .Join(settings.CustomFields, cf => cf.Key, customFieldKey => customFieldKey, (cf, _) => cf)
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
 
             return part;
         }
 
-        private async Task<string> GetFilePathAsync(string id, Settings settings = null)
+        private async Task<string> GetNewId(Settings? settings = null)
+        {
+            settings ??= await _settingsService.GetSettingsAsync().ConfigureAwait(false);
+            var newId = Directory.EnumerateFiles(settings.DatabasePath)
+                .Select(Path.GetFileNameWithoutExtension)
+                .Select(id => int.TryParse(id, out var result) ? result : default)
+                .DefaultIfEmpty()
+                .Max() + 1;
+
+            return newId.ToString(CultureInfo.InvariantCulture);
+        }
+
+        private async Task<string> GetFilePathAsync(string id, Settings? settings = null)
         {
             settings ??= await _settingsService.GetSettingsAsync().ConfigureAwait(false);
             return Path.Combine(settings.DatabasePath, $"{id}.json");
         }
 
-        private void SettingsService_SettingsChanged(object sender, SettingsChangedEventArgs e)
+        private void SettingsService_SettingsChanged(object? sender, SettingsChangedEventArgs e)
         {
             if (e.OldSettings?.SymbolsPath != e.NewSettings?.SymbolsPath)
             {
                 _cachedSymbols = null;
             }
 
-            if (e.OldSettings.FootprintsPath != e.NewSettings?.SymbolsPath)
+            if (e.OldSettings?.FootprintsPath != e.NewSettings?.SymbolsPath)
             {
                 _cachedFootprints = null;
             }

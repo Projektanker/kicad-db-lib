@@ -51,12 +51,6 @@ namespace KiCadDbLib.ViewModels
             GoBack = ReactiveCommand.CreateFromTask(GoBackAsync);
         }
 
-        private async Task GoBackAsync()
-        {
-            await ExecuteSaveSettings().ConfigureAwait(false);
-            await HostScreen.Router.NavigateBack.Execute();
-        }
-
         public ReactiveCommand<Unit, Unit> AddCustomField { get; }
 
         public CombinedReactiveCommand<Unit, Unit> ImportCustomFields { get; }
@@ -76,6 +70,10 @@ namespace KiCadDbLib.ViewModels
         public ReactiveCommand<Unit, Unit> SaveSettings { get; }
 
         public string SettingsLocation => _settingsService?.Location;
+
+        public void Dispose()
+        {
+        }
 
         /// <inheritdoc/>
         protected override void WhenActivated(CompositeDisposable disposables)
@@ -149,6 +147,12 @@ namespace KiCadDbLib.ViewModels
             return form;
         }
 
+        private async Task GoBackAsync()
+        {
+            await ExecuteSaveSettings().ConfigureAwait(false);
+            await HostScreen.Router.NavigateBack.Execute();
+        }
+
         private void ExecuteAddCustomField()
         {
             CustomFields.Add(new SettingsCustomFieldViewModel(NewCustomField, RemoveCustomField));
@@ -157,7 +161,7 @@ namespace KiCadDbLib.ViewModels
 
         private Task ExecuteSaveSettings()
         {
-            Settings settings = PathsForm.GetValue<Settings>();
+            var settings = PathsForm.GetValue<Settings>();
 
             settings.CustomFields.AddRange(
                 CustomFields.Select(vm => vm.Value));
@@ -167,7 +171,7 @@ namespace KiCadDbLib.ViewModels
 
         private void RemoveCustomField(string customField)
         {
-            SettingsCustomFieldViewModel vm = CustomFields.Single(vm => vm.Value.Equals(customField, StringComparison.Ordinal));
+            var vm = CustomFields.Single(vm => vm.Value.Equals(customField, StringComparison.Ordinal));
             CustomFields.Remove(vm);
         }
 
@@ -190,10 +194,6 @@ namespace KiCadDbLib.ViewModels
             {
                 CustomFields.Add(item);
             }
-        }
-
-        public void Dispose()
-        {
         }
     }
 }

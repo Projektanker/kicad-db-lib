@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using KiCadDbLib.Models;
 using KiCadDbLib.ReactiveForms;
@@ -25,9 +22,9 @@ namespace KiCadDbLib.ViewModels
     {
         private readonly PartsService _partsService;
         private readonly SettingsService _settingsService;
-        private string _id;
+        private string? _id;
         private Part _part;
-        private ObservableAsPropertyHelper<FormGroup> _partFormProperty;
+        private ObservableAsPropertyHelper<FormGroup>? _partFormProperty;
 
         public PartViewModel(
             IScreen hostScreen,
@@ -37,13 +34,13 @@ namespace KiCadDbLib.ViewModels
             _part = part ?? new Part();
             Id = _part.Id;
 
-            _settingsService = Locator.Current.GetService<SettingsService>();
-            _partsService = Locator.Current.GetService<PartsService>();
+            _settingsService = Locator.Current.GetService<SettingsService>()!;
+            _partsService = Locator.Current.GetService<PartsService>()!;
 
             GoBack = ReactiveCommand.CreateFromTask(ExecuteGoBackAsync);
 
             var canCloneOrDelete = this.WhenAnyValue(vm => vm.Id)
-                .Select(id => !string.IsNullOrEmpty(Id));
+                .Select(id => !string.IsNullOrEmpty(id));
             Clone = ReactiveCommand.Create(ExecuteClone, canCloneOrDelete);
             Delete = ReactiveCommand.CreateFromTask(ExecuteDeleteAsync, canCloneOrDelete);
             Save = ReactiveCommand.CreateFromTask(ExecuteSaveAsync);
@@ -61,15 +58,13 @@ namespace KiCadDbLib.ViewModels
 
         public ReactiveCommand<Unit, Unit> GoBack { get; }
 
-        public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
-
-        public string Id
+        public string? Id
         {
             get => _id;
             set => this.RaiseAndSetIfChanged(ref _id, value);
         }
 
-        public FormGroup PartForm => _partFormProperty?.Value;
+        public FormGroup? PartForm => _partFormProperty?.Value;
 
         public ReactiveCommand<Unit, Unit> Save { get; }
 
@@ -78,20 +73,20 @@ namespace KiCadDbLib.ViewModels
         {
             base.WhenActivated(disposables);
 
-            IObservable<Settings> settingsObservable = _settingsService.GetSettingsAsync().ToObservable();
-            IObservable<LibraryItemInfo[]> symbolsObservable = _partsService
+            var settingsObservable = _settingsService.GetSettingsAsync().ToObservable();
+            var symbolsObservable = _partsService
                 .GetSymbolsAsync()
                 .ToObservable();
 
-            IObservable<LibraryItemInfo[]> footprintsObservable = _partsService
+            var footprintsObservable = _partsService
                 .GetFootprintsAsync()
                 .ToObservable();
 
-            IObservable<string[]> librariesObservable = _partsService
+            var librariesObservable = _partsService
                 .GetLibrariesAsync()
                 .ToObservable();
 
-            IObservable<(LibraryItemInfo[] Symbols, LibraryItemInfo[] Footprints, string[] Libraries)> kicadObservable = symbolsObservable
+            var kicadObservable = symbolsObservable
                 .ForkJoin(
                     second: footprintsObservable,
                     resultSelector: (symbols, footprints) => (Symbols: symbols, Footprints: footprints))
@@ -115,7 +110,7 @@ namespace KiCadDbLib.ViewModels
 
             foreach (string customField in settings.CustomFields)
             {
-                FormControl formControl = new FormControl(part.CustomFields.TryGetValue(customField, out string temp) ? temp : string.Empty)
+                FormControl formControl = new FormControl(part.CustomFields.TryGetValue(customField, out var temp) ? temp : string.Empty)
                 {
                     Label = customField,
                 };
@@ -154,17 +149,13 @@ namespace KiCadDbLib.ViewModels
             {
                 Label = nameof(Part.Symbol),
                 Validator = Validators.Required,
-                Items = symbols
-                    .Select(x => new LibraryItemInfo() { Name = x.Name, Library = Path.GetFileNameWithoutExtension(x.Library) })
-                    .Select(x => x.ToString()),
+                Items = symbols.Select(x => x.ToString()),
             });
 
             basicFields.Add(nameof(Part.Footprint), new AutoCompleteFormControl(part.Footprint)
             {
                 Label = nameof(Part.Footprint),
-                Items = footprints
-                    .Select(x => new LibraryItemInfo() { Name = x.Name, Library = Path.GetFileNameWithoutExtension(x.Library) })
-                    .Select(x => x.ToString()),
+                Items = footprints.Select(x => x.ToString()),
             });
 
             basicFields.Add(nameof(Part.Description), new FormControl(part.Description)
@@ -214,24 +205,24 @@ namespace KiCadDbLib.ViewModels
 
         private async Task ExecuteSaveAsync()
         {
-            if (!PartForm.Validate())
+            if (!PartForm!.Validate())
             {
                 throw new ValidationException("Input is invalid.");
             }
 
-            JObject part = PartForm.Controls
+            var part = PartForm.Controls
                 .Select(item => item.Control)
                 .First()
                 .GetValue() as JObject;
 
-            part[nameof(Part.CustomFields)] = PartForm.Controls
+            part![nameof(Part.CustomFields)] = PartForm.Controls
                 .Select(item => item.Control)
                 .Skip(1)
                 .First()
                 .GetValue() as JObject;
 
-            _part = part.ToObject<Part>();
-            _part.Id = Id;
+            _part = part.ToObject<Part>()!;
+            _part.Id = Id!;
 
             await HostScreen.Router.NavigateBack.Execute();
             await _partsService.AddOrUpdateAsync(_part).ConfigureAwait(true);
