@@ -8,19 +8,18 @@ namespace KiCadDbLib.ViewModels
 {
     public sealed class AboutViewModel : RoutableViewModelBase
     {
-        private readonly SettingsService _settingsService;
+        private readonly ISettingsProvider _settingsProvider;
 
         public AboutViewModel(IScreen hostScreen)
             : base(hostScreen)
         {
-            _settingsService = Locator.Current.GetService<SettingsService>();
+            _settingsProvider = Locator.Current.GetService<ISettingsProvider>()!;
             GoBack = HostScreen.Router.NavigateBack;
-            var entryAssembly = Assembly.GetEntryAssembly();
             License = "MIT";
             GitHub = @"https://github.com/projektanker/kicad-db-lib";
-            Version = entryAssembly
-                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                .InformationalVersion;
+            Version = Assembly.GetEntryAssembly()
+                !.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                !.InformationalVersion;
         }
 
         public string GitHub { get; }
@@ -29,7 +28,7 @@ namespace KiCadDbLib.ViewModels
 
         public string License { get; }
 
-        public string SettingsLocation => _settingsService?.Location;
+        public string? SettingsLocation => _settingsProvider?.Location;
 
         public string Version { get; }
     }

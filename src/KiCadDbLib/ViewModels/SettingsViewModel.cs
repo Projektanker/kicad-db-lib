@@ -19,8 +19,8 @@ namespace KiCadDbLib.ViewModels
 {
     public sealed class SettingsViewModel : RoutableViewModelBase, IDisposable
     {
-        private readonly SettingsService _settingsService;
-        private readonly PartsService _partsService;
+        private readonly SettingsProvider _settingsService;
+        private readonly PartRepository _partsService;
         private ObservableAsPropertyHelper<ObservableCollection<SettingsCustomFieldViewModel>> _customFieldsProperty;
         private string _newCustomField;
         private ObservableAsPropertyHelper<FormGroup> _pathsFormProperty;
@@ -28,8 +28,8 @@ namespace KiCadDbLib.ViewModels
         public SettingsViewModel(IScreen hostScreen)
             : base(hostScreen)
         {
-            _settingsService = Locator.Current.GetService<SettingsService>();
-            _partsService = Locator.Current.GetService<PartsService>();
+            _settingsService = Locator.Current.GetService<SettingsProvider>();
+            _partsService = Locator.Current.GetService<PartRepository>();
 
             SaveSettings = ReactiveCommand.CreateFromTask(execute: ExecuteSaveSettings);
 

@@ -5,9 +5,7 @@
 
     <StyleInclude Source="/Styles/Resources.axaml" />
     <StyleInclude Source="/Styles/NotificationCard.axaml" />
-    <StyleInclude Source="/Styles/SortableHeader.axaml" />
     <StyleInclude Source="/Styles/Form.axaml" />
-    <StyleInclude Source="/Styles/DataGrid.axaml" />
 
     <!--Layout-->
     <Style Selector="DockPanel.root">

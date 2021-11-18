@@ -35,8 +35,11 @@ namespace KiCadDbLib
             container.Options.EnableAutoVerification = false;
 
             // Services
-            container.RegisterSingleton<SettingsService>();
-            container.RegisterSingleton<PartsService>();
+            container.RegisterSingleton<IPartRepository, PartRepository>();
+            container.RegisterSingleton<ILibraryBuilder, LibraryBuilder>();
+            container.RegisterSingleton<ISettingsProvider, SettingsProvider>();
+
+            container.RegisterSingleton<ILibraryReader, LegacyKiCadLibraryReader>();
             container.RegisterSingleton<KiCadLibraryReader>();
             container.RegisterSingleton<INotificationPoster, SnackbarNotificationPoster>();
 

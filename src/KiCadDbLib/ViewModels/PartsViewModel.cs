@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reactive;
@@ -17,13 +16,15 @@ namespace KiCadDbLib.ViewModels
 {
     public class PartsViewModel : RoutableViewModelBase
     {
-        private readonly PartsService _partsService;
+        private readonly IPartRepository _partRepository;
         private ObservableAsPropertyHelper<IEnumerable<ColumnInfo>> _partColumnsProperty;
 
         public PartsViewModel(IScreen hostScreen)
             : base(hostScreen)
         {
-            _partsService = Locator.Current.GetService<PartsService>();
+            _partRepository = Locator.Current.GetService<IPartRepository>()!;
+            var libraryBuilder = Locator.Current.GetService<ILibraryBuilder>()!;
+
             GoToSettings = NavigationCommand.Create(
                 hostScreen: HostScreen,
                 viewModelFactory: () => new SettingsViewModel(hostScreen: HostScreen));
@@ -36,11 +37,11 @@ namespace KiCadDbLib.ViewModels
                 hostScreen: HostScreen,
                 viewModelFactory: () => new AboutViewModel(HostScreen));
 
-            BuildLibrary = ReactiveCommand.CreateFromTask(_partsService.Build);
+            BuildLibrary = ReactiveCommand.CreateFromTask(libraryBuilder.Build);
 
             LoadParts = ReactiveCommand.CreateFromTask(async () =>
             {
-                return (await _partsService.GetPartsAsync().ConfigureAwait(false))
+                return (await _partRepository.GetPartsAsync().ConfigureAwait(false))
                     .OrderBy(part => part.Library)
                     .ToArray();
             });
@@ -73,7 +74,6 @@ namespace KiCadDbLib.ViewModels
         {
             List<ColumnInfo> columnInfos = new List<ColumnInfo>()
             {
-                // new ColumnInfo(nameof(Part.Id)),
                 new ColumnInfo(nameof(Part.Library)),
                 new ColumnInfo(nameof(Part.Reference)),
                 new ColumnInfo(nameof(Part.Value)),
@@ -106,7 +106,7 @@ namespace KiCadDbLib.ViewModels
             }
             else
             {
-                part = await _partsService.GetPartAsync(part.Id)
+                part = await _partRepository.GetPartAsync(part.Id)
                     .ConfigureAwait(false);
             }
 

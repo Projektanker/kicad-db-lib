@@ -11,7 +11,6 @@ using KiCadDbLib.Models;
 using KiCadDbLib.ReactiveForms;
 using KiCadDbLib.ReactiveForms.Validation;
 using KiCadDbLib.Services;
-using KiCadDbLib.Services.KiCad;
 using Newtonsoft.Json.Linq;
 using ReactiveUI;
 using Splat;
@@ -20,8 +19,10 @@ namespace KiCadDbLib.ViewModels
 {
     public class PartViewModel : RoutableViewModelBase
     {
-        private readonly PartsService _partsService;
-        private readonly SettingsService _settingsService;
+        private readonly ILibraryBuilder _libaryBuilder;
+        private readonly ILibraryReader _libaryReader;
+        private readonly IPartRepository _partRepository;
+        private readonly ISettingsProvider _settingsService;
         private string? _id;
         private Part _part;
         private ObservableAsPropertyHelper<FormGroup>? _partFormProperty;
@@ -34,8 +35,10 @@ namespace KiCadDbLib.ViewModels
             _part = part ?? new Part();
             Id = _part.Id;
 
-            _settingsService = Locator.Current.GetService<SettingsService>()!;
-            _partsService = Locator.Current.GetService<PartsService>()!;
+            _libaryBuilder = Locator.Current.GetService<ILibraryBuilder>()!;
+            _libaryReader = Locator.Current.GetService<ILibraryReader>()!;
+            _partRepository = Locator.Current.GetService<IPartRepository>()!;
+            _settingsService = Locator.Current.GetService<ISettingsProvider>()!;
 
             GoBack = ReactiveCommand.CreateFromTask(ExecuteGoBackAsync);
 
@@ -74,15 +77,15 @@ namespace KiCadDbLib.ViewModels
             base.WhenActivated(disposables);
 
             var settingsObservable = _settingsService.GetSettingsAsync().ToObservable();
-            var symbolsObservable = _partsService
+            var symbolsObservable = _libaryReader
                 .GetSymbolsAsync()
                 .ToObservable();
 
-            var footprintsObservable = _partsService
+            var footprintsObservable = _libaryReader
                 .GetFootprintsAsync()
                 .ToObservable();
 
-            var librariesObservable = _partsService
+            var librariesObservable = _partRepository
                 .GetLibrariesAsync()
                 .ToObservable();
 
@@ -101,7 +104,7 @@ namespace KiCadDbLib.ViewModels
                 .DisposeWith(disposables);
         }
 
-        private static FormGroup GetPartForm(Settings settings, IEnumerable<LibraryItemInfo> symbols, IEnumerable<LibraryItemInfo> footprints, IEnumerable<string> libraries, Part part)
+        private static FormGroup GetPartForm(Settings settings, IEnumerable<string> symbols, IEnumerable<string> footprints, IEnumerable<string> libraries, Part part)
         {
             FormGroup customFields = new FormGroup()
             {
@@ -149,13 +152,13 @@ namespace KiCadDbLib.ViewModels
             {
                 Label = nameof(Part.Symbol),
                 Validator = Validators.Required,
-                Items = symbols.Select(x => x.ToString()),
+                Items = symbols,
             });
 
             basicFields.Add(nameof(Part.Footprint), new AutoCompleteFormControl(part.Footprint)
             {
                 Label = nameof(Part.Footprint),
-                Items = footprints.Select(x => x.ToString()),
+                Items = footprints,
             });
 
             basicFields.Add(nameof(Part.Description), new FormControl(part.Description)
@@ -189,7 +192,7 @@ namespace KiCadDbLib.ViewModels
         {
             if (await DeletePartConfirmation.Handle(default).Catch(Observable.Return(true)))
             {
-                await _partsService.DeleteAsync(_part.Id).ConfigureAwait(false);
+                await _partRepository.DeleteAsync(_part.Id).ConfigureAwait(false);
                 await HostScreen.Router.NavigateBack.Execute();
             }
         }
@@ -225,8 +228,8 @@ namespace KiCadDbLib.ViewModels
             _part.Id = Id!;
 
             await HostScreen.Router.NavigateBack.Execute();
-            await _partsService.AddOrUpdateAsync(_part).ConfigureAwait(true);
-            await _partsService.Build().ConfigureAwait(true);
+            await _partRepository.AddOrUpdateAsync(_part).ConfigureAwait(true);
+            await _libaryBuilder.Build().ConfigureAwait(true);
         }
     }
 }

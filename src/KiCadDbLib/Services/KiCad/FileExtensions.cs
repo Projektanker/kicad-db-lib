@@ -2,12 +2,10 @@
 {
     internal static class FileExtensions
     {
-        public static string Dcm { get; } = ".dcm";
-
-        public static string KicadMod { get; } = ".kicad_mod";
-
-        public static string Lib { get; } = ".lib";
-
-        public static string Pretty { get; } = ".pretty";
+        public const string Dcm = ".dcm";
+        public const string Lib = ".lib";
+        public const string KicadSym = ".kicad_sym";
+        public const string KicadMod = ".kicad_mod";
+        public const string Pretty = ".pretty";
     }
 }

@@ -4,15 +4,12 @@ using System.Reflection;
 using System.Threading.Tasks;
 using KiCadDbLib.Models;
 using Newtonsoft.Json;
-using Splat;
 
 namespace KiCadDbLib.Services
 {
-    public class SettingsService
+    public class SettingsProvider : ISettingsProvider
     {
-        private Settings _settings;
-
-        public SettingsService()
+        public SettingsProvider()
         {
             Location = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -20,45 +17,28 @@ namespace KiCadDbLib.Services
                 "settings.json");
         }
 
-        public event EventHandler<SettingsChangedEventArgs> SettingsChanged;
-
         public string Location { get; }
 
         public async Task<Settings> GetSettingsAsync()
         {
-            if (_settings != null)
-            {
-                return _settings;
-            }
-            else if (File.Exists(Location))
+            if (File.Exists(Location))
             {
                 string json = await File.ReadAllTextAsync(Location).ConfigureAwait(false);
-                return _settings = JsonConvert.DeserializeObject<Settings>(json);
+                return JsonConvert.DeserializeObject<Settings>(json)!;
             }
             else
             {
-                return _settings = new Settings();
+                return new Settings();
             }
         }
 
         public async Task SetSettingsAsync(Settings settings)
         {
-            if (settings is null)
-            {
-                throw new ArgumentNullException(nameof(settings));
-            }
+            var file = new FileInfo(Location);
+            file.Directory!.Create();
 
-            FileInfo file = new FileInfo(Location);
-            file.Directory.Create();
             string json = JsonConvert.SerializeObject(settings);
             await File.WriteAllTextAsync(file.FullName, json).ConfigureAwait(false);
-
-            var oldSettings = _settings;
-            _settings = settings;
-
-            SettingsChanged?.Invoke(
-                this,
-                new SettingsChangedEventArgs(oldSettings, _settings));
         }
     }
 }
