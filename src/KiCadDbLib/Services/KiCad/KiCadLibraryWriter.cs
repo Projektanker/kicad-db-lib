@@ -5,17 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using KiCadDbLib.Models;
 
 namespace KiCadDbLib.Services.KiCad
 {
-    internal sealed class KiCadLibraryBuilder : IDisposable, IAsyncDisposable
+    internal sealed class KiCadLibraryWriter : ILibraryWriter
     {
         private readonly TextWriter _dcmWriter;
-        private readonly KiCadLibraryReader _libraryReader;
+        private readonly KiCadLibrarySymbolTemplateFactory _libraryReader;
         private readonly TextWriter _libWriter;
         private readonly string _symbolsDirectory;
 
-        public KiCadLibraryBuilder(string symbolsDirectory, string outputDirectory, string libraryName)
+        public KiCadLibraryWriter(string symbolsDirectory, string outputDirectory, string libraryName)
         {
             var uft8WithoutBOM = new UTF8Encoding(false);
             _libWriter = new StreamWriter(
@@ -27,7 +28,7 @@ namespace KiCadDbLib.Services.KiCad
                 append: false,
                 encoding: uft8WithoutBOM);
 
-            _libraryReader = new KiCadLibraryReader();
+            _libraryReader = new KiCadLibrarySymbolTemplateFactory();
             _symbolsDirectory = symbolsDirectory;
         }
 
@@ -63,29 +64,21 @@ namespace KiCadDbLib.Services.KiCad
                 WriteEndLibAsync()).ConfigureAwait(false);
         }
 
-        public async Task WritePartAsync(
-            string reference,
-            string value,
-            LibraryItemInfo symbol,
-            string footprint,
-            string description,
-            string keywords,
-            string datasheet,
-            IEnumerable<KeyValuePair<string, string>> customFields)
+        public async Task WritePartAsync(Part part)
         {
             var dcm = WritePartToDcmAsync(
-                value: value,
-                description: description,
-                keywords: keywords,
-                datasheet: datasheet);
+                value: part.Value,
+                description: part.Description,
+                keywords: part.Keywords,
+                datasheet: part.Datasheet);
 
             var lib = WritePartToLibAsync(
-                reference: reference,
-                value: value,
-                symbol: symbol,
-                footprint: footprint,
-                datasheet: datasheet,
-                customFields: customFields);
+                reference: part.Reference,
+                value: part.Value,
+                symbol: LibraryItemInfo.Parse(part.Symbol!),
+                footprint: part.Footprint,
+                datasheet: part.Datasheet,
+                customFields: part.CustomFields);
 
             await Task.WhenAll(dcm, lib).ConfigureAwait(false);
         }
@@ -116,7 +109,7 @@ namespace KiCadDbLib.Services.KiCad
                 return Enumerable.Empty<string>();
             }
 
-            var startIndex = 4;
+            const int startIndex = 4;
             return fields
                 .Select((field, index) => CreateCustomField(index + startIndex, field.Key, field.Value));
         }
@@ -131,7 +124,7 @@ namespace KiCadDbLib.Services.KiCad
             bool bufferLibrary = true)
         {
             // Get symbol
-            string[] template = await _libraryReader.GetSymbolAsync(_symbolsDirectory, symbolInfo, bufferLibrary).ConfigureAwait(false);
+            string[] template = await _libraryReader.GetSymbolTemplateAsync(_symbolsDirectory, symbolInfo, bufferLibrary).ConfigureAwait(false);
 
             // Remove empty lines
             var filtered = template.Where(line => !string.IsNullOrWhiteSpace(line));

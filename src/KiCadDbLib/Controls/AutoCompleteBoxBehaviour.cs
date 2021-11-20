@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -28,19 +27,17 @@ namespace KiCadDbLib.Controls
             target.SetValue(FocusDropDownProperty, value);
         }
 
-        private static void CancelDropDownOpening(object sender, CancelEventArgs e)
+        private static void CancelDropDownOpening(object? sender, CancelEventArgs e)
         {
             e.Cancel = true;
         }
 
-        private static void OnDropDownOpened(object sender, EventArgs e)
+        private static void OnDropDownOpened(object? sender, EventArgs e)
         {
-            if (!(sender is AutoCompleteBox acb))
+            if (sender is not AutoCompleteBox acb)
             {
                 return;
             }
-
-            Debug.WriteLine("PopupFocus");
 
             var dropdown = acb.FindControl<Popup>("PART_Popup");
             dropdown?.Focus();
@@ -48,7 +45,7 @@ namespace KiCadDbLib.Controls
 
         private static void OnFocusDropDownChanged(AvaloniaPropertyChangedEventArgs e)
         {
-            if (!(e.Sender is AutoCompleteBox acb))
+            if (e.Sender is not AutoCompleteBox acb)
             {
                 return;
             }
@@ -62,9 +59,9 @@ namespace KiCadDbLib.Controls
             acb.LostFocus += OnLostFocus;
         }
 
-        private static void OnGotFocus(object sender, Avalonia.Input.GotFocusEventArgs e)
+        private static void OnGotFocus(object? sender, Avalonia.Input.GotFocusEventArgs e)
         {
-            if (!(sender is AutoCompleteBox acb))
+            if (sender is not AutoCompleteBox acb)
             {
                 return;
             }
@@ -72,9 +69,9 @@ namespace KiCadDbLib.Controls
             acb.DropDownOpening -= CancelDropDownOpening;
         }
 
-        private static void OnLostFocus(object sender, RoutedEventArgs e)
+        private static void OnLostFocus(object? sender, RoutedEventArgs e)
         {
-            if (!(sender is AutoCompleteBox acb))
+            if (sender is not AutoCompleteBox acb)
             {
                 return;
             }

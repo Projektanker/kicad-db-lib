@@ -5,13 +5,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace KiCadDbLib.Services.KiCad
+namespace KiCadDbLib.Services.KiCad.LibraryReader
 {
-    public class KiCad6LibraryReader : ILibraryReader
+    public class LegacyKiCadLibraryReader : ILibraryReader
     {
         private readonly ISettingsProvider _settingsProvider;
 
-        public KiCad6LibraryReader(ISettingsProvider settingsProvider)
+        public LegacyKiCadLibraryReader(ISettingsProvider settingsProvider)
         {
             _settingsProvider = settingsProvider;
         }
@@ -69,7 +69,7 @@ namespace KiCadDbLib.Services.KiCad
                 throw new DirectoryNotFoundException($"Directory \"{directory}\" not found.");
             }
 
-            return await Directory.EnumerateFiles(directory, $"*{FileExtensions.KicadSym}")
+            return await Directory.EnumerateFiles(directory, $"*{FileExtensions.Lib}")
                 .ToAsyncEnumerable()
                 .SelectMany(GetSymbolInfosAsync)
                 .ToArrayAsync()
@@ -78,7 +78,9 @@ namespace KiCadDbLib.Services.KiCad
 
         private static async IAsyncEnumerable<LibraryItemInfo> GetSymbolInfosAsync(string libraryFile)
         {
-            var symbolRegex = new Regex("\\(symbol \"(.+?):(.+?)\"");
+            var library = Path.GetFileNameWithoutExtension(libraryFile);
+
+            var symbolRegex = new Regex("DEF ([^ ]+)");
 
             var lines = await File.ReadAllLinesAsync(libraryFile, Encoding.UTF8)
                 .ConfigureAwait(false);
@@ -86,7 +88,8 @@ namespace KiCadDbLib.Services.KiCad
             var symbols = lines
                 .Select(line => symbolRegex.Match(line))
                 .Where(match => match.Success)
-                .Select(match => new LibraryItemInfo(match.Groups[1].Value, match.Groups[2].Value));
+                .Select(match => match.Groups[1].Value)
+                .Select(symbolName => new LibraryItemInfo(library, symbolName));
 
             foreach (var symbol in symbols)
             {

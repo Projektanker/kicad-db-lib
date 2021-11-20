@@ -2,16 +2,15 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace KiCadDbLib.Services.KiCad
+namespace KiCadDbLib.Services.KiCad.LibraryReader
 {
-    public class LegacyKiCadLibraryReader : ILibraryReader
+    public class KiCad6LibraryReader : ILibraryReader
     {
         private readonly ISettingsProvider _settingsProvider;
 
-        public LegacyKiCadLibraryReader(ISettingsProvider settingsProvider)
+        public KiCad6LibraryReader(ISettingsProvider settingsProvider)
         {
             _settingsProvider = settingsProvider;
         }
@@ -37,7 +36,6 @@ namespace KiCadDbLib.Services.KiCad
                 .ConfigureAwait(false);
 
             return kicadSymbols
-                 .Select(x => x.ToString())
                  .ToArray();
         }
 
@@ -62,34 +60,30 @@ namespace KiCadDbLib.Services.KiCad
                .ToArray();
         }
 
-        private static async Task<IEnumerable<LibraryItemInfo>> GetSymbolInfosFromDirectoryAsync(string directory)
+        private static async Task<IEnumerable<string>> GetSymbolInfosFromDirectoryAsync(string directory)
         {
             if (!Directory.Exists(directory))
             {
                 throw new DirectoryNotFoundException($"Directory \"{directory}\" not found.");
             }
 
-            return await Directory.EnumerateFiles(directory, $"*{FileExtensions.Lib}")
+            return await Directory.EnumerateFiles(directory, $"*{FileExtensions.KicadSym}")
                 .ToAsyncEnumerable()
                 .SelectMany(GetSymbolInfosAsync)
                 .ToArrayAsync()
                 .ConfigureAwait(false);
         }
 
-        private static async IAsyncEnumerable<LibraryItemInfo> GetSymbolInfosAsync(string libraryFile)
+        private static async IAsyncEnumerable<string> GetSymbolInfosAsync(string libraryFile)
         {
-            var library = Path.GetFileNameWithoutExtension(libraryFile);
-
-            var symbolRegex = new Regex("DEF ([^ ]+)");
-
-            var lines = await File.ReadAllLinesAsync(libraryFile, Encoding.UTF8)
+            var input = await File.ReadAllTextAsync(libraryFile, Encoding.UTF8)
                 .ConfigureAwait(false);
 
-            var symbols = lines
-                .Select(line => symbolRegex.Match(line))
-                .Where(match => match.Success)
-                .Select(match => match.Groups[1].Value)
-                .Select(symbolName => new LibraryItemInfo(library, symbolName));
+            var root = SNode.Parse(input, 2);
+
+            var symbols = root.Childs
+                .Where(child => child.Name == "symbol")
+                .Select(child => child.Childs[0].Name!);
 
             foreach (var symbol in symbols)
             {

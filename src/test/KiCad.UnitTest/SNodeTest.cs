@@ -169,6 +169,25 @@ namespace KiCad.UnitTest
             node.Should().BeEquivalentTo(expectedNode);
         }
 
+        [Theory]
+        [InlineData(0, "(level1 (level2 (level3)))", "(level1 (level2 (level3)))")]
+        [InlineData(1, "(level1 (level2 (level3)))", "(level1)")]
+        [InlineData(2, "(level1 (level2 (level3)))", "(level1 (level2))")]
+        [InlineData(3, "(level1 (level2 (level3)))", "(level1 (level2 (level3)))")]
+        [InlineData(4, "(level1 (level2 (level3)))", "(level1 (level2 (level3)))")]
+        [InlineData(1, "(level1 1.1 (level2 2.1 2.2) 1.2)", "(level1 1.1 1.2)")]
+        public void Parse_With_Depth(int depth, string input, string expectedOutput)
+        {
+            // Arrange
+            var expectedNode = SNode.Parse(expectedOutput);
+
+            // Act
+            var node = SNode.Parse(input, depth);
+
+            // Assert
+            node.Should().BeEquivalentTo(expectedNode);
+        }
+
         [Fact]
         public void Clone()
         {

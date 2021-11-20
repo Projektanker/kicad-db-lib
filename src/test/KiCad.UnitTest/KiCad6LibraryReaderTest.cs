@@ -4,6 +4,7 @@ using FluentAssertions;
 using KiCadDbLib.Models;
 using KiCadDbLib.Services;
 using KiCadDbLib.Services.KiCad;
+using KiCadDbLib.Services.KiCad.LibraryReader;
 using Moq;
 using Xunit;
 

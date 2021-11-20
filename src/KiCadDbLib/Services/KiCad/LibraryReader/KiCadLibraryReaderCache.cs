@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace KiCadDbLib.Services.KiCad
+namespace KiCadDbLib.Services.KiCad.LibraryReader
 {
     public class KiCadLibraryReaderCache : ILibraryReader
     {

@@ -35,10 +35,10 @@ namespace KiCadDbLib.ViewModels
             _part = part ?? new Part();
             Id = _part.Id;
 
-            _libaryBuilder = Locator.Current.GetRequiredService<ILibraryBuilder>()!;
-            _libaryReader = Locator.Current.GetRequiredService<ILibraryReader>()!;
-            _partRepository = Locator.Current.GetRequiredService<IPartRepository>()!;
-            _settingsService = Locator.Current.GetRequiredService<ISettingsProvider>()!;
+            _libaryBuilder = Locator.Current.GetRequiredService<ILibraryBuilder>();
+            _libaryReader = Locator.Current.GetRequiredService<ILibraryReader>();
+            _partRepository = Locator.Current.GetRequiredService<IPartRepository>();
+            _settingsService = Locator.Current.GetRequiredService<ISettingsProvider>();
 
             GoBack = ReactiveCommand.CreateFromTask(ExecuteGoBackAsync);
 
@@ -192,7 +192,7 @@ namespace KiCadDbLib.ViewModels
         {
             if (await DeletePartConfirmation.Handle(default).Catch(Observable.Return(true)))
             {
-                await _partRepository.DeleteAsync(_part.Id).ConfigureAwait(false);
+                await _partRepository.DeleteAsync(_part.Id!).ConfigureAwait(false);
                 await HostScreen.Router.NavigateBack.Execute();
             }
         }
@@ -224,7 +224,7 @@ namespace KiCadDbLib.ViewModels
                 .First()
                 .GetValue() as JObject;
 
-            _part = part.ToObject<Part>()!;
+            _part = part.ToObject<Part>() ?? new Part();
             _part.Id = Id!;
 
             await HostScreen.Router.NavigateBack.Execute();

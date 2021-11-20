@@ -11,14 +11,43 @@ namespace KiCadDbLib.Services.KiCad
             "(?:(?<bo>\\()|(?<bc>\\))|(?<q>\\\".*?(?<!\\\\)\\\")|(?<s>[^()\\s]+))",
             RegexOptions.IgnorePatternWhitespace);
 
-        public static SNode Parse(string input)
+        private static bool CheckDepth(string tokenKey, ref int level, int depth)
+        {
+            if (depth == 0)
+            {
+                return false;
+            }
+
+            switch (tokenKey)
+            {
+                // bracket open
+                case "bo":
+                    level++;
+                    return level > depth;
+
+                // bracket close
+                case "bc":
+                    level--;
+                    return level >= depth;
+
+                default:
+                    return level > depth;
+            }
+        }
+
+        public static SNode Parse(string input, int depth = 0)
         {
             var tokens = Tokenize(input);
-
+            var level = 0;
             var nodes = new Stack<SNode>();
             var node = new SNode(isPrimitive: true);
             foreach (var token in tokens)
             {
+                if (CheckDepth(token.Key, ref level, depth))
+                {
+                    continue;
+                }
+
                 switch (token.Key)
                 {
                     // bracket open

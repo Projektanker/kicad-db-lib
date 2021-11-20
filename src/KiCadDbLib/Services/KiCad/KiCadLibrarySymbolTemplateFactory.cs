@@ -8,14 +8,14 @@ using static MoreLinq.Extensions.TakeUntilExtension;
 
 namespace KiCadDbLib.Services.KiCad
 {
-    internal class KiCadLibraryReader
+    internal class KiCadLibrarySymbolTemplateFactory
     {
         private const string _endDef = "ENDDEF";
 
-        private string _getSymbolLibrary;
-        private string[] _getSymbolLines;
+        private string? _getSymbolLibrary;
+        private string[]? _getSymbolLines;
 
-        public Task<string[]> GetSymbolAsync(string directory, LibraryItemInfo symbolInfo, bool bufferLibrary = true)
+        public Task<string[]> GetSymbolTemplateAsync(string directory, LibraryItemInfo symbolInfo, bool bufferLibrary = true)
         {
             return GetSymbolAsync(
                 libraryFilePath: Path.Combine(directory, symbolInfo.Library + FileExtensions.Lib),
@@ -23,14 +23,14 @@ namespace KiCadDbLib.Services.KiCad
                 bufferLibrary: bufferLibrary);
         }
 
-        public async Task<string[]> GetSymbolAsync(string libraryFilePath, string symbolName, bool bufferLibrary = true)
+        private async Task<string[]> GetSymbolAsync(string libraryFilePath, string symbolName, bool bufferLibrary = true)
         {
             if (!File.Exists(libraryFilePath))
             {
                 throw new FileNotFoundException($"Library \"{libraryFilePath}\" not found.");
             }
 
-            string[] lines;
+            string[]? lines;
             if (bufferLibrary && (_getSymbolLibrary?.Equals(libraryFilePath, StringComparison.Ordinal) ?? false))
             {
                 lines = _getSymbolLines;

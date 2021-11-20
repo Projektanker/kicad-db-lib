@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using KiCadDbLib.Models;
 using KiCadDbLib.Services.KiCad;
 
 namespace KiCadDbLib.Services
@@ -9,11 +8,13 @@ namespace KiCadDbLib.Services
     {
         private readonly ISettingsProvider _settingsProvider;
         private readonly IPartRepository _partRepository;
+        private readonly ILibraryWriterFactory _libraryWriterFactory;
 
-        public LibraryBuilder(ISettingsProvider settingsProvider, IPartRepository partRepository)
+        public LibraryBuilder(ISettingsProvider settingsProvider, IPartRepository partRepository, ILibraryWriterFactory libraryWriterFactory)
         {
             _settingsProvider = settingsProvider;
             _partRepository = partRepository;
+            _libraryWriterFactory = libraryWriterFactory;
         }
 
         public async Task Build()
@@ -21,32 +22,28 @@ namespace KiCadDbLib.Services
             var settings = await _settingsProvider.GetSettingsAsync().ConfigureAwait(false);
             var parts = await _partRepository.GetPartsAsync().ConfigureAwait(false);
 
-            await KiCadLibraryBuilder.ClearDirectoryAsync(settings.OutputPath).ConfigureAwait(false);
+            await KiCadLibraryWriter.ClearDirectoryAsync(settings.OutputPath).ConfigureAwait(false);
 
             var groupedParts = parts
                  .GroupBy(part => part.Library);
 
-            foreach (IGrouping<string, Part> group in groupedParts)
+            foreach (var group in groupedParts)
             {
-                using var builder = new KiCadLibraryBuilder(settings.SymbolsPath, settings.OutputPath, group.Key);
-                await builder.WriteStartLibrary().ConfigureAwait(false);
+                await using var writer = await _libraryWriterFactory.CreateWriterAsync(settings.OutputPath, group.Key!)
+                    .ConfigureAwait(false);
+
+                await writer.WriteStartLibrary().ConfigureAwait(false);
 
                 foreach (var part in group.OrderBy(part => part.Value))
                 {
-                    var symbolInfo = LibraryItemInfo.Parse(part.Symbol);
+                    part.CustomFields = part.CustomFields
+                        .Join(settings.CustomFields, cf => cf.Key, key => key, (cf, _) => cf)
+                        .ToDictionary(cf => cf.Key, cf => cf.Value);
 
-                    await builder.WritePartAsync(
-                        reference: part.Reference,
-                        value: part.Value,
-                        symbol: symbolInfo,
-                        footprint: part.Footprint,
-                        description: part.Description,
-                        keywords: part.Keywords,
-                        datasheet: part.Datasheet,
-                        customFields: part.CustomFields.Where(cf => settings.CustomFields.Contains(cf.Key))).ConfigureAwait(false);
+                    await writer.WritePartAsync(part).ConfigureAwait(false);
                 }
 
-                await builder.WriteEndLibrary().ConfigureAwait(false);
+                await writer.WriteEndLibrary().ConfigureAwait(false);
             }
         }
     }
