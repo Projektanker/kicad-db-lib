@@ -1,10 +1,5 @@
-﻿using System.Collections.Generic;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
-using Avalonia.Data.Converters;
+﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using KiCadDbLib.Models;
 
 namespace KiCadDbLib.Controls
 {

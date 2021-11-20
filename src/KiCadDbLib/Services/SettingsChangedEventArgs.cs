@@ -1,10 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
 using KiCadDbLib.Models;
-using Newtonsoft.Json;
-using Splat;
 
 namespace KiCadDbLib.Services
 {

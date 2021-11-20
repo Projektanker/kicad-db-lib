@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace KiCadDbLib.Services
+﻿namespace KiCadDbLib.Services
 {
     public interface INotificationPoster
     {

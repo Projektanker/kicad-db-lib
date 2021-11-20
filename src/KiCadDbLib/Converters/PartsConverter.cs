@@ -2,7 +2,6 @@
 using System.Linq;
 using Avalonia.Data.Converters;
 using KiCadDbLib.Models;
-using MoreLinq;
 
 namespace KiCadDbLib.Converters
 {
