@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using KiCadDbLib.Services.KiCad;
+using KiCadDbLib.Services.KiCad.LibraryWriter;
 
 namespace KiCadDbLib.Services
 {

@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using KiCadDbLib.Models;
+﻿using System.Threading.Tasks;
 
-namespace KiCadDbLib.Services.KiCad
+namespace KiCadDbLib.Services.KiCad.LibraryWriter
 {
-
     public class KiCadLibraryWriterFactory : ILibraryWriterFactory
     {
-        private ISettingsProvider _settingsProvider;
+        private readonly ISettingsProvider _settingsProvider;
 
         public KiCadLibraryWriterFactory(ISettingsProvider settingsProvider)
         {

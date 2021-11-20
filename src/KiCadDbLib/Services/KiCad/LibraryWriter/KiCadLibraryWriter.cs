@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using KiCadDbLib.Models;
 
-namespace KiCadDbLib.Services.KiCad
+namespace KiCadDbLib.Services.KiCad.LibraryWriter
 {
     internal sealed class KiCadLibraryWriter : ILibraryWriter
     {
@@ -123,69 +123,41 @@ namespace KiCadDbLib.Services.KiCad
             IEnumerable<KeyValuePair<string, string>> customFields,
             bool bufferLibrary = true)
         {
-            // Get symbol
-            string[] template = await _libraryReader.GetSymbolTemplateAsync(_symbolsDirectory, symbolInfo, bufferLibrary).ConfigureAwait(false);
+            // Get symbol template
+            var template = await _libraryReader.GetSymbolTemplateAsync(_symbolsDirectory, symbolInfo, bufferLibrary).ConfigureAwait(false);
 
-            // Remove empty lines
-            var filtered = template.Where(line => !string.IsNullOrWhiteSpace(line));
+            var result = template.ToList();
 
-            // Remove lines starting with '#'
-            filtered = filtered.Where(line => !line.StartsWith('#'));
-
-            // Remove ALIAS
-            filtered = filtered.Where(line => !line.StartsWith("ALIAS", StringComparison.OrdinalIgnoreCase));
-
-            // Remove FPLIST
-            static bool IsPartOfFPList(string line, ref bool insideFPList)
-            {
-                if (line.StartsWith("$FPLIST", StringComparison.OrdinalIgnoreCase))
-                {
-                    insideFPList = true;
-                    return true;
-                }
-                else if (line.StartsWith("$ENDFPLIST", StringComparison.OrdinalIgnoreCase))
-                {
-                    insideFPList = false;
-                    return true;
-                }
-                else
-                {
-                    return insideFPList;
-                }
-            }
-
-            bool insideFPList = false;
-            filtered = filtered.Where(line => !IsPartOfFPList(line, ref insideFPList));
-
-            // Done filtering.
-            var result = filtered.ToList();
-
-            // DEF value reference ... F0 "Reference" ... F1 "Value" ... F2 "Footprint" ... F3
-            // "Datasheet" ... F3+n "custom field value" ... "custom field name"
+            /* DEF value reference ...
+             * F0 "Reference" ...
+             * F1 "Value" ...
+             * F2 "Footprint" ...
+             * F3 "Datasheet" ...
+             * F3+n "custom field value" ... "custom field name"
+             */
 
             // DEF value reference ...
             result[0] = Regex.Replace(result[0], "^DEF \\S+ \\S ", $"DEF {value} {reference} ");
 
             // F0 - F3
-            int index;
-            string[] replacement = new[] { reference, value, footprint, datasheet };
-            for (index = 1; index < 5; index++)
+            int lineIndex = 1;
+            var replacement = new[] { reference, value, footprint, datasheet };
+            for (int fieldIndex = 0; fieldIndex < replacement.Length; fieldIndex++, lineIndex++)
             {
-                var fieldIndex = index - 1;
-                result[index] = Regex.Replace(
-                    result[index],
+                result[lineIndex] = Regex.Replace(
+                    result[lineIndex],
                     $"^F{fieldIndex} \".*?\"",
                     $"F{fieldIndex} \"{replacement[fieldIndex]}\"");
             }
 
             // Remove remaining F...
-            while (result[index].StartsWith('F'))
+            while (result[lineIndex].StartsWith('F'))
             {
-                result.RemoveAt(index);
+                result.RemoveAt(lineIndex);
             }
 
             // Add custom fields
-            result.InsertRange(index, CreateCustomFields(customFields));
+            result.InsertRange(lineIndex, CreateCustomFields(customFields));
 
             return result;
         }

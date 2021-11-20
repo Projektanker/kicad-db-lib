@@ -79,11 +79,12 @@ namespace KiCadDbLib.Services.KiCad.LibraryReader
             var input = await File.ReadAllTextAsync(libraryFile, Encoding.UTF8)
                 .ConfigureAwait(false);
 
-            var root = SNode.Parse(input, 2);
+            var root = SNode.Parse(input, 3);
 
             var symbols = root.Childs
                 .Where(child => child.Name == "symbol")
-                .Select(child => child.Childs[0].Name!);
+                .Where(symbol => symbol.Childs.All(child => child.Name != "extends"))
+                .Select(symbol => symbol.Childs[0].Name!);
 
             foreach (var symbol in symbols)
             {

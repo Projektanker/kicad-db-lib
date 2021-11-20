@@ -5,6 +5,7 @@ using Avalonia.ReactiveUI;
 using KiCadDbLib.Services;
 using KiCadDbLib.Services.KiCad;
 using KiCadDbLib.Services.KiCad.LibraryReader;
+using KiCadDbLib.Services.KiCad.LibraryWriter;
 using KiCadDbLib.ViewModels;
 using KiCadDbLib.Views;
 using Projektanker.Icons.Avalonia;
