@@ -22,8 +22,8 @@ namespace KiCadDbLib.ViewModels
         public PartsViewModel(IScreen hostScreen)
             : base(hostScreen)
         {
-            _partRepository = Locator.Current.GetService<IPartRepository>()!;
-            var libraryBuilder = Locator.Current.GetService<ILibraryBuilder>()!;
+            _partRepository = Locator.Current.GetRequiredService<IPartRepository>()!;
+            var libraryBuilder = Locator.Current.GetRequiredService<ILibraryBuilder>()!;
 
             GoToSettings = NavigationCommand.Create(
                 hostScreen: HostScreen,

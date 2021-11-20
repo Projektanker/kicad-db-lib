@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -7,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace KiCadDbLib.Services.KiCad
 {
-    public class LegacyKiCadLibraryReader : ILibraryReader
+    public class KiCad6LibraryReader : ILibraryReader
     {
         private readonly ISettingsProvider _settingsProvider;
 
-        public LegacyKiCadLibraryReader(ISettingsProvider settingsProvider)
+        public KiCad6LibraryReader(ISettingsProvider settingsProvider)
         {
             _settingsProvider = settingsProvider;
         }
@@ -69,7 +70,7 @@ namespace KiCadDbLib.Services.KiCad
                 throw new DirectoryNotFoundException($"Directory \"{directory}\" not found.");
             }
 
-            return await Directory.EnumerateFiles(directory, $"*{FileExtensions.Lib}")
+            return await Directory.EnumerateFiles(directory, $"*{FileExtensions.KicadSym}")
                 .ToAsyncEnumerable()
                 .SelectMany(GetSymbolInfosAsync)
                 .ToArrayAsync()
@@ -78,9 +79,7 @@ namespace KiCadDbLib.Services.KiCad
 
         private static async IAsyncEnumerable<LibraryItemInfo> GetSymbolInfosAsync(string libraryFile)
         {
-            var library = Path.GetFileNameWithoutExtension(libraryFile);
-
-            var symbolRegex = new Regex("DEF ([^ ]+)");
+            var symbolRegex = new Regex("\\(symbol \"(.+?):(.+?)\"");
 
             var lines = await File.ReadAllLinesAsync(libraryFile, Encoding.UTF8)
                 .ConfigureAwait(false);
@@ -88,8 +87,7 @@ namespace KiCadDbLib.Services.KiCad
             var symbols = lines
                 .Select(line => symbolRegex.Match(line))
                 .Where(match => match.Success)
-                .Select(match => match.Groups[1].Value)
-                .Select(symbolName => new LibraryItemInfo(library, symbolName));
+                .Select(match => new LibraryItemInfo(match.Groups[1].Value, match.Groups[2].Value));
 
             foreach (var symbol in symbols)
             {

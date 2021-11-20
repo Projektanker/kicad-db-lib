@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
+using KiCadDbLib.Services.KiCad;
 using Xunit;
 
 namespace KiCad.UnitTest
@@ -170,18 +171,47 @@ namespace KiCad.UnitTest
         }
 
         [Fact]
-        public void Parse_KiCadSym()
+        public void Clone()
+        {
+            // Arrange
+            var node = new SNode(
+                new SNode(
+                    "data",
+                    new SNode("quoted \" data"),
+                    new SNode("123"),
+                    new SNode("4.5")
+                ),
+                new SNode(
+                    "data",
+                    new SNode(
+                        "!@#",
+                        new SNode("4.5", isPrimitive: false),
+                        new SNode("(more"),
+                        new SNode("data)")
+                    )
+                )
+            );
+
+            // Act
+            var clone = node.Clone();
+
+            // Assert
+            clone.Should().BeEquivalentTo(node);
+        }
+
+        [Fact]
+        public void Parse_And_Clone_KiCadSym()
         {
             // Arrange
             var input = File.ReadAllText("Device.kicad_sym");
 
             // Act
-            SNode node = new SNode("not set");
-            Action action = () => node = SNode.Parse(input);
+            var node = SNode.Parse(input);
+            var clone = node.Clone();
 
             // Assert
-            action.Should().NotThrow();
             node.Childs.Should().HaveCountGreaterThan(0);
+            clone.Should().BeEquivalentTo(node);
         }
     }
 }

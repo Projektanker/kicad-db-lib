@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
-namespace KiCad.UnitTest
+namespace KiCadDbLib.Services.KiCad
 {
     public partial class SNode
     {
@@ -29,6 +29,13 @@ namespace KiCad.UnitTest
             _childs.AddRange(childs);
         }
 
+        private SNode(string? name, bool isPrimitive, IEnumerable<SNode> childs)
+        {
+            Name = name;
+            IsPrimitive = isPrimitive;
+            _childs.AddRange(childs);
+        }
+
         public string? Name { get; set; }
 
         public IReadOnlyList<SNode> Childs => _childs.AsReadOnly();
@@ -38,6 +45,14 @@ namespace KiCad.UnitTest
         {
             _childs.Add(node);
             IsPrimitive = false;
+        }
+
+        public SNode Clone()
+        {
+            var childs = _childs
+                .Select(child => child.Clone());
+
+            return new SNode(Name, IsPrimitive, childs);
         }
     }
 }

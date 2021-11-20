@@ -35,10 +35,10 @@ namespace KiCadDbLib.ViewModels
             _part = part ?? new Part();
             Id = _part.Id;
 
-            _libaryBuilder = Locator.Current.GetService<ILibraryBuilder>()!;
-            _libaryReader = Locator.Current.GetService<ILibraryReader>()!;
-            _partRepository = Locator.Current.GetService<IPartRepository>()!;
-            _settingsService = Locator.Current.GetService<ISettingsProvider>()!;
+            _libaryBuilder = Locator.Current.GetRequiredService<ILibraryBuilder>()!;
+            _libaryReader = Locator.Current.GetRequiredService<ILibraryReader>()!;
+            _partRepository = Locator.Current.GetRequiredService<IPartRepository>()!;
+            _settingsService = Locator.Current.GetRequiredService<ISettingsProvider>()!;
 
             GoBack = ReactiveCommand.CreateFromTask(ExecuteGoBackAsync);
 

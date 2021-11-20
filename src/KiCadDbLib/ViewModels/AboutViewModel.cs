@@ -13,7 +13,7 @@ namespace KiCadDbLib.ViewModels
         public AboutViewModel(IScreen hostScreen)
             : base(hostScreen)
         {
-            _settingsProvider = Locator.Current.GetService<ISettingsProvider>()!;
+            _settingsProvider = Locator.Current.GetRequiredService<ISettingsProvider>()!;
             GoBack = HostScreen.Router.NavigateBack;
             License = "MIT";
             GitHub = @"https://github.com/projektanker/kicad-db-lib";

@@ -23,7 +23,7 @@ namespace KiCadDbLib.Views
                     .Subscribe()
                     .DisposeWith(disposables);
 
-                var notifications = Locator.Current.GetService<INotificationPoster>();
+                var notifications = Locator.Current.GetRequiredService<INotificationPoster>();
                 if (notifications != null)
                 {
                     ViewModel.BuildLibrary.IsExecuting

@@ -25,15 +25,25 @@ namespace KiCadDbLib
         }
 
         /// <inheritdoc/>
-        public object GetService(Type serviceType, string contract = null)
+        public object? GetService(Type? serviceType, string? contract = null)
         {
+            if (serviceType is null)
+            {
+                return null;
+            }
+
             return _dependencyResolver.GetService(serviceType, contract)
                 ?? ((IServiceProvider)_container).GetService(serviceType);
         }
 
         /// <inheritdoc/>
-        public IEnumerable<object> GetServices(Type serviceType, string contract = null)
+        public IEnumerable<object> GetServices(Type? serviceType, string? contract = null)
         {
+            if (serviceType is null)
+            {
+                return Array.Empty<object>();
+            }
+
             var services = _dependencyResolver.GetServices(serviceType, contract);
             if (ContainerHasRegistration(serviceType))
             {
@@ -44,32 +54,37 @@ namespace KiCadDbLib
         }
 
         /// <inheritdoc/>
-        public bool HasRegistration(Type serviceType, string contract = null)
+        public bool HasRegistration(Type? serviceType, string? contract = null)
         {
+            if (serviceType is null)
+            {
+                return false;
+            }
+
             return _dependencyResolver.HasRegistration(serviceType, contract)
                 || ContainerHasRegistration(serviceType);
         }
 
         /// <inheritdoc/>
-        public void Register(Func<object> factory, Type serviceType, string contract = null)
+        public void Register(Func<object?> factory, Type? serviceType, string? contract = null)
         {
             _dependencyResolver.Register(factory, serviceType, contract);
         }
 
         /// <inheritdoc/>
-        public IDisposable ServiceRegistrationCallback(Type serviceType, string contract, Action<IDisposable> callback)
+        public IDisposable ServiceRegistrationCallback(Type serviceType, string? contract, Action<IDisposable> callback)
         {
             return _dependencyResolver.ServiceRegistrationCallback(serviceType, contract, callback);
         }
 
         /// <inheritdoc/>
-        public void UnregisterAll(Type serviceType, string contract = null)
+        public void UnregisterAll(Type? serviceType, string? contract = null)
         {
             _dependencyResolver.UnregisterAll(serviceType, contract);
         }
 
         /// <inheritdoc/>
-        public void UnregisterCurrent(Type serviceType, string contract = null)
+        public void UnregisterCurrent(Type? serviceType, string? contract = null)
         {
             _dependencyResolver.UnregisterCurrent(serviceType, contract);
         }

@@ -39,7 +39,8 @@ namespace KiCadDbLib
             container.RegisterSingleton<ILibraryBuilder, LibraryBuilder>();
             container.RegisterSingleton<ISettingsProvider, SettingsProvider>();
 
-            container.RegisterSingleton<ILibraryReader, LegacyKiCadLibraryReader>();
+            container.RegisterSingleton<ILibraryReader, KiCadLibraryReaderMediator>();
+            container.RegisterDecorator<ILibraryReader, KiCadLibraryReaderCache>(Lifestyle.Singleton);
             container.RegisterSingleton<KiCadLibraryReader>();
             container.RegisterSingleton<INotificationPoster, SnackbarNotificationPoster>();
 
@@ -51,7 +52,7 @@ namespace KiCadDbLib
 
             // Register views
             container.Register(typeof(IViewFor<>), Assembly.GetCallingAssembly());
-            container.RegisterInitializer<IHosted>(hosted => hosted.Host = Locator.Current.GetService<Window>());
+            container.RegisterInitializer<IHosted>(hosted => hosted.Host = Locator.Current.GetRequiredService<Window>());
 
             // Chain them up
             var chain = new LocatorChain(Locator.GetLocator(), container);

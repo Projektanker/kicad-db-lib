@@ -31,7 +31,7 @@ namespace KiCadDbLib.Views
                     .RegisterHandler(HandleDiscardChangesConfirmationAsync)
                     .DisposeWith(disposables);
 
-                var notifications = Locator.Current.GetService<INotificationPoster>();
+                var notifications = Locator.Current.GetRequiredService<INotificationPoster>();
                 if (notifications != null)
                 {
                     ViewModel.Save

@@ -22,7 +22,7 @@ namespace KiCadDbLib
             {
                 desktop.MainWindow = new MainWindow()
                 {
-                    DataContext = Locator.Current.GetService<MainWindowViewModel>(),
+                    DataContext = Locator.Current.GetRequiredService<MainWindowViewModel>(),
                 };
 
                 Locator.CurrentMutable.RegisterConstant(desktop.MainWindow);

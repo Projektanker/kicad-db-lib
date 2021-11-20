@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace KiCad.UnitTest
+namespace KiCadDbLib.Services.KiCad
 {
     public partial class SNode
     {
@@ -21,7 +21,7 @@ namespace KiCad.UnitTest
             var hasName = Name is not null;
             if (hasName)
             {
-                if (Name.IndexOfAny(new char[] { ' ', '"', '(', ')' }) != -1 || Name.Length == 0)
+                if (Name!.IndexOfAny(new char[] { ' ', '"', '(', ')' }) != -1 || Name.Length == 0)
                 {
                     sb.Append('"').Append(GetEscapcedName()).Append('"');
                 }

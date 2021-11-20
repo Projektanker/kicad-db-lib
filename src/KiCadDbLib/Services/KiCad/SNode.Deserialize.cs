@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace KiCad.UnitTest
+namespace KiCadDbLib.Services.KiCad
 {
     public partial class SNode
     {
@@ -34,28 +36,21 @@ namespace KiCad.UnitTest
                         break;
 
                     // quoted string
+                    case "q" when node.Name is null:
+                        node.Name = UnescapeName(token.Value[1..^1]);
+                        break;
+
                     case "q":
-                        var name = token.Value[1..^1];
-                        if (node.Name is null)
-                        {
-                            node.Name = UnescapeName(name);
-                        }
-                        else
-                        {
-                            node.Add(UnescapedNode(name));
-                        }
+                        node.Add(UnescapedNode(token.Value[1..^1]));
                         break;
 
                     // string
+                    case "s" when node.Name is null:
+                        node.Name = UnescapeName(token.Value);
+                        break;
+
                     case "s":
-                        if (node.Name is null)
-                        {
-                            node.Name = UnescapeName(token.Value);
-                        }
-                        else
-                        {
-                            node.Add(UnescapedNode(token.Value));
-                        }
+                        node.Add(UnescapedNode(token.Value));
                         break;
 
                     default:
@@ -71,10 +66,12 @@ namespace KiCad.UnitTest
         private static IEnumerable<KeyValuePair<string, string>> Tokenize(string input)
         {
             input = input.Trim(' ');
-            var matches = _tokenizer.Matches(input);
-            var tokens = matches
-                .Select(ExtractTokenValuePair);
-            return tokens;
+            var match = _tokenizer.Match(input);
+            while (match.Success)
+            {
+                yield return ExtractTokenValuePair(match);
+                match = match.NextMatch();
+            }
         }
 
         private static KeyValuePair<string, string> ExtractTokenValuePair(Match match)
@@ -85,7 +82,7 @@ namespace KiCad.UnitTest
 
         private static string UnescapeName(string name)
         {
-            return name.Replace("\\\"", "\"");
+            return name.Replace("\\\"", "\"", StringComparison.Ordinal);
         }
 
         private static SNode UnescapedNode(string name)
