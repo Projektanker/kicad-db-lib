@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace KiCadDbLib.Services.KiCad
 {
@@ -21,14 +22,7 @@ namespace KiCadDbLib.Services.KiCad
             var hasName = Name is not null;
             if (hasName)
             {
-                if (Name!.IndexOfAny(new char[] { ' ', '"', '(', ')' }) != -1 || Name.Length == 0)
-                {
-                    sb.Append('"').Append(GetEscapcedName()).Append('"');
-                }
-                else
-                {
-                    sb.Append(Name);
-                }
+                AppendName(sb);
             }
 
             for (var i = 0; i < Childs.Count; i++)
@@ -47,9 +41,26 @@ namespace KiCadDbLib.Services.KiCad
             }
         }
 
-        private string GetEscapcedName()
+        private void AppendName(StringBuilder sb)
         {
-            return Name.Replace("\"", "\\\"");
+            var isQuoted = Name!.StartsWith('"') && Name.Length >= 2;
+
+            var name = isQuoted
+                ? Name[1..^1]
+                : Name;
+
+            if (name!.IndexOfAny(new char[] { ' ', '"', '(', ')' }) != -1 || name.Length == 0)
+            {
+                sb.Append('"')
+                    .Append(name.Replace("\"", "\\\"", StringComparison.Ordinal))
+                    .Append('"');
+            }
+            else
+            {
+                sb.Append(isQuoted ? "\"" : string.Empty)
+                    .Append(name)
+                    .Append(isQuoted ? "\"" : string.Empty);
+            }
         }
     }
 }

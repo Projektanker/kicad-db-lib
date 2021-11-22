@@ -8,7 +8,7 @@ using static MoreLinq.Extensions.TakeUntilExtension;
 
 namespace KiCadDbLib.Services.KiCad.LibraryWriter
 {
-    internal class KiCadLibrarySymbolTemplateFactory
+    internal class LegacyKiCadLibrarySymbolTemplateFactory
     {
         private const string _endDef = "ENDDEF";
 

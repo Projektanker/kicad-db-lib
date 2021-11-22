@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using KiCadDbLib.Services.KiCad.LibraryWriter;
 
 namespace KiCadDbLib.Services
 {
@@ -22,12 +21,10 @@ namespace KiCadDbLib.Services
             var settings = await _settingsProvider.GetSettingsAsync().ConfigureAwait(false);
             var parts = await _partRepository.GetPartsAsync().ConfigureAwait(false);
 
-            await KiCadLibraryWriter.ClearDirectoryAsync(settings.OutputPath).ConfigureAwait(false);
-
             var groupedParts = parts
                  .GroupBy(part => part.Library);
 
-            foreach (var group in groupedParts)
+            foreach (var group in groupedParts.OrderBy(group => group.Key))
             {
                 await using var writer = await _libraryWriterFactory.CreateWriterAsync(settings.OutputPath, group.Key!)
                     .ConfigureAwait(false);

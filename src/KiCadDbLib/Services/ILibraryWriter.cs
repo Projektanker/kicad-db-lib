@@ -6,10 +6,10 @@ namespace KiCadDbLib.Services
 {
     public interface ILibraryWriter : IDisposable, IAsyncDisposable
     {
+        Task WriteStartLibrary();
+
         Task WriteEndLibrary();
 
         Task WritePartAsync(Part part);
-
-        Task WriteStartLibrary();
     }
 }

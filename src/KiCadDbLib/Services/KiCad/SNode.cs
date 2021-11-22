@@ -47,6 +47,17 @@ namespace KiCadDbLib.Services.KiCad
             IsPrimitive = false;
         }
 
+        public void Insert(int index, SNode node)
+        {
+            _childs.Insert(index, node);
+            IsPrimitive = false;
+        }
+
+        public void Remove(SNode node)
+        {
+            _childs.Remove(node);
+        }
+
         public SNode Clone()
         {
             var childs = _childs
