@@ -22,7 +22,7 @@ namespace KiCadDbLib.Views
             InitializeComponent();
             this.WhenActivated(disposables =>
             {
-                ViewModel.DeletePartConfirmation
+                ViewModel!.DeletePartConfirmation
                     .RegisterHandler(HandleDeletePartConfirmationAsync)
                     .DisposeWith(disposables);
 
@@ -31,24 +31,18 @@ namespace KiCadDbLib.Views
                     .DisposeWith(disposables);
 
                 var notifications = Locator.Current.GetRequiredService<INotificationPoster>();
-                if (notifications != null)
-                {
-                    ViewModel.Save
-                        .Do(_ => notifications.ShowSuccess("Save and Build", "Save and build successful."))
-                        .Subscribe()
-                        .DisposeWith(disposables);
+                ViewModel.Save
+                    .Subscribe(_ => notifications.ShowSuccess("Save + Build", "Done"))
+                    .DisposeWith(disposables);
 
-                    ViewModel.Save.ThrownExceptions
-                        .Do(exception => notifications.ShowError("Save and Build", exception.Message))
-                        .Subscribe()
-                        .DisposeWith(disposables);
+                ViewModel.Save.ThrownExceptions
+                    .Subscribe(exception => notifications.ShowError("Save + Build", exception.Message))
+                    .DisposeWith(disposables);
 
-                    ViewModel.Save.IsExecuting
-                        .Where(isExecuting => isExecuting)
-                        .Do(_ => notifications.ShowInformation("Save and Build", "Start of save and build."))
-                        .Subscribe()
-                        .DisposeWith(disposables);
-                }
+                ViewModel.Save.IsExecuting
+                    .Where(isExecuting => isExecuting)
+                    .Subscribe(_ => notifications.ShowInformation("Save + Build", "Running."))
+                    .DisposeWith(disposables);
             });
         }
 

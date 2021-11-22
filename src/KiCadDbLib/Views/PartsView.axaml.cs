@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using KiCadDbLib.Services;
@@ -17,31 +16,25 @@ namespace KiCadDbLib.Views
         {
             this.WhenActivated(disposables =>
             {
-                ViewModel.LoadParts
+                ViewModel!.LoadParts
                     .Execute()
                     .Subscribe()
                     .DisposeWith(disposables);
 
                 var notifications = Locator.Current.GetRequiredService<INotificationPoster>();
-                if (notifications != null)
-                {
-                    ViewModel.BuildLibrary.IsExecuting
-                        .Where(isExecuting => isExecuting)
-                        .Do(_ => notifications.ShowInformation("Build", "Start of build."))
-                        .Subscribe()
-                        .DisposeWith(disposables);
+                ViewModel.BuildLibrary.IsExecuting
+                    .Where(isExecuting => isExecuting)
+                    .Subscribe(_ => notifications.ShowInformation("Build", "Running"))
+                    .DisposeWith(disposables);
 
-                    ViewModel.BuildLibrary
-                        .Do(_ => notifications.ShowSuccess("Build", "Build successful."))
-                        .Subscribe()
-                        .DisposeWith(disposables);
+                ViewModel.BuildLibrary
+                    .Subscribe(_ => notifications.ShowSuccess("Build", "Done"))
+                    .DisposeWith(disposables);
 
-                    ViewModel.BuildLibrary
-                        .ThrownExceptions
-                        .Do(exception => notifications.ShowError("Build", exception.Message))
-                        .Subscribe()
-                        .DisposeWith(disposables);
-                }
+                ViewModel.BuildLibrary
+                    .ThrownExceptions
+                    .Subscribe(exception => notifications.ShowError("Build", exception.Message))
+                    .DisposeWith(disposables);
             });
 
             InitializeComponent();

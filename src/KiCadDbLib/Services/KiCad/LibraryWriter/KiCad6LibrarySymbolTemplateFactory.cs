@@ -27,7 +27,7 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
         {
             var footprintFiltersProperty = symbol.Childs
                 .Where(child => child.Name == "property")
-                .FirstOrDefault(property => property.Childs[0].Name?.Trim('"') == "ki_fp_filters");
+                .FirstOrDefault(property => property.Childs[0].Name == "ki_fp_filters");
 
             if (footprintFiltersProperty != null)
             {
@@ -42,7 +42,7 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
 
             var symbol = root.Childs
                 .Where(child => child.Name == "symbol")
-                .SingleOrDefault(symbol => symbol.Childs[0].Name?.Trim('"') == symbolInfo.ToString());
+                .SingleOrDefault(symbol => symbol.Childs[0].Name == symbolInfo.ToString());
 
             if (symbol is null)
             {

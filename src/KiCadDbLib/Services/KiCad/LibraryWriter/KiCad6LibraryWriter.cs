@@ -57,26 +57,32 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
         public async Task WritePartAsync(Part part)
         {
             var symbolInfo = LibraryItemInfo.Parse(part.Symbol);
-            var template = await _libraryReader.GetSymbolTemplateAsync(_symbolsDirectory, symbolInfo)
+            var symbol = await _libraryReader.GetSymbolTemplateAsync(_symbolsDirectory, symbolInfo)
                 .ConfigureAwait(false);
 
-            template.Childs[0].Name = $"\"{_libraryName}:{part.Value}\"";
-            UpdateUnitIds(template, symbolInfo.Name, part.Value);
+            SetSymbolId(symbol, _libraryName, part.Value);
+            UpdateUnitIds(symbol, symbolInfo.Name, part.Value);
 
-            SetPropertyByName(template, "Reference", part.Reference);
-            SetPropertyByName(template, "Value", part.Value);
-            SetPropertyByName(template, "Footprint", part.Footprint);
-            SetPropertyByName(template, "Datasheet", string.IsNullOrEmpty(part.Datasheet) ? "~" : part.Datasheet);
-            SetPropertyByName(template, "ki_keywords", part.Keywords);
-            SetPropertyByName(template, "ki_description", part.Description);
+            SetPropertyByName(symbol, "Reference", part.Reference);
+            SetPropertyByName(symbol, "Value", part.Value);
+            SetPropertyByName(symbol, "Footprint", part.Footprint);
+            SetPropertyByName(symbol, "Datasheet", string.IsNullOrEmpty(part.Datasheet) ? "~" : part.Datasheet);
+            SetPropertyByName(symbol, "ki_keywords", part.Keywords);
+            SetPropertyByName(symbol, "ki_description", part.Description);
 
-            var customFields = part.CustomFields.OrderBy(cf => cf.Key).ToArray();
-            for (int i = 0; i < customFields.Length; i++)
+            foreach (var customField in part.CustomFields.OrderBy(cf => cf.Key))
             {
-                AddCustomProperty(template, i, customFields[i]);
+                AddCustomProperty(symbol, customField);
             }
 
-            _root.Add(template);
+            _root.Add(symbol);
+        }
+
+        private static void SetSymbolId(SNode symbol, string libraryName, string partValue)
+        {
+            var symbolId = symbol.Childs[0];
+            symbolId.Name = $"{libraryName}:{partValue}";
+            symbolId.IsString = true;
         }
 
         private static void UpdateUnitIds(SNode symbol, string symbolName, string partValue)
@@ -93,7 +99,7 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
         {
             var property = symbol.Childs
                 .Where(child => child.Name == _property)
-                .SingleOrDefault(property => property.Childs[0].Name!.Trim('"') == propertyName);
+                .SingleOrDefault(property => property.Childs[0].Name == propertyName);
 
             if (property is null)
             {
@@ -101,33 +107,44 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
                 throw new KeyNotFoundException($"Property \"{propertyName}\" not found in symbol\"{symbolName}\".");
             }
 
-            property.Childs[1].Name = $"\"{value}\"";
+            property.Childs[1].Name = value;
+            property.Childs[1].IsString = true;
         }
 
-        private static void AddCustomProperty(SNode symbol, int index, KeyValuePair<string, string> property)
+        private static void AddCustomProperty(SNode symbol, KeyValuePair<string, string> property)
         {
-            var customProperty = CreateCustomProperty(index + 6, property);
-            var nodeIndex = IndexOfLastProperty(symbol) + 1;
-            symbol.Insert(nodeIndex, customProperty);
+            var id = GetIdOfLastProperty(symbol) + 1;
+            var customProperty = CreateCustomProperty(id, property);
+            var index = GetIndexOfLastProperty(symbol) + 1;
+            symbol.Insert(index, customProperty);
         }
 
         private static SNode CreateCustomProperty(int propertyId, KeyValuePair<string, string> property)
         {
-            if (propertyId < 6)
-            {
-                throw new ArgumentOutOfRangeException(nameof(propertyId), "Must be greater or equal 6.");
-            }
-
             var id = new SNode("id", new SNode(propertyId.ToString()));
             var at = new SNode("at", new SNode("0"), new SNode("0"), new SNode("0"));
 
             var font = new SNode("font", new SNode("size", new SNode("1.27"), new SNode("1.27")));
             var effects = new SNode("effects", font, new SNode("hide"));
 
-            return new SNode(_property, new SNode($"\"{property.Key}\""), new SNode($"\"{property.Value}\""), id, at, effects);
+            return new SNode(_property, new SNode(property.Key, isString: true), new SNode(property.Value, isString: true), id, at, effects);
         }
 
-        private static int IndexOfLastProperty(SNode symbol)
+        private static int GetIdOfLastProperty(SNode symbol)
+        {
+            static int GetIdOfProperty(SNode property)
+            {
+                var idNode = property.Childs.First(child => child.Name == "id");
+                return int.Parse(idNode.Childs[0].Name!);
+            }
+
+            return symbol.Childs
+                .Where(child => child.Name == "property")
+                .Select(GetIdOfProperty)
+                .Last();
+        }
+
+        private static int GetIndexOfLastProperty(SNode symbol)
         {
             return symbol.Childs
                 .Select((child, index) => (Child: child, Index: index))

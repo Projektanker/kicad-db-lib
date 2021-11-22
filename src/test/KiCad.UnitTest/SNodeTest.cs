@@ -31,23 +31,21 @@ namespace KiCad.UnitTest
                     "data",
                     new SNode("quoted data"),
                     new SNode("123"),
-                    new SNode("4.5")
+                    new SNode(
+                        new SNode("4.5"))
                 ),
                 new SNode(
                     "data",
                     new SNode(
                         new SNode("!@#"),
-                        new SNode(
-                            new SNode("4.5")
-                        ),
                         new SNode("(more"),
                         new SNode("data)"),
-                        new SNode("\"quote\"")
+                        new SNode("quote", isString: true)
                     )
                 )
             );
 
-            var expectedOutput = "((data \"quoted data\" 123 4.5) (data (!@# (4.5) \"(more\" \"data)\" \"quote\")))";
+            var expectedOutput = "((data \"quoted data\" 123 (4.5)) (data (!@# \"(more\" \"data)\" \"quote\")))";
 
             // Act
             var output = root.ToString();
@@ -59,19 +57,18 @@ namespace KiCad.UnitTest
         [Theory]
         [InlineData("", "\"\"")]
         [InlineData("data", "data")]
-        [InlineData("quoted data", "\"quoted data\"")]
-        [InlineData("\"quoted\"", "\"quoted\"")]
+        [InlineData("with space", "\"with space\"")]
+        [InlineData("string", "\"string\"", true)]
         [InlineData("123", "123")]
         [InlineData("4.5", "4.5")]
         [InlineData("!@#", "!@#")]
-        [InlineData("(more", "\"(more\"")]
-        [InlineData("data)", "\"data)\"")]
-        [InlineData("\"", "\"\\\"\"")]
+        [InlineData("(bracket", "\"(bracket\"")]
+        [InlineData("bracket)", "\"bracket)\"")]
         [InlineData(" \"hello\" world ", "\" \\\"hello\\\" world \"")]
-        public void Serialize_Primitive_Node(string name, string expectedOutput)
+        public void Serialize_Primitive_Node(string name, string expectedOutput, bool isString = false)
         {
             // Arrange
-            var node = new SNode(name);
+            var node = new SNode(name, isString: isString);
 
             // Act
             var output = node.ToString();
@@ -81,21 +78,20 @@ namespace KiCad.UnitTest
         }
 
         [Theory]
-        [InlineData("\"\"", "\"\"")]
+        [InlineData("\"\"", "", true)]
         [InlineData("data", "data")]
-        [InlineData("\"quoted data\"", "\"quoted data\"")]
-        [InlineData("\"quoted\"", "\"quoted\"")]
+        [InlineData("\"with space\"", "with space", true)]
+        [InlineData("\"string\"", "string", true)]
         [InlineData("123", "123")]
         [InlineData("4.5", "4.5")]
         [InlineData("!@#", "!@#")]
-        [InlineData("\"(more\"", "\"(more\"")]
-        [InlineData("\"data)\"", "\"data)\"")]
-        [InlineData("\"\\\"\"", "\"\"\"")]
-        [InlineData("\" \\\"hello\\\" world \"", "\" \"hello\" world \"")]
-        public void Parse_Primitive_Node(string input, string expectedName)
+        [InlineData("\"(bracket\"", "(bracket", true)]
+        [InlineData("\"bracket)\"", "bracket)", true)]
+        [InlineData("\" \\\"hello\\\" world \"", " \"hello\" world ", true)]
+        public void Parse_Primitive_Node(string input, string expectedName, bool isString = false)
         {
             // Arrange
-            var expectedNode = new SNode(expectedName);
+            var expectedNode = new SNode(expectedName, isString);
 
             // Act
             var node = SNode.Parse(input);
@@ -125,8 +121,7 @@ namespace KiCad.UnitTest
         [Theory]
         [InlineData("(test)", "test")]
         [InlineData("(1 2)", "1", "2")]
-        [InlineData("(data \"quoted data\" 123 4.5)", "data", "\"quoted data\"", "123", "4.5")]
-        [InlineData("(\"quoted data\" \"(more\")", "\"quoted data\"", "\"(more\"")]
+        [InlineData("(data 123 4.5)", "data", "123", "4.5")]
         public void Parse_Non_Primitive_Node(string input, string key, params string[] childs)
         {
             // Arrange
@@ -144,22 +139,21 @@ namespace KiCad.UnitTest
         public void Parse()
         {
             // Arrange
-            var input = "((data \"quoted \\\" data\" 123 4.5)\n (data(!@# (4.5) \"(more\" \"data)\")))";
+            var input = "((data \"quoted \\\" data\" 123 (4.5))\n (data(!@# \"(more\" \"data)\")))";
 
             var expectedNode = new SNode(
                 new SNode(
                     "data",
-                    new SNode("\"quoted \" data\""),
+                    new SNode("quoted \" data", isString: true),
                     new SNode("123"),
-                    new SNode("4.5")
+                    new SNode("4.5", isPrimitive: false)
                 ),
                 new SNode(
                     "data",
                     new SNode(
                         "!@#",
-                        new SNode("4.5", isPrimitive: false),
-                        new SNode("\"(more\""),
-                        new SNode("\"data)\"")
+                        new SNode("(more", isString: true),
+                        new SNode("data)", isString: true)
                     )
                 )
             );
@@ -205,7 +199,6 @@ namespace KiCad.UnitTest
                     "data",
                     new SNode(
                         "!@#",
-                        new SNode("4.5", isPrimitive: false),
                         new SNode("(more"),
                         new SNode("data)")
                     )

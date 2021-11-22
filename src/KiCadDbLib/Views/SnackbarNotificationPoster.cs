@@ -7,30 +7,22 @@ namespace KiCadDbLib.Views
     {
         public void ShowError(string title, string message)
         {
-            SnackbarHost.Post($"{title}: {message}");
-
-            //otificationManager.Show(new Notification(title, message, NotificationType.Error, TimeSpan.Zero));
+            SnackbarHost.Post($"❌ {title}: {message}");
         }
 
         public void ShowInformation(string title, string message)
         {
-            SnackbarHost.Post($"{title}: {message}");
-
-            //notificationManager.Show(new Notification(title, message, NotificationType.Information));
+            SnackbarHost.Post($"ℹ️ {title}: {message}");
         }
 
         public void ShowSuccess(string title, string message)
         {
-            SnackbarHost.Post($"{title}: {message}");
-
-            //notificationManager.Show(new Notification(title, message, NotificationType.Success));
+            SnackbarHost.Post($"✔️ {title}: {message}");
         }
 
         public void ShowWarning(string title, string message)
         {
-            SnackbarHost.Post($"{title}: {message}");
-
-            //notificationManager.Show(new Notification(title, message, NotificationType.Warning));
+            SnackbarHost.Post($"⚠️ {title}: {message}");
         }
     }
 }

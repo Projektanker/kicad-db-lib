@@ -8,7 +8,7 @@ namespace KiCadDbLib.Services.KiCad
     public partial class SNode
     {
         private static readonly Regex _tokenizer = new(
-            "(?:(?<bo>\\()|(?<bc>\\))|(?<q>\\\".*?(?<!\\\\)\\\")|(?<s>[^()\\s]+))",
+            "(?:(?<bo>\\()|(?<bc>\\))|(?<q>\\\".*?(?<!\\\\)\\\")|(?<t>[^()\\s]+))",
             RegexOptions.IgnorePatternWhitespace);
 
         public static SNode Parse(string input, int depth = 0)
@@ -16,7 +16,7 @@ namespace KiCadDbLib.Services.KiCad
             var tokens = Tokenize(input);
             var level = 0;
             var nodes = new Stack<SNode>();
-            var node = new SNode(isPrimitive: true);
+            var node = PrimitiveNode();
             foreach (var token in tokens)
             {
                 if (ShouldIgnoreToken(token.Key, ref level, depth))
@@ -29,7 +29,7 @@ namespace KiCadDbLib.Services.KiCad
                     // bracket open
                     case "bo":
                         nodes.Push(node);
-                        node = new SNode(isPrimitive: false);
+                        node = EmptyNode();
                         break;
 
                     // bracket close
@@ -39,13 +39,23 @@ namespace KiCadDbLib.Services.KiCad
                         node.Add(childNode);
                         break;
 
-                    // quoted string or string
-                    case "q" or "s" when node.Name is null:
-                        node.Name = UnescapeName(token.Value);
+                    // quoted string
+                    case "q" when node.Name is null:
+                        node.Name = PrepareStringName(token.Value);
+                        node.IsString = true;
                         break;
 
-                    case "q" or "s":
-                        node.Add(UnescapedNode(token.Value));
+                    case "q":
+                        node.Add(StringNode(PrepareStringName(token.Value)));
+                        break;
+
+                    // token
+                    case "t" when node.Name is null:
+                        node.Name = token.Value;
+                        break;
+
+                    case "t":
+                        node.Add(PrimitiveNode(token.Value));
                         break;
 
                     default:
@@ -56,6 +66,34 @@ namespace KiCadDbLib.Services.KiCad
             return node.Childs.Count > 0
                 ? node.Childs[0]
                 : node;
+        }
+
+        public static SNode EmptyNode()
+        {
+            return new SNode()
+            {
+                IsString = false,
+                IsPrimitive = false,
+            };
+        }
+
+        public static SNode PrimitiveNode(string? name = null)
+        {
+            return new SNode()
+            {
+                Name = name,
+                IsString = false,
+                IsPrimitive = true,
+            };
+        }
+
+        public static SNode StringNode(string name)
+        {
+            return new SNode(name)
+            {
+                IsString = true,
+                IsPrimitive = true,
+            };
         }
 
         private static bool ShouldIgnoreToken(string tokenKey, ref int level, int depth)
@@ -99,15 +137,10 @@ namespace KiCadDbLib.Services.KiCad
             return KeyValuePair.Create(group.Name, group.Value);
         }
 
-        private static string UnescapeName(string name)
+        private static string PrepareStringName(string name)
         {
-            return name.Replace("\\\"", "\"", StringComparison.Ordinal);
-        }
-
-        private static SNode UnescapedNode(string name)
-        {
-            var unescaped = UnescapeName(name);
-            return new SNode(unescaped);
+            return name[1..^1]
+                .Replace("\\\"", "\"", StringComparison.Ordinal);
         }
     }
 }

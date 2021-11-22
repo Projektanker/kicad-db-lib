@@ -28,14 +28,14 @@ namespace KiCad.UnitTest
             symbols.Should().HaveCountGreaterThan(0);
             foreach (var symbol in symbols)
             {
-                symbol.Should().StartWith("\"Device:");
+                symbol.Should().StartWith("Device:");
             }
 
-            symbols.Should().Contain("\"Device:C\"");
-            symbols.Should().Contain("\"Device:R\"");
-            symbols.Should().Contain("\"Device:L\"");
+            symbols.Should().Contain("Device:C");
+            symbols.Should().Contain("Device:R");
+            symbols.Should().Contain("Device:L");
 
-            symbols.Should().NotContain("\"Device:Filter_EMI_C\"", because: "it only extends Device:C_Feedthrough");
+            symbols.Should().NotContain("Device:Filter_EMI_C", because: "it only extends Device:C_Feedthrough");
         }
     }
 }

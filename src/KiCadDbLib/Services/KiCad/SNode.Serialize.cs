@@ -43,24 +43,13 @@ namespace KiCadDbLib.Services.KiCad
 
         private void AppendName(StringBuilder sb)
         {
-            var isQuoted = Name!.StartsWith('"') && Name.Length >= 2;
+            var quotes = Name!.IndexOfAny(new char[] { ' ', '"', '(', ')' }) != -1 || Name.Length == 0 || IsString
+                ? "\""
+                : string.Empty;
 
-            var name = isQuoted
-                ? Name[1..^1]
-                : Name;
-
-            if (name!.IndexOfAny(new char[] { ' ', '"', '(', ')' }) != -1 || name.Length == 0)
-            {
-                sb.Append('"')
-                    .Append(name.Replace("\"", "\\\"", StringComparison.Ordinal))
-                    .Append('"');
-            }
-            else
-            {
-                sb.Append(isQuoted ? "\"" : string.Empty)
-                    .Append(name)
-                    .Append(isQuoted ? "\"" : string.Empty);
-            }
+            sb.Append(quotes);
+            sb.Append(Name.Replace("\"", "\\\"", StringComparison.Ordinal));
+            sb.Append(quotes);
         }
     }
 }
