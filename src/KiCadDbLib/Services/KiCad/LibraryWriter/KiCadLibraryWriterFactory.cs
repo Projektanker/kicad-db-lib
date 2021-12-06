@@ -8,6 +8,7 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
     public class KiCadLibraryWriterFactory : ILibraryWriterFactory
     {
         private readonly ISettingsProvider _settingsProvider;
+        private KiCad6LibrarySymbolTemplateFactory? _kiCad6LibrarySymbolTemplateFactory;
 
         public KiCadLibraryWriterFactory(ISettingsProvider settingsProvider)
         {
@@ -19,16 +20,21 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
             var settings = await _settingsProvider.GetSettingsAsync()
                 .ConfigureAwait(false);
 
-            var isLegacy = IsLegacy(settings);
-
-            return isLegacy
-                ? new LegacyKiCadLibraryWriter(settings.SymbolsPath, outputDirectory, libraryName)
-                : new KiCad6LibraryWriter(settings.SymbolsPath, outputDirectory, libraryName);
+            if (IsLegacy(settings))
+            {
+                return new LegacyKiCadLibraryWriter(settings.SymbolsPath, outputDirectory, libraryName);
+            }
+            else
+            {
+                _kiCad6LibrarySymbolTemplateFactory ??= new();
+                return new KiCad6LibraryWriter(_kiCad6LibrarySymbolTemplateFactory, settings.SymbolsPath, outputDirectory, libraryName);
+            }
         }
 
         private static bool IsLegacy(Settings settings)
         {
-            return !Directory.EnumerateFiles(settings.SymbolsPath, $"*{FileExtensions.KicadSym}")
+            return !Directory
+                .EnumerateFiles(settings.SymbolsPath, $"*{FileExtensions.KicadSym}")
                 .Any();
         }
     }

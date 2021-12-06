@@ -17,13 +17,13 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
         private readonly string _libraryName;
         private readonly SNode _root;
 
-        public KiCad6LibraryWriter(string symbolsDirectory, string outputDirectory, string libraryName)
+        public KiCad6LibraryWriter(KiCad6LibrarySymbolTemplateFactory libraryReader, string symbolsDirectory, string outputDirectory, string libraryName)
         {
             _symbolsDirectory = symbolsDirectory;
             _outputDirectory = outputDirectory;
             _libraryName = libraryName;
 
-            _libraryReader = new KiCad6LibrarySymbolTemplateFactory();
+            _libraryReader = libraryReader;
             _root = new SNode();
         }
 
@@ -87,11 +87,12 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
 
         private static void UpdateUnitIds(SNode symbol, string symbolName, string partValue)
         {
-            var units = symbol.Childs
-                .Where(child => child.Name == "symbol");
-            foreach (var unit in units)
+            var unitIds = symbol.Childs
+                .Where(child => child.Name == "symbol")
+                .Select(unit => unit.Childs[0]);
+            foreach (var unitId in unitIds)
             {
-                unit.Childs[0].Name = unit.Childs[0].Name?.Replace(symbolName, partValue, StringComparison.Ordinal);
+                unitId.Name = unitId.Name?.Replace(symbolName, partValue, StringComparison.Ordinal);
             }
         }
 

@@ -14,7 +14,7 @@ namespace KiCadDbLib.Services.KiCad
 
         private void ToString(StringBuilder sb)
         {
-            if (!IsPrimitive)
+            if (_childs != null)
             {
                 sb.Append('(');
             }
@@ -35,7 +35,7 @@ namespace KiCadDbLib.Services.KiCad
                 Childs[i].ToString(sb);
             }
 
-            if (!IsPrimitive)
+            if (_childs != null)
             {
                 sb.Append(')');
             }
@@ -43,12 +43,12 @@ namespace KiCadDbLib.Services.KiCad
 
         private void AppendName(StringBuilder sb)
         {
-            var quotes = Name!.IndexOfAny(new char[] { ' ', '"', '(', ')' }) != -1 || Name.Length == 0 || IsString
+            var quotes = IsString || Name!.Length == 0 || Name!.IndexOfAny(new char[] { ' ', '"', '(', ')' }) != -1
                 ? "\""
                 : string.Empty;
 
             sb.Append(quotes);
-            sb.Append(Name.Replace("\"", "\\\"", StringComparison.Ordinal));
+            sb.Append(Name!.Replace("\"", "\\\"", StringComparison.Ordinal));
             sb.Append(quotes);
         }
     }

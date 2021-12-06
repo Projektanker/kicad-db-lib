@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -31,8 +32,7 @@ namespace KiCad.UnitTest
                     "data",
                     new SNode("quoted data"),
                     new SNode("123"),
-                    new SNode(
-                        new SNode("4.5"))
+                    new SNode("4.5", Array.Empty<SNode>())
                 ),
                 new SNode(
                     "data",
@@ -78,29 +78,6 @@ namespace KiCad.UnitTest
         }
 
         [Theory]
-        [InlineData("\"\"", "", true)]
-        [InlineData("data", "data")]
-        [InlineData("\"with space\"", "with space", true)]
-        [InlineData("\"string\"", "string", true)]
-        [InlineData("123", "123")]
-        [InlineData("4.5", "4.5")]
-        [InlineData("!@#", "!@#")]
-        [InlineData("\"(bracket\"", "(bracket", true)]
-        [InlineData("\"bracket)\"", "bracket)", true)]
-        [InlineData("\" \\\"hello\\\" world \"", " \"hello\" world ", true)]
-        public void Parse_Primitive_Node(string input, string expectedName, bool isString = false)
-        {
-            // Arrange
-            var expectedNode = new SNode(expectedName, isString);
-
-            // Act
-            var node = SNode.Parse(input);
-
-            // Assert
-            node.Should().BeEquivalentTo(expectedNode);
-        }
-
-        [Theory]
         [InlineData("(test)", "test")]
         [InlineData("(1 2)", "1", "2")]
         [InlineData("(data \"quoted data\" 123 4.5)", "data", "quoted data", "123", "4.5")]
@@ -135,6 +112,28 @@ namespace KiCad.UnitTest
             node.Should().BeEquivalentTo(expectedNode);
         }
 
+        [Theory]
+        [InlineData("(\"test\")", "test")]
+        [InlineData("(\" \\\"hello\\\" world \")", " \"hello\" world ")]
+        [InlineData("(\"\")", "")]
+        [InlineData("((\"with space\")", "with space")]
+        [InlineData("(\"(bracket\")", "(bracket")]
+        [InlineData("(\"bracket)\")", "bracket)")]
+        public void Parse_String_Node(string input, string key)
+        {
+            // Arrange
+            var expectedNode = new SNode(key, Array.Empty<SNode>())
+            {
+                IsString = true,
+            };
+
+            // Act
+            var node = SNode.Parse(input);
+
+            // Assert
+            node.Should().BeEquivalentTo(expectedNode);
+        }
+
         [Fact]
         public void Parse()
         {
@@ -146,7 +145,7 @@ namespace KiCad.UnitTest
                     "data",
                     new SNode("quoted \" data", isString: true),
                     new SNode("123"),
-                    new SNode("4.5", isPrimitive: false)
+                    new SNode("4.5", Array.Empty<SNode>())
                 ),
                 new SNode(
                     "data",
@@ -220,11 +219,9 @@ namespace KiCad.UnitTest
 
             // Act
             var node = SNode.Parse(input);
-            var clone = node.Clone();
 
             // Assert
             node.Childs.Should().HaveCountGreaterThan(0);
-            clone.Should().BeEquivalentTo(node);
         }
     }
 }

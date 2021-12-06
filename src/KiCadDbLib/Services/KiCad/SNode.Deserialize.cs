@@ -1,22 +1,35 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Text;
 
 namespace KiCadDbLib.Services.KiCad
 {
     public partial class SNode
     {
-        private static readonly Regex _tokenizer = new(
-            "(?:(?<bo>\\()|(?<bc>\\))|(?<q>\\\".*?(?<!\\\\)\\\")|(?<t>[^()\\s]+))",
-            RegexOptions.IgnorePatternWhitespace);
+        private static readonly HashSet<char> _tokenEndChars = new(new[] { '(', ')', ' ', '\t', '\n', '\r' });
+
+        private enum TokenType
+        {
+            BracketOpen,
+            BracketClose,
+            String,
+            Token,
+        }
 
         public static SNode Parse(string input, int depth = 0)
         {
-            var tokens = Tokenize(input);
+            var sw = Stopwatch.StartNew();
+            var tokens = Tokenize(input).ToArray();
+            var timeToken = sw.ElapsedMilliseconds;
+            Debug.WriteLine($"Tokenize: {timeToken}ms");
+
+            sw.Restart();
             var level = 0;
             var nodes = new Stack<SNode>();
-            var node = PrimitiveNode();
+            var node = EmptyNode();
             foreach (var token in tokens)
             {
                 if (ShouldIgnoreToken(token.Key, ref level, depth))
@@ -27,34 +40,34 @@ namespace KiCadDbLib.Services.KiCad
                 switch (token.Key)
                 {
                     // bracket open
-                    case "bo":
+                    case TokenType.BracketOpen:
                         nodes.Push(node);
                         node = EmptyNode();
                         break;
 
                     // bracket close
-                    case "bc":
+                    case TokenType.BracketClose:
                         var childNode = node;
                         node = nodes.Pop();
                         node.Add(childNode);
                         break;
 
                     // quoted string
-                    case "q" when node.Name is null:
-                        node.Name = PrepareStringName(token.Value);
+                    case TokenType.String when node.Name is null:
+                        node.Name = token.Value;
                         node.IsString = true;
                         break;
 
-                    case "q":
-                        node.Add(StringNode(PrepareStringName(token.Value)));
+                    case TokenType.String:
+                        node.Add(StringNode(token.Value));
                         break;
 
                     // token
-                    case "t" when node.Name is null:
+                    case TokenType.Token when node.Name is null:
                         node.Name = token.Value;
                         break;
 
-                    case "t":
+                    case TokenType.Token:
                         node.Add(PrimitiveNode(token.Value));
                         break;
 
@@ -63,6 +76,9 @@ namespace KiCadDbLib.Services.KiCad
                 }
             }
 
+            var timeTree = sw.ElapsedMilliseconds;
+            Debug.WriteLine($"Tree: {timeTree}ms");
+
             return node.Childs.Count > 0
                 ? node.Childs[0]
                 : node;
@@ -70,20 +86,17 @@ namespace KiCadDbLib.Services.KiCad
 
         public static SNode EmptyNode()
         {
-            return new SNode()
+            return new SNode(Array.Empty<SNode>())
             {
                 IsString = false,
-                IsPrimitive = false,
             };
         }
 
-        public static SNode PrimitiveNode(string? name = null)
+        public static SNode PrimitiveNode(string name)
         {
-            return new SNode()
+            return new SNode(name)
             {
-                Name = name,
                 IsString = false,
-                IsPrimitive = true,
             };
         }
 
@@ -92,26 +105,25 @@ namespace KiCadDbLib.Services.KiCad
             return new SNode(name)
             {
                 IsString = true,
-                IsPrimitive = true,
             };
         }
 
-        private static bool ShouldIgnoreToken(string tokenKey, ref int level, int depth)
+        private static bool ShouldIgnoreToken(TokenType tokenType, ref int level, int depth)
         {
             if (depth == 0)
             {
                 return false;
             }
 
-            switch (tokenKey)
+            switch (tokenType)
             {
                 // bracket open
-                case "bo":
+                case TokenType.BracketOpen:
                     level++;
                     return level > depth;
 
                 // bracket close
-                case "bc":
+                case TokenType.BracketClose:
                     level--;
                     return level >= depth;
 
@@ -120,27 +132,63 @@ namespace KiCadDbLib.Services.KiCad
             }
         }
 
-        private static IEnumerable<KeyValuePair<string, string>> Tokenize(string input)
+        private static string ExtractString(ReadOnlySpan<char> input, ref int index)
         {
-            input = input.Trim(' ');
-            var match = _tokenizer.Match(input);
-            while (match.Success)
+            var start = index;
+            index++;
+            while (input[index] != '"' || input[index - 1] == '\\')
             {
-                yield return ExtractTokenValuePair(match);
-                match = match.NextMatch();
+                index++;
             }
+
+            index++;
+            var sb = new StringBuilder(index - start - 2);
+            return sb
+                .Append(input[(start + 1)..(index - 1)])
+                .Replace("\\\"", "\"")
+                .ToString();
         }
 
-        private static KeyValuePair<string, string> ExtractTokenValuePair(Match match)
+        private static string ExtractToken(string input, ref int index)
         {
-            var group = match.Groups.Values.Skip(1).First(group => group.Success);
-            return KeyValuePair.Create(group.Name, group.Value);
+            var start = index;
+            while (!_tokenEndChars.Contains(input[index]))
+            {
+                index++;
+            }
+
+            return input[start..index];
         }
 
-        private static string PrepareStringName(string name)
+        private static IEnumerable<KeyValuePair<TokenType, string>> Tokenize(string input)
         {
-            return name[1..^1]
-                .Replace("\\\"", "\"", StringComparison.Ordinal);
+            var whitespace = new HashSet<char>(new[] { ' ', '\t', '\n', '\r' });
+            var index = 0;
+            while (index < input.Length)
+            {
+                if (input[index] == '(')
+                {
+                    yield return KeyValuePair.Create(TokenType.BracketOpen, string.Empty);
+                    index++;
+                }
+                else if (input[index] == ')')
+                {
+                    yield return KeyValuePair.Create(TokenType.BracketClose, string.Empty);
+                    index++;
+                }
+                else if (input[index] == '"')
+                {
+                    yield return KeyValuePair.Create(TokenType.String, ExtractString(input, ref index));
+                }
+                else if (!whitespace.Contains(input[index]))
+                {
+                    yield return KeyValuePair.Create(TokenType.Token, ExtractToken(input, ref index));
+                }
+                else
+                {
+                    index++;
+                }
+            }
         }
     }
 }

@@ -32,25 +32,28 @@ namespace KiCadDbLib
         {
             IconProvider.Register<MaterialDesignIconProvider>();
 
-            Container container = new Container();
-            container.Options.AllowOverridingRegistrations = true;
-            container.Options.EnableAutoVerification = false;
+            var container = new Container
+            {
+                Options =
+                {
+                    EnableAutoVerification = false
+                }
+            };
 
             // Services
             container.RegisterSingleton<IPartRepository, PartRepository>();
-            container.RegisterSingleton<ILibraryBuilder, LibraryBuilder>();
+            container.Register<ILibraryBuilder, LibraryBuilder>();
+            container.RegisterDecorator<ILibraryBuilder, LibraryBuilderSingletonProxy>();
             container.RegisterSingleton<ISettingsProvider, SettingsProvider>();
 
-            container.RegisterSingleton<ILibraryReader, KiCadLibraryReaderMediator>();
+            container.Register<ILibraryReader, KiCadLibraryReaderMediator>();
             container.RegisterDecorator<ILibraryReader, KiCadLibraryReaderCache>(Lifestyle.Singleton);
-            container.RegisterSingleton<ILibraryWriterFactory, KiCadLibraryWriterFactory>();
+            container.Register<ILibraryWriterFactory, KiCadLibraryWriterFactory>();
+
             container.RegisterSingleton<INotificationPoster, SnackbarNotificationPoster>();
 
             // View model
             container.RegisterSingleton<MainWindowViewModel>();
-            container.RegisterSingleton<PartsViewModel>();
-            container.RegisterSingleton<SettingsViewModel>();
-            container.RegisterSingleton<AboutViewModel>();
 
             // Register views
             container.Register(typeof(IViewFor<>), Assembly.GetCallingAssembly());

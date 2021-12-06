@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,8 +10,7 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
     internal class KiCad6LibrarySymbolTemplateFactory
     {
         private readonly Dictionary<string, SNode> _symbolCache = new();
-        private string _cachedLibraryName = string.Empty;
-        private SNode _cachedLibrary = new();
+        private readonly Dictionary<string, SNode> _libraryCache = new();
 
         public async Task<SNode> GetSymbolTemplateAsync(string directory, LibraryItemInfo symbolInfo)
         {
@@ -50,23 +50,24 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
             }
 
             Clean(ref symbol);
-
             return symbol;
         }
 
         private async Task<SNode> ReadLibrary(string directory, string libraryName)
         {
-            if (_cachedLibraryName != libraryName)
+            var libraryFile = Path.Combine(directory, libraryName + FileExtensions.KicadSym);
+            Debug.WriteLine($"{nameof(ReadLibrary)}: {libraryFile}");
+
+            if (!_libraryCache.TryGetValue(libraryFile, out var library))
             {
-                var libraryFile = Path.Combine(directory, libraryName + FileExtensions.KicadSym);
                 var input = await File.ReadAllTextAsync(libraryFile, Encoding.UTF8)
                     .ConfigureAwait(false);
 
-                _cachedLibrary = SNode.Parse(input);
-                _cachedLibraryName = libraryName;
+                library = SNode.Parse(input);
+                _libraryCache[libraryFile] = library;
             }
 
-            return _cachedLibrary;
+            return library;
         }
     }
 }
