@@ -3,7 +3,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using KiCadDbLib.Services;
-using KiCadDbLib.Services.KiCad;
 using KiCadDbLib.Services.KiCad.LibraryReader;
 using KiCadDbLib.Services.KiCad.LibraryWriter;
 using KiCadDbLib.ViewModels;
@@ -43,10 +42,10 @@ namespace KiCadDbLib
             // Services
             container.RegisterSingleton<IPartRepository, PartRepository>();
             container.Register<ILibraryBuilder, LibraryBuilder>();
-            container.RegisterDecorator<ILibraryBuilder, LibraryBuilderSingletonProxy>();
+            container.RegisterDecorator<ILibraryBuilder, LibraryBuilderSingletonProxy>(Lifestyle.Singleton);
             container.RegisterSingleton<ISettingsProvider, SettingsProvider>();
 
-            container.Register<ILibraryReader, KiCadLibraryReaderMediator>();
+            container.RegisterSingleton<ILibraryReader, KiCadLibraryReaderMediator>();
             container.RegisterDecorator<ILibraryReader, KiCadLibraryReaderCache>(Lifestyle.Singleton);
             container.Register<ILibraryWriterFactory, KiCadLibraryWriterFactory>();
 

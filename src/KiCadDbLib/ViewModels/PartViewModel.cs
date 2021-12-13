@@ -71,7 +71,6 @@ namespace KiCadDbLib.ViewModels
 
         public ReactiveCommand<Unit, Unit> Save { get; }
 
-        /// <inheritdoc/>
         protected override void WhenActivated(CompositeDisposable disposables)
         {
             base.WhenActivated(disposables);
@@ -106,14 +105,14 @@ namespace KiCadDbLib.ViewModels
 
         private static FormGroup GetPartForm(Settings settings, IEnumerable<string> symbols, IEnumerable<string> footprints, IEnumerable<string> libraries, Part part)
         {
-            FormGroup customFields = new FormGroup()
+            var customFields = new FormGroup()
             {
                 Label = "Custom fields",
             };
 
             foreach (string customField in settings.CustomFields)
             {
-                FormControl formControl = new FormControl(part.CustomFields.TryGetValue(customField, out var temp) ? temp : string.Empty)
+                var formControl = new FormControl(part.CustomFields.TryGetValue(customField, out var temp) ? temp : string.Empty)
                 {
                     Label = customField,
                 };
@@ -121,7 +120,7 @@ namespace KiCadDbLib.ViewModels
                 customFields.Add(customField, formControl);
             }
 
-            FormGroup basicFields = new FormGroup("Basic fields");
+            var basicFields = new FormGroup("Basic fields");
 
             basicFields.Add(nameof(Part.Library), new AutoCompleteFormControl(part.Library)
             {
@@ -176,7 +175,7 @@ namespace KiCadDbLib.ViewModels
                 Label = nameof(Part.Datasheet),
             });
 
-            FormGroup form = new FormGroup();
+            var form = new FormGroup();
             form.Add("BasicFields", basicFields);
             form.Add("CustomFields", customFields);
 

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace KiCadDbLib.Services.KiCad.LibraryReader
@@ -76,20 +78,21 @@ namespace KiCadDbLib.Services.KiCad.LibraryReader
 
         private static async IAsyncEnumerable<string> GetSymbolInfosAsync(string libraryFile)
         {
-            var input = await File.ReadAllTextAsync(libraryFile, Encoding.UTF8)
+            var sw = Stopwatch.StartNew();
+            var regex = new Regex("\\(symbol \"((?:.+?):(?:.+?))\" (?!.*?extends)");
+            var lines = await File.ReadAllTextAsync(libraryFile, Encoding.UTF8)
                 .ConfigureAwait(false);
 
-            var root = SNode.Parse(input, 3);
-
-            var symbols = root.Childs
-                .Where(child => child.Name == "symbol")
-                .Where(symbol => symbol.Childs.All(child => child.Name != "extends"))
-                .Select(symbol => symbol.Childs[0].Name!);
+            var symbols = regex.Matches(lines)
+                .Select(match => match.Groups[1].Value);
 
             foreach (var symbol in symbols)
             {
                 yield return symbol;
             }
+
+            sw.Stop();
+            Debug.WriteLine($"Get Symbols from {libraryFile}: {sw.ElapsedMilliseconds}ms");
         }
     }
 }

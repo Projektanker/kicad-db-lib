@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
 
 namespace KiCadDbLib.Services.KiCad
@@ -22,7 +20,7 @@ namespace KiCadDbLib.Services.KiCad
         public static SNode Parse(string input, int depth = 0)
         {
             var sw = Stopwatch.StartNew();
-            var tokens = Tokenize(input).ToArray();
+            var tokens = Tokenize(input);
             var timeToken = sw.ElapsedMilliseconds;
             Debug.WriteLine($"Tokenize: {timeToken}ms");
 

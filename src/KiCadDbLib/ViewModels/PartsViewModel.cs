@@ -98,16 +98,16 @@ namespace KiCadDbLib.ViewModels
             return columnInfos;
         }
 
-        private async Task<PartViewModel> CreatePartViewModel(Part part = null)
+        private async Task<PartViewModel> CreatePartViewModel(Part? part = null)
         {
-            if (part is null)
+            if (part?.Id is null)
             {
                 part = new Part();
             }
             else
             {
                 part = await _partRepository.GetPartAsync(part.Id)
-                    .ConfigureAwait(false);
+                    .ConfigureAwait(true);
             }
 
             return new PartViewModel(

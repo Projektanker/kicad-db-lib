@@ -65,13 +65,13 @@ namespace KiCadDbLib.Navigation
         private static async Task<IRoutableViewModel> NavigateAsync<TParam, TViewModel>(IScreen hostScreen, Func<TParam, Task<TViewModel>> viewModelFactory, TParam param)
             where TViewModel : IRoutableViewModel
         {
-            TViewModel vm = await viewModelFactory(param).ConfigureAwait(false);
+            TViewModel vm = await viewModelFactory(param).ConfigureAwait(true);
             return await hostScreen.Router.Navigate.Execute(vm);
         }
 
         private static IObservable<bool> GetCanExecute<TViewModel>(IScreen hostScreen)
         {
-            return hostScreen.Router.CurrentViewModel.Select(routableViewModel => !(routableViewModel is TViewModel));
+            return hostScreen.Router.CurrentViewModel.Select(routableViewModel => routableViewModel is not TViewModel);
         }
     }
 }

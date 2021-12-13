@@ -26,8 +26,8 @@ namespace KiCadDbLib.Services
 
             foreach (var group in groupedParts.OrderBy(group => group.Key))
             {
-                await using var writer = await _libraryWriterFactory.CreateWriterAsync(settings.OutputPath, group.Key!)
-                    .ConfigureAwait(false);
+                using var writer = await _libraryWriterFactory.CreateWriterAsync(settings.OutputPath, group.Key!)
+                     .ConfigureAwait(false);
 
                 await writer.WriteStartLibrary().ConfigureAwait(false);
 
