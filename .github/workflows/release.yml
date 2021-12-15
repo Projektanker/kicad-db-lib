@@ -40,13 +40,13 @@ jobs:
         run: | 
           dotnet publish KiCadDbLib/KiCadDbLib.csproj -c Release --sc -r linux-x64 -p:Version=$VERSION -o ../publish/linux-x64
           cd ../publish/linux-x64
-          zip -r ../KiCad-Db-Lib-linux-x64.zip .
+          tar -cvzf ../KiCad-Db-Lib-linux-x64.tar.gz *
       
       - name: 📯 Publish 🍏
         run: | 
           dotnet publish KiCadDbLib/KiCadDbLib.csproj -c Release --sc -r osx-x64 -p:Version=$VERSION -o ../publish/osx-x64
           cd ../publish/osx-x64
-          zip -r ../KiCad-Db-Lib-macOS.zip .
+          tar -cvzf ../KiCad-Db-Lib-macOS.tar.gz *
 
       - name: 🚀 Release
         uses: softprops/action-gh-release@v1
@@ -54,6 +54,6 @@ jobs:
           body_path: release-notes/${{ env.VERSION }}.md
           files: |
             publish/KiCad-Db-Lib-win-x64.zip
-            publish/KiCad-Db-Lib-linux-x64.zip
-            publish/KiCad-Db-Lib-macOS.zip
+            publish/KiCad-Db-Lib-linux-x64.tar.gz
+            publish/KiCad-Db-Lib-macOS.tar.gz
 
