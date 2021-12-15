@@ -7,6 +7,7 @@ on:
 
 jobs:
   build:
+    name: 🚀 Release
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -30,10 +31,10 @@ jobs:
         run: | 
           dotnet publish KiCadDbLib/KiCadDbLib.csproj -c Release --sc -r win-x64 -p:Version=$VERSION -o publish/win-x64
           cd publish/win-x64
-          zip ../KiCadDbLib-win-x64.zip *      
+          zip ../KiCad-Db-Lib-win-x64.zip *      
 
       - name: 🚀 Release
         uses: softprops/action-gh-release@v1
         with:
-          files: publish/KiCadDbLib-win-x64.zip
+          files: src/publish/KiCad-Db-Lib-win-x64.zip
 
