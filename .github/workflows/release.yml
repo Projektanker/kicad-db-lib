@@ -20,7 +20,7 @@ jobs:
         uses: ./.github/actions/version
       
       - name: 💬 Release notes
-        run: cat "release-notes/${{ env.VERSION }}.md"
+        run: cat "../release-notes/${{ env.VERSION }}.md"
       
       - name: 🟣 Setup .NET
         uses: actions/setup-dotnet@v1
