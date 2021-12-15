@@ -27,14 +27,29 @@ jobs:
       - name: 🧪 Test
         run: dotnet test --verbosity normal
       
-      - name: 📯 Publish
+      - name: 📯 Publish 🪟
         run: | 
-          dotnet publish KiCadDbLib/KiCadDbLib.csproj -c Release --sc -r win-x64 -p:Version=$VERSION -o publish/win-x64
-          cd publish/win-x64
+          dotnet publish KiCadDbLib/KiCadDbLib.csproj -c Release --sc -r win-x64 -p:Version=$VERSION -o ../publish/win-x64
+          cd ../publish/win-x64
           zip -r ../KiCad-Db-Lib-win-x64.zip .
+
+      - name: 📯 Publish 📺
+        run: | 
+          dotnet publish KiCadDbLib/KiCadDbLib.csproj -c Release --sc -r linux-x64 -p:Version=$VERSION -o ../publish/linux-x64
+          cd ../publish/linux-x64
+          zip -r ../KiCad-Db-Lib-linux-x64.zip .
+      
+      - name: 📯 Publish 🍏
+        run: | 
+          dotnet publish KiCadDbLib/KiCadDbLib.csproj -c Release --sc -r osx-x64 -p:Version=$VERSION -o ../publish/osx-x64
+          cd ../publish/osx-x64
+          zip -r ../KiCad-Db-Lib-macOS.zip .
 
       - name: 🚀 Release
         uses: softprops/action-gh-release@v1
         with:
-          files: src/publish/KiCad-Db-Lib-win-x64.zip
+          files: |
+            publish/KiCad-Db-Lib-win-x64.zip
+            publish/KiCad-Db-Lib-linux-x64.zip
+            publish/KiCad-Db-Lib-macOS.zip
 
