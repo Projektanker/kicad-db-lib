@@ -71,21 +71,8 @@ After creating some parts with `KiCad-Db-Lib` you can use the library files from
 
 ## Roadmap
 
-- [x] Add sort functionality to parts data table
 - [ ] Add filter functionality to parts data table
-- [x] Function to duplicate part
-- [x] Add pard id to created library
 - [ ] Validate parts (unique value per library)
-- [ ] Remove footprint list
-
-  > `$FPLIST`  
-  > `DIP?14*`  
-  > `$ENDFPLIST`
-
-  from the symbol template as well
-
-- [x] Configure electron packager for Linux and Mac OS (thanks to Terry Gray)
-- [ ] Configure electron packager for Mac OS
 - [ ] Setup guide on first application usage
 
 [settings]: https://fonts.gstatic.com/s/i/materialicons/settings/v1/24px.svg 'Settings Icon'

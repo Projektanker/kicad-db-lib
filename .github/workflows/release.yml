@@ -19,7 +19,10 @@ jobs:
       - name: 1️⃣2️⃣3️⃣ Set VERSION
         uses: ./.github/actions/version
       
-      - name: 🟣 Setup .NET Core
+      - name: 💬 Release notes
+        run: cat "release-notes/${{ env.VERSION }}.md"
+      
+      - name: 🟣 Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
@@ -48,6 +51,7 @@ jobs:
       - name: 🚀 Release
         uses: softprops/action-gh-release@v1
         with:
+          body_path: release-notes/${{ env.VERSION }}.md
           files: |
             publish/KiCad-Db-Lib-win-x64.zip
             publish/KiCad-Db-Lib-linux-x64.zip
