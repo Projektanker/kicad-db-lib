@@ -4,8 +4,8 @@
   - [About](#about)
   - [Usage](#usage)
     - [Settings](#settings)
-      - [Fields:](#fields)
       - [Paths](#paths)
+      - [Fields:](#fields)
     - [Add, update, delete part](#add-update-delete-part)
   - [Roadmap](#roadmap)
 
@@ -25,23 +25,20 @@ Create and maintain a database for your electric components with
 
 inside of `KiCad-Db-Lib`.
 
-Created with Angular and Electron KiCad-Db-Lib can be used on Windows, Linux and MacOS.
+Because it is build with [Avalonia](http://avaloniaui.net/) KiCad-Db-Lib can be used on Windows, Linux and MacOS.
 
 ![Screenshot](documentation/screenshot-parts.png 'Screenshot')
 
 ## Usage
 
-On Windows, download and unpack the `kicad-db-lib-win32-x64.zip` from the [latest release](https://github.com/Projektanker/kicad-db-lib/releases/latest) and run `kicad-db-lib.exe`.
+On Windows, download and unpack the `kicad-db-lib-win-x64.zip` from the [latest release](https://github.com/Projektanker/kicad-db-lib/releases/latest) and run `KiCadDbLib.exe`.
 
-On Linux, download and unpack the `kicad-db-lib-linux-x64.zip` from the [latest release](https://github.com/Projektanker/kicad-db-lib/releases/latest) and run `kicad-db-lib`.
+On Linux, download and unpack the `kicad-db-lib-linux-x64.zip` from the [latest release](https://github.com/Projektanker/kicad-db-lib/releases/latest) and run `KiCadDbLib`.
 
-At first startup you have to go to the ![Settings][settings] settings and configure your custom fields and your paths.
+At first startup you have to go to the settings and configure your custom fields and your paths.
 
 ### Settings
 
-#### Fields:
-
-Add or delete custom fields like manufacturer, order codes etc.
 
 #### Paths
 
@@ -51,7 +48,7 @@ Add or delete custom fields like manufacturer, order codes etc.
 
 - Symbol:
 
-  Directory where the KiCad symbols are stored. E.g. clone the `kicad-symbols` repository from https://github.com/KiCad/kicad-symbols to `C:\kicad\kicad-symbols`.
+  Directory where the KiCad symbols are stored. E.g. clone the `kicad-symbols` repository from https://gitlab.com/kicad/libraries/kicad-symbols to `C:\kicad\kicad-symbols`.
 
 - Footprint:
 
@@ -61,11 +58,15 @@ Add or delete custom fields like manufacturer, order codes etc.
 
   Directory where the final created library files for use in KiCad go. E.g. `C:\kicad\library`.
 
+#### Fields:
+
+Add or delete custom fields like manufacturer, order codes etc.
+
 ### Add, update, delete part
 
-To add parts you have to click on the ![Add][add] button. Click on a part in the Parts-View to update or delete it.  
+To add parts you have to click on the `+` button. Click on a part in the Parts-View to update or delete it.  
 The application will build your library whenever a part is added, updated or deleted.  
-You can reload the parts from your disk or rebuild the library at any time by using the corresponding button from the menu ![More vertical][more-vert]
+You can reload the parts from your disk or rebuild the library at any time by using the corresponding button from the menu.
 
 After creating some parts with `KiCad-Db-Lib` you can use the library files from the `output` path in KiCad.
 
@@ -74,7 +75,3 @@ After creating some parts with `KiCad-Db-Lib` you can use the library files from
 - [ ] Add filter functionality to parts data table
 - [ ] Validate parts (unique value per library)
 - [ ] Setup guide on first application usage
-
-[settings]: https://fonts.gstatic.com/s/i/materialicons/settings/v1/24px.svg 'Settings Icon'
-[add]: https://fonts.gstatic.com/s/i/materialicons/add/v1/24px.svg 'Add Icon'
-[more-vert]: https://fonts.gstatic.com/s/i/materialicons/more_vert/v1/24px.svg 'More vert Icon'
