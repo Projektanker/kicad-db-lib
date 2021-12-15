@@ -1,0 +1,39 @@
+name: 🚀 Release
+
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/
+    steps:
+      - name: 🛒 Checkout
+        uses: actions/checkout@v2
+      
+      - name: 1️⃣2️⃣3️⃣ Set VERSION
+        uses: ./.github/actions/version
+      
+      - name: 🟣 Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+           
+      - name: 🧪 Test
+        run: dotnet test --verbosity normal
+      
+      - name: 📯 Publish
+        run: | 
+          dotnet publish KiCadDbLib/KiCadDbLib.csproj -c Release --sc -r win-x64 -p:Version=$VERSION -o publish/win-x64
+          cd publish/win-x64
+          zip ../KiCadDbLib-win-x64.zip *      
+
+      - name: 🚀 Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: publish/KiCadDbLib-win-x64.zip
+
