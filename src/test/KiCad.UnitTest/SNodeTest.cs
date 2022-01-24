@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using KiCadDbLib.Services.KiCad;
 using Xunit;
@@ -212,10 +213,12 @@ namespace KiCad.UnitTest
         }
 
         [Fact]
-        public void Parse_And_Clone_KiCadSym()
+        public async Task Parse_And_Clone_KiCadSymAsync()
         {
             // Arrange
-            var input = File.ReadAllText("Device.kicad_sym");
+            const string libraryName = "Device";
+            await KicadDownloader.DownloadSymbolFile(libraryName);
+            var input = File.ReadAllText($"{libraryName}.kicad_sym");
 
             // Act
             var node = SNode.Parse(input);
