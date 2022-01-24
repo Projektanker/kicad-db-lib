@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -10,31 +10,33 @@ namespace KiCadDbLib.Services
 {
     public class PartRepository : IPartRepository
     {
-        private readonly ISettingsProvider _settingsProvider;
+        private readonly Lazy<Task<Settings>> _settings;
 
         public PartRepository(ISettingsProvider settingsProvider)
         {
-            _settingsProvider = settingsProvider;
+            _settings = new(settingsProvider.GetSettingsAsync);
         }
 
         public async Task AddOrUpdateAsync(Part part)
         {
-            var settings = await _settingsProvider.GetSettingsAsync()
-                .ConfigureAwait(false);
-
             if (string.IsNullOrEmpty(part.Id))
             {
-                part.Id = await GetNewId(settings).ConfigureAwait(false);
+                part.Id = await GetNewId().ConfigureAwait(false);
             }
 
-            var filePath = await GetFilePathAsync(part.Id, settings).ConfigureAwait(false);
+            var filePath = await GetFilePathAsync(part.Id)
+                .ConfigureAwait(false);
+
             var json = JsonConvert.SerializeObject(part);
-            await File.WriteAllTextAsync(filePath, json).ConfigureAwait(false);
+            await File.WriteAllTextAsync(filePath, json)
+                .ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(string id)
         {
-            var filePath = await GetFilePathAsync(id).ConfigureAwait(false);
+            var filePath = await GetFilePathAsync(id)
+                .ConfigureAwait(false);
+
             File.Delete(filePath);
         }
 
@@ -49,37 +51,41 @@ namespace KiCadDbLib.Services
 
         public async Task<Part> GetPartAsync(string id)
         {
-            var settings = await _settingsProvider.GetSettingsAsync().ConfigureAwait(false);
-            var filePath = await GetFilePathAsync(id, settings).ConfigureAwait(false);
-            return await GetPartAsync(filePath, settings).ConfigureAwait(false);
+            var filePath = await GetFilePathAsync(id).ConfigureAwait(false);
+            var part = await Deserialize(filePath).ConfigureAwait(false);
+            return part!;
         }
 
         public async Task<Part[]> GetPartsAsync()
         {
-            var settings = await _settingsProvider.GetSettingsAsync().ConfigureAwait(false);
+            var directory = await TryGetDatabasePath()
+                .ConfigureAwait(false);
 
-            IEnumerable<Task<Part>> tasks = Directory.EnumerateFiles(settings.DatabasePath)
-                .Select(file => GetPartAsync(file, settings));
+            if (directory is null)
+            {
+                return Array.Empty<Part>();
+            }
 
-            Part[] parts = await Task.WhenAll(tasks).ConfigureAwait(false);
-            return parts;
+            return await Directory.EnumerateFiles(directory)
+                .ToAsyncEnumerable()
+                .SelectAwait(Deserialize)
+                .ToArrayAsync()
+                .ConfigureAwait(false);
         }
 
-        private static async Task<Part> GetPartAsync(string file, Settings settings)
+        private static async ValueTask<Part> Deserialize(string filePath)
         {
-            var json = await File.ReadAllTextAsync(file).ConfigureAwait(false);
+            var json = await File.ReadAllTextAsync(filePath).ConfigureAwait(false);
             var part = JsonConvert.DeserializeObject<Part>(json);
-            part!.CustomFields = part.CustomFields
-                .Join(settings.CustomFields, cf => cf.Key, customFieldKey => customFieldKey, (cf, _) => cf)
-                .ToDictionary(kv => kv.Key, kv => kv.Value);
-
-            return part;
+            return part!;
         }
 
-        private async Task<string> GetNewId(Settings? settings = null)
+        private async Task<string> GetNewId()
         {
-            settings ??= await _settingsProvider.GetSettingsAsync().ConfigureAwait(false);
-            var newId = Directory.EnumerateFiles(settings.DatabasePath)
+            var directory = await GetDatabasePath()
+                .ConfigureAwait(false);
+
+            var newId = Directory.EnumerateFiles(directory)
                 .Select(Path.GetFileNameWithoutExtension)
                 .Select(id => int.TryParse(id, out var result) ? result : default)
                 .DefaultIfEmpty()
@@ -88,10 +94,37 @@ namespace KiCadDbLib.Services
             return newId.ToString(CultureInfo.InvariantCulture);
         }
 
-        private async Task<string> GetFilePathAsync(string id, Settings? settings = null)
+        private async Task<string> GetFilePathAsync(string id)
         {
-            settings ??= await _settingsProvider.GetSettingsAsync().ConfigureAwait(false);
-            return Path.Combine(settings.DatabasePath, $"{id}.json");
+            var directory = await GetDatabasePath()
+                .ConfigureAwait(false);
+
+            return Path.Combine(directory, $"{id}.json");
+        }
+
+        private async Task<string?> TryGetDatabasePath()
+        {
+            var settings = await _settings.Value.ConfigureAwait(false);
+            return !string.IsNullOrEmpty(settings.DatabasePath) && Directory.Exists(settings.DatabasePath)
+                ? settings.DatabasePath
+                : null;
+        }
+
+        private async Task<string> GetDatabasePath()
+        {
+            var settings = await _settings.Value.ConfigureAwait(false);
+            if (string.IsNullOrEmpty(settings.DatabasePath))
+            {
+                throw new DirectoryNotFoundException("The database directory is not set.");
+            }
+            else if (!Directory.Exists(settings.DatabasePath))
+            {
+                throw new DirectoryNotFoundException($"The database directory \"{settings.DatabasePath}\" does not exists");
+            }
+            else
+            {
+                return settings.DatabasePath;
+            }
         }
     }
 }

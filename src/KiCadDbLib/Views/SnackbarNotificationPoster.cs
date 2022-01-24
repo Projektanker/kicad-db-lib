@@ -1,13 +1,14 @@
-﻿using KiCadDbLib.Services;
+﻿using System;
+using KiCadDbLib.Services;
 using Material.Styles;
 
 namespace KiCadDbLib.Views
 {
     public class SnackbarNotificationPoster : INotificationPoster
     {
-        public void ShowError(string title, string message)
+        public void ShowError(string title, Exception exception)
         {
-            SnackbarHost.Post($"❌ {title}: {message}");
+            SnackbarHost.Post($"❌ {title}: {exception.Message}");
         }
 
         public void ShowInformation(string title, string message)

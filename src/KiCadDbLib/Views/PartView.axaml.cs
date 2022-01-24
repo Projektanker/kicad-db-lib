@@ -36,7 +36,7 @@ namespace KiCadDbLib.Views
                     .DisposeWith(disposables);
 
                 ViewModel.Save.ThrownExceptions
-                    .Subscribe(exception => notifications.ShowError("Save + Build", exception.Message))
+                    .Subscribe(exception => notifications.ShowError("Save + Build", exception))
                     .DisposeWith(disposables);
 
                 ViewModel.Save.IsExecuting

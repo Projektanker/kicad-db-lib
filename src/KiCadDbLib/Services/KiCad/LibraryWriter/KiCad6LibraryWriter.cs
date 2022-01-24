@@ -60,7 +60,7 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
             var symbol = await _libraryReader.GetSymbolTemplateAsync(_symbolsDirectory, symbolInfo)
                 .ConfigureAwait(false);
 
-            SetSymbolId(symbol, _libraryName, part.Value);
+            SetSymbolId(symbol, part.Value);
             UpdateUnitIds(symbol, symbolInfo.Name, part.Value);
 
             SetPropertyByName(symbol, "Reference", part.Reference);
@@ -78,10 +78,10 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
             _root.Add(symbol);
         }
 
-        private static void SetSymbolId(SNode symbol, string libraryName, string partValue)
+        private static void SetSymbolId(SNode symbol, string partValue)
         {
             var symbolId = symbol.Childs[0];
-            symbolId.Name = $"{libraryName}:{partValue}";
+            symbolId.Name = partValue;
             symbolId.IsString = true;
         }
 

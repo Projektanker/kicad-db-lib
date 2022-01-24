@@ -13,19 +13,19 @@ namespace KiCadDbLib.ReactiveForms
     public class FormControl : AbstractControl, INotifyDataErrorInfo
     {
         private readonly ObservableAsPropertyHelper<bool> _hasErrorProperty;
-        private readonly string _initialState;
+        private readonly string? _initialState;
         private readonly ObservableAsPropertyHelper<bool> _isDirtyProperty;
         private readonly ObservableAsPropertyHelper<bool> _isRequiredProperty;
         private IEnumerable<string> _errors;
-        private IValidator _validator;
-        private string _value;
+        private IValidator _validator = Validators.None;
+        private string? _value;
 
         public FormControl()
             : this(null)
         {
         }
 
-        public FormControl(string initialState)
+        public FormControl(string? initialState)
         {
             _initialState = initialState;
             _value = initialState;
@@ -48,7 +48,7 @@ namespace KiCadDbLib.ReactiveForms
         }
 
         /// <inheritdoc/>
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+        public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
 
         public IEnumerable<string> Errors
         {

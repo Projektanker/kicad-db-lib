@@ -16,13 +16,9 @@ namespace KiCadDbLib.Views
         {
             this.WhenActivated(disposables =>
             {
-                ViewModel!.LoadParts
-                    .Execute()
-                    .Subscribe()
-                    .DisposeWith(disposables);
-
                 var notifications = Locator.Current.GetRequiredService<INotificationPoster>();
-                ViewModel.BuildLibrary.IsExecuting
+
+                ViewModel!.BuildLibrary.IsExecuting
                     .Where(isExecuting => isExecuting)
                     .Subscribe(_ => notifications.ShowInformation("Build", "Running"))
                     .DisposeWith(disposables);
@@ -33,7 +29,16 @@ namespace KiCadDbLib.Views
 
                 ViewModel.BuildLibrary
                     .ThrownExceptions
-                    .Subscribe(exception => notifications.ShowError("Build", exception.Message))
+                    .Subscribe(exception => notifications.ShowError("Build", exception))
+                    .DisposeWith(disposables);
+
+                ViewModel.LoadParts.ThrownExceptions
+                    .Subscribe(exception => notifications.ShowError("Load parts", exception))
+                    .DisposeWith(disposables);
+
+                ViewModel.LoadParts
+                    .Execute()
+                    .Subscribe(_ => { }, exception => notifications.ShowError("Load parts", exception))
                     .DisposeWith(disposables);
             });
 

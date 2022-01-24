@@ -72,14 +72,16 @@ namespace KiCadDbLib.Services.KiCad.LibraryReader
             return await Directory.EnumerateFiles(directory, $"*{FileExtensions.KicadSym}")
                 .ToAsyncEnumerable()
                 .SelectMany(GetSymbolInfosAsync)
+                .Select(item => item.ToString())
                 .ToArrayAsync()
                 .ConfigureAwait(false);
         }
 
-        private static async IAsyncEnumerable<string> GetSymbolInfosAsync(string libraryFile)
+        private static async IAsyncEnumerable<LibraryItemInfo> GetSymbolInfosAsync(string libraryFile)
         {
             var sw = Stopwatch.StartNew();
-            var regex = new Regex("\\(symbol \"((?:.+?):(?:.+?))\" (?!.*?extends)");
+            var libraryName = Path.GetFileNameWithoutExtension(libraryFile);
+            var regex = new Regex("\\(symbol \"(.+?)\" (?!.*?extends)");
             var lines = await File.ReadAllTextAsync(libraryFile, Encoding.UTF8)
                 .ConfigureAwait(false);
 
@@ -88,7 +90,7 @@ namespace KiCadDbLib.Services.KiCad.LibraryReader
 
             foreach (var symbol in symbols)
             {
-                yield return symbol;
+                yield return new LibraryItemInfo(libraryName, symbol);
             }
 
             sw.Stop();

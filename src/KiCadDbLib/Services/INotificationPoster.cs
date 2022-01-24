@@ -1,8 +1,10 @@
-﻿namespace KiCadDbLib.Services
+﻿using System;
+
+namespace KiCadDbLib.Services
 {
     public interface INotificationPoster
     {
-        void ShowError(string title, string message);
+        void ShowError(string title, Exception exception);
 
         void ShowInformation(string title, string message);
 

@@ -8,7 +8,7 @@ namespace KiCadDbLib.ReactiveForms.Validation
     public static class Validators
     {
         public static IValidator DirectoryExists { get; }
-            = new ValidatorFn(control => Directory.Exists(control.Value) ? Sucess : Error(control, "does not exist"));
+            = new ValidatorFn(control => Directory.Exists(control.Value) ? Sucess : Error(control, "directory does not exist"));
 
         public static IValidator None { get; } = new ValidatorFn(_ => Sucess);
 

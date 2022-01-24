@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace KiCadDbLib.Services.KiCad.LibraryWriter
 {
-    internal class KiCad6LibrarySymbolTemplateFactory
+    public class KiCad6LibrarySymbolTemplateFactory
     {
         private readonly Dictionary<string, SNode> _symbolCache = new();
         private readonly Dictionary<string, SNode> _libraryCache = new();
@@ -42,7 +42,7 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
 
             var symbol = root.Childs
                 .Where(child => child.Name == "symbol")
-                .SingleOrDefault(symbol => symbol.Childs[0].Name == symbolInfo.ToString());
+                .SingleOrDefault(symbol => symbol.Childs[0].Name == symbolInfo.Name);
 
             if (symbol is null)
             {

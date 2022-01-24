@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -12,6 +13,7 @@ using KiCadDbLib.Models;
 using KiCadDbLib.ReactiveForms;
 using KiCadDbLib.ReactiveForms.Validation;
 using KiCadDbLib.Services;
+using Microsoft.CodeAnalysis;
 using ReactiveUI;
 using Splat;
 
@@ -19,8 +21,8 @@ namespace KiCadDbLib.ViewModels
 {
     public sealed class SettingsViewModel : RoutableViewModelBase, IDisposable
     {
-        private readonly ISettingsProvider _settingsService;
-        private readonly IPartRepository _partsService;
+        private readonly ISettingsProvider _settingsProvider;
+        private readonly IPartRepository _partsRepository;
         private ObservableAsPropertyHelper<ObservableCollection<SettingsCustomFieldViewModel>> _customFieldsProperty;
         private string _newCustomField;
         private ObservableAsPropertyHelper<FormGroup> _pathsFormProperty;
@@ -28,8 +30,8 @@ namespace KiCadDbLib.ViewModels
         public SettingsViewModel(IScreen hostScreen)
             : base(hostScreen)
         {
-            _settingsService = Locator.Current.GetRequiredService<ISettingsProvider>();
-            _partsService = Locator.Current.GetRequiredService<IPartRepository>();
+            _settingsProvider = Locator.Current.GetRequiredService<ISettingsProvider>();
+            _partsRepository = Locator.Current.GetRequiredService<IPartRepository>();
 
             SaveSettings = ReactiveCommand.CreateFromTask(execute: ExecuteSaveSettings);
 
@@ -69,10 +71,12 @@ namespace KiCadDbLib.ViewModels
 
         public ReactiveCommand<Unit, Unit> SaveSettings { get; }
 
-        public string SettingsLocation => _settingsService?.Location;
+        public string SettingsLocation => _settingsProvider?.Location;
 
         public void Dispose()
         {
+            _pathsFormProperty.Dispose();
+            _customFieldsProperty.Dispose();
         }
 
         /// <inheritdoc/>
@@ -80,7 +84,7 @@ namespace KiCadDbLib.ViewModels
         {
             base.WhenActivated(disposables);
 
-            IObservable<Settings> settingsObservable = _settingsService.GetSettingsAsync().ToObservable();
+            IObservable<Settings> settingsObservable = _settingsProvider.GetSettingsAsync().ToObservable();
 
             // Logging
             settingsObservable
@@ -115,33 +119,25 @@ namespace KiCadDbLib.ViewModels
             form.Add(nameof(Settings.DatabasePath), new FormControl(settings.DatabasePath)
             {
                 Label = "Database",
-                Validator = Validators.Compose(
-                        Validators.Required,
-                        Validators.DirectoryExists),
+                Validator = Validators.DirectoryExists,
             });
 
             form.Add(nameof(Settings.SymbolsPath), new FormControl(settings.SymbolsPath)
             {
                 Label = "Symbols",
-                Validator = Validators.Compose(
-                        Validators.Required,
-                        Validators.DirectoryExists),
+                Validator = Validators.DirectoryExists,
             });
 
             form.Add(nameof(Settings.FootprintsPath), new FormControl(settings.FootprintsPath)
             {
                 Label = "Footprints",
-                Validator = Validators.Compose(
-                        Validators.Required,
-                        Validators.DirectoryExists),
+                Validator = Validators.DirectoryExists,
             });
 
             form.Add(nameof(Settings.OutputPath), new FormControl(settings.OutputPath)
             {
                 Label = "Output",
-                Validator = Validators.Compose(
-                        Validators.Required,
-                        Validators.DirectoryExists),
+                Validator = Validators.DirectoryExists,
             });
 
             return form;
@@ -149,7 +145,8 @@ namespace KiCadDbLib.ViewModels
 
         private async Task GoBackAsync()
         {
-            await ExecuteSaveSettings().ConfigureAwait(false);
+            await ExecuteSaveSettings()
+                .ConfigureAwait(true);
             await HostScreen.Router.NavigateBack.Execute();
         }
 
@@ -161,12 +158,17 @@ namespace KiCadDbLib.ViewModels
 
         private Task ExecuteSaveSettings()
         {
+            if (!PathsForm!.Validate())
+            {
+                throw new ValidationException("Settings are invalid.");
+            }
+
             var settings = PathsForm.GetValue<Settings>();
 
             settings.CustomFields.AddRange(
                 CustomFields.Select(vm => vm.Value));
 
-            return _settingsService.SetSettingsAsync(settings);
+            return _settingsProvider.SetSettingsAsync(settings);
         }
 
         private void RemoveCustomField(string customField)
@@ -177,9 +179,11 @@ namespace KiCadDbLib.ViewModels
 
         private async Task ImportCustomFieldsAsync()
         {
-            IEnumerable<string> customFields = CustomFields.Select(vm => vm.Value);
+            var customFields = CustomFields.Select(vm => vm.Value);
 
-            var parts = await _partsService.GetPartsAsync().ConfigureAwait(false);
+            var parts = await _partsRepository.GetPartsAsync()
+                .ConfigureAwait(true);
+
             customFields = customFields
                 .Concat(parts.SelectMany(part => part.CustomFields.Keys))
                 .Distinct()
