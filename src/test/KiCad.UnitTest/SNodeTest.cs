@@ -213,7 +213,7 @@ namespace KiCad.UnitTest
         }
 
         [Fact]
-        public async Task Parse_And_Clone_KiCadSymAsync()
+        public async Task Parse_KiCadSymAsync()
         {
             // Arrange
             const string libraryName = "Device";
