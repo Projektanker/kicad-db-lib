@@ -39,12 +39,7 @@ namespace KiCadDbLib.ViewModels
 
             BuildLibrary = ReactiveCommand.CreateFromTask(libraryBuilder.Build);
 
-            LoadParts = ReactiveCommand.CreateFromTask(async () =>
-            {
-                return (await _partRepository.GetPartsAsync().ConfigureAwait(false))
-                    .OrderBy(part => part.Library)
-                    .ToArray();
-            });
+            LoadParts = ReactiveCommand.CreateFromTask(GetParts);
         }
 
         public ReactiveCommand<Unit, Unit> BuildLibrary { get; }
@@ -72,7 +67,7 @@ namespace KiCadDbLib.ViewModels
 
         private static IEnumerable<ColumnInfo> GetColumnInfos(IEnumerable<Part> parts)
         {
-            List<ColumnInfo> columnInfos = new List<ColumnInfo>()
+            var columnInfos = new List<ColumnInfo>()
             {
                 new ColumnInfo(nameof(Part.Library)),
                 new ColumnInfo(nameof(Part.Reference)),
@@ -87,15 +82,37 @@ namespace KiCadDbLib.ViewModels
             if (parts != null)
             {
                 var customFieldColumnInfos = parts
-                    .SelectMany(part => part.CustomFields.Keys)
+                    .SelectMany(part => part.CustomFields)
+                    .Where(kv => !string.IsNullOrWhiteSpace(kv.Value))
+                    .OrderBy(kv => kv.Key)
+                    .Select(kv => kv.Key)
                     .Distinct()
-                    .OrderBy(x => x)
                     .Select(field => new ColumnInfo(field, $"{nameof(Part.CustomFields)}[{field}]"));
 
                 columnInfos.AddRange(customFieldColumnInfos);
             }
 
             return columnInfos;
+        }
+
+        private async Task<Part[]> GetParts()
+        {
+            var parts = await _partRepository.GetPartsAsync().ConfigureAwait(false);
+            var customFields = parts
+                .SelectMany(part => part.CustomFields.Keys)
+                .Distinct()
+                .ToArray();
+
+            foreach (var part in parts)
+            {
+                part.CustomFields = customFields.ToDictionary(
+                    field => field,
+                    field => part.CustomFields.GetValueOrDefault(field, string.Empty));
+            }
+
+            return parts
+                .OrderBy(part => part.Library)
+                .ToArray();
         }
 
         private async Task<PartViewModel> CreatePartViewModel(Part? part = null)

@@ -13,13 +13,13 @@ namespace KiCadDbLib.Controls
     public class DataGridBehavior
     {
         public static readonly AttachedProperty<ICommand> CellPointerPressedCommandProperty =
-                    AvaloniaProperty.RegisterAttached<DataGridBehavior, DataGrid, ICommand>("CellPointerPressedCommand");
+            AvaloniaProperty.RegisterAttached<DataGridBehavior, DataGrid, ICommand>("CellPointerPressedCommand");
 
         public static readonly AttachedProperty<IEnumerable<ColumnInfo>> ColumnInfosProperty =
-                    AvaloniaProperty.RegisterAttached<DataGridBehavior, DataGrid, IEnumerable<ColumnInfo>>("ColumnInfos", Enumerable.Empty<ColumnInfo>());
+            AvaloniaProperty.RegisterAttached<DataGridBehavior, DataGrid, IEnumerable<ColumnInfo>>("ColumnInfos", Enumerable.Empty<ColumnInfo>());
 
         public static readonly AttachedProperty<ICommand> SelectionChangedCommandProperty =
-                    AvaloniaProperty.RegisterAttached<DataGridBehavior, DataGrid, ICommand>("SelectionChangedCommand");
+            AvaloniaProperty.RegisterAttached<DataGridBehavior, DataGrid, ICommand>("SelectionChangedCommand");
 
         static DataGridBehavior()
         {
@@ -88,9 +88,9 @@ namespace KiCadDbLib.Controls
             target.SetValue(SelectionChangedCommandProperty, value);
         }
 
-        private static void OnCellPointerPressed(object sender, DataGridCellPointerPressedEventArgs e)
+        private static void OnCellPointerPressed(object? sender, DataGridCellPointerPressedEventArgs e)
         {
-            if (!(sender is DataGrid target))
+            if (sender is not DataGrid target)
             {
                 return;
             }
@@ -110,7 +110,7 @@ namespace KiCadDbLib.Controls
 
         private static void OnCellPointerPressedCommandChanged(AvaloniaPropertyChangedEventArgs obj)
         {
-            if (!(obj.Sender is DataGrid target))
+            if (obj.Sender is not DataGrid target)
             {
                 return;
             }
@@ -121,12 +121,12 @@ namespace KiCadDbLib.Controls
 
         private static void OnColumnInfosChanged(AvaloniaPropertyChangedEventArgs e)
         {
-            if (!(e.Sender is DataGrid dg))
+            if (e.Sender is not DataGrid dg)
             {
                 return;
             }
 
-            if (!(e.NewValue is IEnumerable<ColumnInfo> columnInfos))
+            if (e.NewValue is not IEnumerable<ColumnInfo> columnInfos)
             {
                 return;
             }
@@ -144,26 +144,12 @@ namespace KiCadDbLib.Controls
             }
         }
 
-        private static void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private static void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
-            if (!(sender is DataGrid target))
+            if (sender is not DataGrid target)
             {
                 return;
             }
-
-            Debug.WriteLine($"Added: {e.AddedItems.Count}");
-            foreach (var item in e.AddedItems)
-            {
-                Debug.WriteLine($"  {item}");
-            }
-
-            Debug.WriteLine($"Removed: {e.RemovedItems.Count}");
-            foreach (var item in e.RemovedItems)
-            {
-                Debug.WriteLine($"  {item}");
-            }
-
-            Debug.WriteLine($"Selected: {target.SelectedItem}");
 
             if (e.AddedItems.Count == 0 || target.SelectedItem is null)
             {
@@ -180,7 +166,7 @@ namespace KiCadDbLib.Controls
 
         private static void OnSelectionChangedCommandChanged(AvaloniaPropertyChangedEventArgs obj)
         {
-            if (!(obj.Sender is DataGrid target))
+            if (obj.Sender is not DataGrid target)
             {
                 return;
             }

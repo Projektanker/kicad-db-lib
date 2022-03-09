@@ -179,17 +179,20 @@ namespace KiCadDbLib.ViewModels
 
         private async Task ImportCustomFieldsAsync()
         {
-            var customFields = CustomFields.Select(vm => vm.Value);
-
             var parts = await _partsRepository.GetPartsAsync()
                 .ConfigureAwait(true);
 
-            customFields = customFields
-                .Concat(parts.SelectMany(part => part.CustomFields.Keys))
-                .Distinct()
-                .OrderBy(s => s);
+            var customFieldsFromParts = parts
+                .SelectMany(part => part.CustomFields)
+                .Where(kv => !string.IsNullOrWhiteSpace(kv.Value))
+                .Select(kv => kv.Key)
+                .Distinct();
 
-            SettingsCustomFieldViewModel[] customFieldVms = customFields
+            var customFieldVms = CustomFields
+                .Select(vm => vm.Value)
+                .Concat(customFieldsFromParts)
+                .Distinct()
+                .OrderBy(s => s)
                 .Select(cf => new SettingsCustomFieldViewModel(cf, RemoveCustomField))
                 .ToArray();
 

@@ -10,11 +10,11 @@ namespace KiCadDbLib.Services
 {
     public class PartRepository : IPartRepository
     {
-        private readonly Lazy<Task<Settings>> _settings;
+        private readonly ISettingsProvider _settingsProvider;
 
         public PartRepository(ISettingsProvider settingsProvider)
         {
-            _settings = new(settingsProvider.GetSettingsAsync);
+            _settingsProvider = settingsProvider;
         }
 
         public async Task AddOrUpdateAsync(Part part)
@@ -102,9 +102,13 @@ namespace KiCadDbLib.Services
             return Path.Combine(directory, $"{id}.json");
         }
 
+        private Task<Settings> GetSettings() => _settingsProvider.GetSettingsAsync();
+
         private async Task<string?> TryGetDatabasePath()
         {
-            var settings = await _settings.Value.ConfigureAwait(false);
+            var settings = await GetSettings()
+                .ConfigureAwait(false);
+
             return !string.IsNullOrEmpty(settings.DatabasePath) && Directory.Exists(settings.DatabasePath)
                 ? settings.DatabasePath
                 : null;
@@ -112,7 +116,9 @@ namespace KiCadDbLib.Services
 
         private async Task<string> GetDatabasePath()
         {
-            var settings = await _settings.Value.ConfigureAwait(false);
+            var settings = await GetSettings()
+                .ConfigureAwait(false);
+
             if (string.IsNullOrEmpty(settings.DatabasePath))
             {
                 throw new DirectoryNotFoundException("The database directory is not set.");
