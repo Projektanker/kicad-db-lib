@@ -31,8 +31,7 @@ jobs:
         run: dotnet test --verbosity normal
       
       - name: 📯 Publish 🪟
-        run: | 
-          dotnet publish KiCadDbLib/KiCadDbLib.csproj -c Release --sc -r win-x64 -p:Version=$VERSION -o ../publish/win-x64
+        run: dotnet publish KiCadDbLib/KiCadDbLib.csproj -c Release --sc -r win-x64 -p:Version=${{ env.VERSION }} -o ../publish/win-x64
       
       - name: 📤 Upload
         uses: actions/upload-artifact@v3
