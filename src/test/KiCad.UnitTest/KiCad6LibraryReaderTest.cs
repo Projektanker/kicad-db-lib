@@ -15,8 +15,13 @@ public static class KicadDownloader
 {
     public static async Task DownloadSymbolFile(string libraryName)
     {
-        using var client = new HttpClient();
         var file = $"{libraryName}.kicad_sym";
+        if (File.Exists(file))
+        {
+            File.Delete(file);
+        }
+
+        using var client = new HttpClient();
         var url = new Uri("https://gitlab.com/kicad/libraries/kicad-symbols/-/raw/master/" + file);
         var content = await client.GetByteArrayAsync(url);
         await File.WriteAllBytesAsync(file, content);
