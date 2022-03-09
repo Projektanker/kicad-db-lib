@@ -29,8 +29,6 @@ namespace KiCadDbLib
         // Avalonia configuration, don't remove; also used by visual designer.
         public static AppBuilder BuildAvaloniaApp()
         {
-            IconProvider.Register<MaterialDesignIconProvider>();
-
             var container = new Container
             {
                 Options =
@@ -66,7 +64,8 @@ namespace KiCadDbLib
                 .Configure<App>()
                 .UseReactiveUI()
                 .UsePlatformDetect()
-                .LogToTrace();
+                .LogToTrace()
+                .WithIcons(container => container.Register<MaterialDesignIconProvider>());
         }
     }
 }
