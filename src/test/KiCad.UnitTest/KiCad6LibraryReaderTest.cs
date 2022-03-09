@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Net.Http;
+﻿using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
 using KiCadDbLib.Models;
@@ -10,23 +8,6 @@ using Moq;
 using Xunit;
 
 namespace KiCad.UnitTest;
-
-public static class KicadDownloader
-{
-    public static async Task DownloadSymbolFile(string libraryName)
-    {
-        var file = $"{libraryName}.kicad_sym";
-        if (File.Exists(file))
-        {
-            File.Delete(file);
-        }
-
-        using var client = new HttpClient();
-        var url = new Uri("https://gitlab.com/kicad/libraries/kicad-symbols/-/raw/master/" + file);
-        var content = await client.GetByteArrayAsync(url);
-        await File.WriteAllBytesAsync(file, content);
-    }
-}
 
 public class KiCad6LibraryReaderTest
 {
