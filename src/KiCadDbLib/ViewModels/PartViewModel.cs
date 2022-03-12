@@ -191,7 +191,8 @@ namespace KiCadDbLib.ViewModels
         {
             if (await DeletePartConfirmation.Handle(default).Catch(Observable.Return(true)))
             {
-                await _partRepository.DeleteAsync(_part.Id!).ConfigureAwait(false);
+                await _partRepository.DeleteAsync(_part.Id!)
+                    .ConfigureAwait(true);
                 await HostScreen.Router.NavigateBack.Execute();
             }
         }
