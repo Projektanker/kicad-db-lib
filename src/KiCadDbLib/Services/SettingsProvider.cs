@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using KiCadDbLib.Models;
 using Newtonsoft.Json;
@@ -10,10 +9,7 @@ namespace KiCadDbLib.Services
     {
         public SettingsProvider()
         {
-            Location = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "kicad-db-lib",
-                "settings.json");
+            Location = Path.Combine(DirectoryProvider.ApplicationData, "settings.json");
         }
 
         public string Location { get; }

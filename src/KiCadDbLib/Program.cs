@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.IO;
+using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
@@ -22,8 +24,17 @@ namespace KiCadDbLib
         // yet and stuff might break.
         public static void Main(string[] args)
         {
-            BuildAvaloniaApp()
-                .StartWithClassicDesktopLifetime(args);
+            try
+            {
+                BuildAvaloniaApp()
+                    .StartWithClassicDesktopLifetime(args);
+            }
+            catch (Exception exception)
+            {
+                var file = new FileInfo(Path.Combine(DirectoryProvider.ApplicationData, "dump.txt"));
+                file.Directory!.Create();
+                File.WriteAllText(file.FullName, exception.ToString());
+            }
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.
