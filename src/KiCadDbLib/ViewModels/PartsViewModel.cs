@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Avalonia.Metadata;
 using DynamicData.Alias;
 using KiCadDbLib.Models;
 using KiCadDbLib.Navigation;
@@ -16,30 +18,43 @@ namespace KiCadDbLib.ViewModels
 {
     public class PartsViewModel : RoutableViewModelBase
     {
+        private readonly ISettingsProvider _settingsProvider;
         private readonly IPartRepository _partRepository;
+
         private ObservableAsPropertyHelper<IEnumerable<ColumnInfo>> _partColumnsProperty;
+        private IReadOnlyList<Part> _parts = Array.Empty<Part>();
 
         public PartsViewModel(IScreen hostScreen)
             : base(hostScreen)
         {
-            _partRepository = Locator.Current.GetRequiredService<IPartRepository>()!;
-            var libraryBuilder = Locator.Current.GetRequiredService<ILibraryBuilder>()!;
+            _settingsProvider = Locator.Current.GetRequiredService<ISettingsProvider>();
+            _partRepository = Locator.Current.GetRequiredService<IPartRepository>();
+            var libraryBuilder = Locator.Current.GetRequiredService<ILibraryBuilder>();
+
+            _partColumnsProperty = ObservableAsPropertyHelper<IEnumerable<ColumnInfo>>
+                .Default(Enumerable.Empty<ColumnInfo>());
+
+            SetWorkspace = ReactiveCommand.CreateFromTask(ExecuteSetWorkspace);
 
             GoToSettings = NavigationCommand.Create(
                 hostScreen: HostScreen,
-                viewModelFactory: () => new SettingsViewModel(hostScreen: HostScreen));
+                viewModelFactory: () => new SettingsViewModel(hostScreen: HostScreen),
+                canExecute: SetWorkspace);
 
             GoToPart = NavigationCommand.Create<Part, PartViewModel>(
                 hostScreen: HostScreen,
-                viewModelFactory: CreatePartViewModel);
+                viewModelFactory: CreatePartViewModel,
+                canExecute: SetWorkspace);
 
             GoToAbout = NavigationCommand.Create(
                 hostScreen: HostScreen,
                 viewModelFactory: () => new AboutViewModel(HostScreen));
 
-            BuildLibrary = ReactiveCommand.CreateFromTask(libraryBuilder.Build);
+            BuildLibrary = ReactiveCommand.CreateFromTask(libraryBuilder.Build, SetWorkspace);
 
-            LoadParts = ReactiveCommand.CreateFromTask(GetParts);
+            LoadParts = ReactiveCommand.CreateFromTask(ExecuteLoadParts, SetWorkspace);
+
+            SelectWorkspace = new Interaction<string?, string?>();
         }
 
         public ReactiveCommand<Unit, Unit> BuildLibrary { get; }
@@ -50,22 +65,22 @@ namespace KiCadDbLib.ViewModels
 
         public ReactiveCommand<Unit, IRoutableViewModel> GoToSettings { get; }
 
-        public ReactiveCommand<Unit, Part[]> LoadParts { get; }
+        public ReactiveCommand<Unit, bool> SetWorkspace { get; }
 
-        public IEnumerable<ColumnInfo> PartColumns => _partColumnsProperty?.Value;
+        public Interaction<string?, string?> SelectWorkspace { get; }
 
-        /// <inheritdoc/>
-        protected override void WhenActivated(CompositeDisposable disposables)
+        public ReactiveCommand<Unit, Unit> LoadParts { get; }
+
+        [DependsOn(nameof(Parts))]
+        public IReadOnlyList<ColumnInfo> PartColumns => GetColumnInfos(Parts);
+
+        public IReadOnlyList<Part> Parts
         {
-            base.WhenActivated(disposables);
-
-            _partColumnsProperty = LoadParts
-                .Select(parts => GetColumnInfos(parts))
-                .ToProperty(this, nameof(PartColumns))
-                .DisposeWith(disposables);
+            get => _parts;
+            set => this.RaiseAndSetIfChanged(ref _parts, value);
         }
 
-        private static IEnumerable<ColumnInfo> GetColumnInfos(IEnumerable<Part> parts)
+        private static IReadOnlyList<ColumnInfo> GetColumnInfos(IEnumerable<Part> parts)
         {
             var columnInfos = new List<ColumnInfo>()
             {
@@ -95,7 +110,7 @@ namespace KiCadDbLib.ViewModels
             return columnInfos;
         }
 
-        private async Task<Part[]> GetParts()
+        private async Task ExecuteLoadParts()
         {
             var parts = await _partRepository.GetPartsAsync().ConfigureAwait(false);
             var customFields = parts
@@ -110,7 +125,7 @@ namespace KiCadDbLib.ViewModels
                     field => part.CustomFields.GetValueOrDefault(field, string.Empty));
             }
 
-            return parts
+            Parts = parts
                 .OrderBy(part => part.Library)
                 .ToArray();
         }
@@ -130,6 +145,21 @@ namespace KiCadDbLib.ViewModels
             return new PartViewModel(
                      hostScreen: HostScreen,
                      part: part);
+        }
+
+        private async Task<bool> ExecuteSetWorkspace()
+        {
+            var appSettings = await _settingsProvider.GetAppSettings().ConfigureAwait(true);
+
+            var workspace = appSettings.Workspace;
+            var selection = await SelectWorkspace.Handle(workspace).Catch(Observable.Return(workspace));
+
+            appSettings.Workspace = selection;
+            await _settingsProvider.UpdateAppSettings(appSettings).ConfigureAwait(true);
+
+            var hasWorkspace = !string.IsNullOrEmpty(appSettings.Workspace);
+
+            return hasWorkspace;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
 
         public async Task<ILibraryWriter> CreateWriterAsync(string outputDirectory, string libraryName)
         {
-            var settings = await _settingsProvider.GetSettingsAsync()
+            var settings = await _settingsProvider.GetWorkspaceSettings()
                 .ConfigureAwait(false);
 
             if (IsLegacy(settings))
@@ -31,7 +31,7 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
             }
         }
 
-        private static bool IsLegacy(Settings settings)
+        private static bool IsLegacy(WorkspaceSettings settings)
         {
             return !Directory
                 .EnumerateFiles(settings.SymbolsPath, $"*{FileExtensions.KicadSym}")

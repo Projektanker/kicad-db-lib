@@ -7,8 +7,12 @@ namespace KiCadDbLib.Services
     {
         string Location { get; }
 
-        Task<Settings> GetSettingsAsync();
+        Task<AppSettings> GetAppSettings();
 
-        Task SetSettingsAsync(Settings settings);
+        Task UpdateAppSettings(AppSettings appSettings);
+
+        Task<WorkspaceSettings> GetWorkspaceSettings();
+
+        Task UpdateWorkspaceSettings(WorkspaceSettings settings);
     }
 }

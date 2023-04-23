@@ -75,7 +75,7 @@ namespace KiCadDbLib.ViewModels
         {
             base.WhenActivated(disposables);
 
-            var settingsObservable = _settingsService.GetSettingsAsync().ToObservable();
+            var settingsObservable = _settingsService.GetWorkspaceSettings().ToObservable();
             var symbolsObservable = _libaryReader
                 .GetSymbolsAsync()
                 .ToObservable();
@@ -103,7 +103,7 @@ namespace KiCadDbLib.ViewModels
                 .DisposeWith(disposables);
         }
 
-        private static FormGroup GetPartForm(Settings settings, IEnumerable<string> symbols, IEnumerable<string> footprints, IEnumerable<string> libraries, Part part)
+        private static FormGroup GetPartForm(WorkspaceSettings settings, IEnumerable<string> symbols, IEnumerable<string> footprints, IEnumerable<string> libraries, Part part)
         {
             var customFields = new FormGroup()
             {

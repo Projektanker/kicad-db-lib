@@ -4,6 +4,6 @@ namespace KiCadDbLib
 {
     public interface IHosted
     {
-        Window Host { get; set; }
+        Window? Host { get; set; }
     }
 }

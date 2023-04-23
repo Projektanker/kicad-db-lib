@@ -102,7 +102,7 @@ namespace KiCadDbLib.Services
             return Path.Combine(directory, $"{id}.json");
         }
 
-        private Task<Settings> GetSettings() => _settingsProvider.GetSettingsAsync();
+        private Task<WorkspaceSettings> GetSettings() => _settingsProvider.GetWorkspaceSettings();
 
         private async Task<string?> TryGetDatabasePath()
         {

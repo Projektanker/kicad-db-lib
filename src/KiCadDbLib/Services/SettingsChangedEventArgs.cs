@@ -5,14 +5,14 @@ namespace KiCadDbLib.Services
 {
     public class SettingsChangedEventArgs : EventArgs
     {
-        public SettingsChangedEventArgs(Settings oldSettings, Settings newSettings)
+        public SettingsChangedEventArgs(WorkspaceSettings oldSettings, WorkspaceSettings newSettings)
         {
             OldSettings = oldSettings;
             NewSettings = newSettings;
         }
 
-        public Settings NewSettings { get; }
+        public WorkspaceSettings NewSettings { get; }
 
-        public Settings OldSettings { get; }
+        public WorkspaceSettings OldSettings { get; }
     }
 }

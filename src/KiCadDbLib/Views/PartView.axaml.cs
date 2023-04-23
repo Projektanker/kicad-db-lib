@@ -47,7 +47,7 @@ namespace KiCadDbLib.Views
         }
 
         /// <inheritdoc/>
-        public Window Host { get; set; }
+        public Window? Host { get; set; }
 
         private async Task HandleDeletePartConfirmationAsync(InteractionContext<Unit, bool> interactionContext)
         {

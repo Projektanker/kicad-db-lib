@@ -23,7 +23,7 @@ namespace KiCadDbLib.Services.KiCad.LibraryReader
 
         public async Task<string[]> GetFootprintsAsync()
         {
-            var settings = await _settingsProvider.GetSettingsAsync()
+            var settings = await _settingsProvider.GetWorkspaceSettings()
                    .ConfigureAwait(false);
 
             if (_footprintsPath != settings.FootprintsPath)
@@ -38,7 +38,7 @@ namespace KiCadDbLib.Services.KiCad.LibraryReader
 
         public async Task<string[]> GetSymbolsAsync()
         {
-            var settings = await _settingsProvider.GetSettingsAsync()
+            var settings = await _settingsProvider.GetWorkspaceSettings()
                 .ConfigureAwait(false);
 
             if (_symbolsPath != settings.SymbolsPath)

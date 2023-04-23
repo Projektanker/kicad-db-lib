@@ -43,7 +43,7 @@ namespace KiCadDbLib.Services.KiCad.LibraryReader
 
         private async Task<bool> IsLegacyAsync()
         {
-            var settings = await _settingsProvider.GetSettingsAsync()
+            var settings = await _settingsProvider.GetWorkspaceSettings()
                 .ConfigureAwait(false);
 
             return !Directory.EnumerateFiles(settings.SymbolsPath, $"*{FileExtensions.KicadSym}")

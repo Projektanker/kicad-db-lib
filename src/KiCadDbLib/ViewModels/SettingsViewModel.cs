@@ -24,14 +24,20 @@ namespace KiCadDbLib.ViewModels
         private readonly ISettingsProvider _settingsProvider;
         private readonly IPartRepository _partsRepository;
         private ObservableAsPropertyHelper<ObservableCollection<SettingsCustomFieldViewModel>> _customFieldsProperty;
-        private string _newCustomField;
         private ObservableAsPropertyHelper<FormGroup> _pathsFormProperty;
+        private string _newCustomField = string.Empty;
 
         public SettingsViewModel(IScreen hostScreen)
             : base(hostScreen)
         {
             _settingsProvider = Locator.Current.GetRequiredService<ISettingsProvider>();
             _partsRepository = Locator.Current.GetRequiredService<IPartRepository>();
+
+            _customFieldsProperty = ObservableAsPropertyHelper<ObservableCollection<SettingsCustomFieldViewModel>>
+                .Default(new ObservableCollection<SettingsCustomFieldViewModel>());
+
+            _pathsFormProperty = ObservableAsPropertyHelper<FormGroup>
+                .Default(new FormGroup());
 
             SaveSettings = ReactiveCommand.CreateFromTask(execute: ExecuteSaveSettings);
 
@@ -51,15 +57,19 @@ namespace KiCadDbLib.ViewModels
             });
 
             GoBack = ReactiveCommand.CreateFromTask(GoBackAsync);
+
+            SelectFolder = new Interaction<string, string?>();
         }
 
         public ReactiveCommand<Unit, Unit> AddCustomField { get; }
 
         public CombinedReactiveCommand<Unit, Unit> ImportCustomFields { get; }
 
-        public ObservableCollection<SettingsCustomFieldViewModel> CustomFields => _customFieldsProperty?.Value;
+        public ObservableCollection<SettingsCustomFieldViewModel> CustomFields => _customFieldsProperty.Value;
 
         public ReactiveCommandBase<Unit, Unit> GoBack { get; }
+
+        public Interaction<string, string?> SelectFolder { get; }
 
         public string NewCustomField
         {
@@ -67,11 +77,11 @@ namespace KiCadDbLib.ViewModels
             set => this.RaiseAndSetIfChanged(ref _newCustomField, value);
         }
 
-        public AbstractControl PathsForm => _pathsFormProperty?.Value;
+        public AbstractControl PathsForm => _pathsFormProperty.Value;
 
         public ReactiveCommand<Unit, Unit> SaveSettings { get; }
 
-        public string SettingsLocation => _settingsProvider?.Location;
+        public string SettingsLocation => _settingsProvider.Location;
 
         public void Dispose()
         {
@@ -84,7 +94,7 @@ namespace KiCadDbLib.ViewModels
         {
             base.WhenActivated(disposables);
 
-            IObservable<Settings> settingsObservable = _settingsProvider.GetSettingsAsync().ToObservable();
+            IObservable<WorkspaceSettings> settingsObservable = _settingsProvider.GetWorkspaceSettings().ToObservable();
 
             // Logging
             settingsObservable
@@ -95,7 +105,7 @@ namespace KiCadDbLib.ViewModels
 
             // Settings Paths
             _pathsFormProperty = settingsObservable
-                .Select(settings => GetPathsForm(settings))
+                .Select(GetPathsForm)
                 .ToProperty(this, nameof(PathsForm))
                 .DisposeWith(disposables);
 
@@ -112,29 +122,29 @@ namespace KiCadDbLib.ViewModels
                 .DisposeWith(disposables);
         }
 
-        private static FormGroup GetPathsForm(Settings settings)
+        private static FormGroup GetPathsForm(WorkspaceSettings settings)
         {
             var form = new FormGroup();
 
-            form.Add(nameof(Settings.DatabasePath), new FormControl(settings.DatabasePath)
+            form.Add(nameof(WorkspaceSettings.DatabasePath), new FormControl(settings.DatabasePath)
             {
                 Label = "Database",
                 Validator = Validators.DirectoryExists,
             });
 
-            form.Add(nameof(Settings.SymbolsPath), new FormControl(settings.SymbolsPath)
+            form.Add(nameof(WorkspaceSettings.SymbolsPath), new FormControl(settings.SymbolsPath)
             {
                 Label = "Symbols",
                 Validator = Validators.DirectoryExists,
             });
 
-            form.Add(nameof(Settings.FootprintsPath), new FormControl(settings.FootprintsPath)
+            form.Add(nameof(WorkspaceSettings.FootprintsPath), new FormControl(settings.FootprintsPath)
             {
                 Label = "Footprints",
                 Validator = Validators.DirectoryExists,
             });
 
-            form.Add(nameof(Settings.OutputPath), new FormControl(settings.OutputPath)
+            form.Add(nameof(WorkspaceSettings.OutputPath), new FormControl(settings.OutputPath)
             {
                 Label = "Output",
                 Validator = Validators.DirectoryExists,
@@ -163,12 +173,12 @@ namespace KiCadDbLib.ViewModels
                 throw new ValidationException("Settings are invalid.");
             }
 
-            var settings = PathsForm.GetValue<Settings>();
+            var settings = PathsForm.GetValue<WorkspaceSettings>();
 
             settings.CustomFields.AddRange(
                 CustomFields.Select(vm => vm.Value));
 
-            return _settingsProvider.SetSettingsAsync(settings);
+            return _settingsProvider.UpdateWorkspaceSettings(settings);
         }
 
         private void RemoveCustomField(string customField)

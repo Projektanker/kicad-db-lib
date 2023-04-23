@@ -18,7 +18,7 @@ namespace KiCadDbLib.Services
 
         public async Task Build()
         {
-            var settings = await _settingsProvider.GetSettingsAsync().ConfigureAwait(false);
+            var settings = await _settingsProvider.GetWorkspaceSettings().ConfigureAwait(false);
             var parts = await _partRepository.GetPartsAsync().ConfigureAwait(false);
 
             var groupedParts = parts

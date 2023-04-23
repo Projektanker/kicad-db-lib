@@ -17,9 +17,9 @@ public class KiCad6LibraryReaderTest
         // Arrange
         await KicadDownloader.DownloadSymbolFile("Device");
 
-        var settings = new Settings { SymbolsPath = Directory.GetCurrentDirectory() };
+        var settings = new WorkspaceSettings { SymbolsPath = Directory.GetCurrentDirectory() };
         var settingsProvider = new Mock<ISettingsProvider>();
-        settingsProvider.Setup(x => x.GetSettingsAsync()).ReturnsAsync(settings);
+        settingsProvider.Setup(x => x.GetWorkspaceSettings()).ReturnsAsync(settings);
 
         var reader = new KiCad6LibraryReader(settingsProvider.Object);
 
