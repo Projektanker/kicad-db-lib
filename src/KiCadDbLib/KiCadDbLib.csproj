@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<ApplicationIcon>Assets/kicad-db-lib.ico</ApplicationIcon>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<AnalysisMode>AllEnabledByDefault</AnalysisMode>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
@@ -17,16 +17,16 @@
 		<AvaloniaResource Include="Assets\**" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Avalonia.Controls.DataGrid" Version="0.10.10" />
-		<PackageReference Include="Avalonia.Desktop" Version="0.10.10" />
-		<PackageReference Include="Avalonia.Diagnostics" Version="0.10.10" />
-		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.10" />
-		<PackageReference Include="Material.Avalonia" Version="2.5.0" />
-		<PackageReference Include="morelinq" Version="3.3.2" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-		<PackageReference Include="Projektanker.Icons.Avalonia.MaterialDesign" Version="4.1.0" />
-		<PackageReference Include="ReactiveUI.Validation" Version="2.2.1" />
-		<PackageReference Include="SimpleInjector" Version="5.3.3" />
+		<PackageReference Include="Avalonia.Controls.DataGrid" Version="0.10.19" />
+		<PackageReference Include="Avalonia.Desktop" Version="0.10.19" />
+		<PackageReference Include="Avalonia.Diagnostics" Version="0.10.19" />
+		<PackageReference Include="Avalonia.ReactiveUI" Version="0.10.19" />
+		<PackageReference Include="Material.Avalonia" Version="2.5.1" />
+		<PackageReference Include="morelinq" Version="3.4.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Projektanker.Icons.Avalonia.MaterialDesign" Version="5.12.0" />
+		<PackageReference Include="ReactiveUI.Validation" Version="3.1.7" />
+		<PackageReference Include="SimpleInjector" Version="5.4.1" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.354">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
