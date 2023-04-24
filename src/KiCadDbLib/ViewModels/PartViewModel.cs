@@ -23,7 +23,7 @@ namespace KiCadDbLib.ViewModels
         private readonly ILibraryReader _libaryReader;
         private readonly IPartRepository _partRepository;
         private readonly ISettingsProvider _settingsService;
-        private string? _id;
+        private int? _id;
         private Part _part;
         private ObservableAsPropertyHelper<FormGroup>? _partFormProperty;
 
@@ -33,7 +33,7 @@ namespace KiCadDbLib.ViewModels
             : base(hostScreen)
         {
             _part = part ?? new Part();
-            Id = _part.Id;
+            Id = _part.Id != default ? _part.Id : null;
 
             _libaryBuilder = Locator.Current.GetRequiredService<ILibraryBuilder>();
             _libaryReader = Locator.Current.GetRequiredService<ILibraryReader>();
@@ -43,7 +43,7 @@ namespace KiCadDbLib.ViewModels
             GoBack = ReactiveCommand.CreateFromTask(ExecuteGoBackAsync);
 
             var canCloneOrDelete = this.WhenAnyValue(vm => vm.Id)
-                .Select(id => !string.IsNullOrEmpty(id));
+                .Select(id => id != default);
             Clone = ReactiveCommand.Create(ExecuteClone, canCloneOrDelete);
             Delete = ReactiveCommand.CreateFromTask(ExecuteDeleteAsync, canCloneOrDelete);
             Save = ReactiveCommand.CreateFromTask(ExecuteSaveAsync);
@@ -61,7 +61,7 @@ namespace KiCadDbLib.ViewModels
 
         public ReactiveCommand<Unit, Unit> GoBack { get; }
 
-        public string? Id
+        public int? Id
         {
             get => _id;
             set => this.RaiseAndSetIfChanged(ref _id, value);
@@ -191,7 +191,7 @@ namespace KiCadDbLib.ViewModels
         {
             if (await DeletePartConfirmation.Handle(default).Catch(Observable.Return(true)))
             {
-                await _partRepository.DeleteAsync(_part.Id!)
+                await _partRepository.DeleteAsync(_part.Id)
                     .ConfigureAwait(true);
                 await HostScreen.Router.NavigateBack.Execute();
             }
@@ -225,7 +225,7 @@ namespace KiCadDbLib.ViewModels
                 .GetValue() as JObject;
 
             _part = part.ToObject<Part>() ?? new Part();
-            _part.Id = Id!;
+            _part.Id = Id.GetValueOrDefault();
 
             await _partRepository.AddOrUpdateAsync(_part).ConfigureAwait(true);
             await _libaryBuilder.Build().ConfigureAwait(true);

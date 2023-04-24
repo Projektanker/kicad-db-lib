@@ -1,15 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using KiCadDbLib.Models;
 using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace KiCadDbLib.Services
 {
     public class PartRepository : IPartRepository
     {
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
+        {
+            AllowTrailingCommas = true,
+            WriteIndented = true,
+            PropertyNameCaseInsensitive = true,
+        };
+
         private readonly ISettingsProvider _settingsProvider;
 
         public PartRepository(ISettingsProvider settingsProvider)
@@ -19,20 +30,17 @@ namespace KiCadDbLib.Services
 
         public async Task AddOrUpdateAsync(Part part)
         {
-            if (string.IsNullOrEmpty(part.Id))
+            if (part.Id == 0)
             {
                 part.Id = await GetNewId().ConfigureAwait(false);
             }
 
             var filePath = await GetFilePathAsync(part.Id)
                 .ConfigureAwait(false);
-
-            var json = JsonConvert.SerializeObject(part);
-            await File.WriteAllTextAsync(filePath, json)
-                .ConfigureAwait(false);
+            await Serialize(part, filePath).ConfigureAwait(false);
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(int id)
         {
             var filePath = await GetFilePathAsync(id)
                 .ConfigureAwait(false);
@@ -49,11 +57,11 @@ namespace KiCadDbLib.Services
                 .ToArray();
         }
 
-        public async Task<Part> GetPartAsync(string id)
+        public async Task<Part> GetPartAsync(int id)
         {
             var filePath = await GetFilePathAsync(id).ConfigureAwait(false);
             var part = await Deserialize(filePath).ConfigureAwait(false);
-            return part!;
+            return part;
         }
 
         public async Task<Part[]> GetPartsAsync()
@@ -73,28 +81,43 @@ namespace KiCadDbLib.Services
                 .ConfigureAwait(false);
         }
 
+        private static async Task Serialize(Part part, string filePath)
+        {
+            var entity = PartEntity.From(part);
+            var json = JsonSerializer.Serialize(entity, _jsonSerializerOptions);
+            await File.WriteAllTextAsync(filePath, json)
+                .ConfigureAwait(false);
+        }
+
         private static async ValueTask<Part> Deserialize(string filePath)
         {
             var json = await File.ReadAllTextAsync(filePath).ConfigureAwait(false);
-            var part = JsonConvert.DeserializeObject<Part>(json);
-            return part!;
+            var entity = JsonSerializer.Deserialize<PartEntity>(json, _jsonSerializerOptions)!;
+            var id = GetId(filePath);
+            return entity.ToPart(id);
         }
 
-        private async Task<string> GetNewId()
+        private static int GetId(string filePath)
+        {
+            return int.Parse(
+                Path.GetFileNameWithoutExtension(filePath),
+                CultureInfo.InvariantCulture);
+        }
+
+        private async Task<int> GetNewId()
         {
             var directory = await GetDatabasePath()
                 .ConfigureAwait(false);
 
             var newId = Directory.EnumerateFiles(directory)
-                .Select(Path.GetFileNameWithoutExtension)
-                .Select(id => int.TryParse(id, out var result) ? result : default)
+                .Select(GetId)
                 .DefaultIfEmpty()
                 .Max() + 1;
 
-            return newId.ToString(CultureInfo.InvariantCulture);
+            return newId;
         }
 
-        private async Task<string> GetFilePathAsync(string id)
+        private async Task<string> GetFilePathAsync(int id)
         {
             var directory = await GetDatabasePath()
                 .ConfigureAwait(false);

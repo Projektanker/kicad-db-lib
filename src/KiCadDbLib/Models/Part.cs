@@ -4,7 +4,7 @@ namespace KiCadDbLib.Models
 {
     public class Part
     {
-        public string? Id { get; set; }
+        public int Id { get; set; }
         public string Library { get; set; } = string.Empty;
         public string Reference { get; set; } = string.Empty;
         public string Symbol { get; set; } = string.Empty;
@@ -19,7 +19,7 @@ namespace KiCadDbLib.Models
 
         public override string ToString()
         {
-            return Id ?? string.Empty;
+            return Id.ToString();
         }
     }
 }

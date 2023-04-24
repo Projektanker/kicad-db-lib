@@ -6,9 +6,13 @@ namespace KiCadDbLib.Services
     public interface IPartRepository
     {
         Task AddOrUpdateAsync(Part part);
-        Task DeleteAsync(string id);
+
+        Task DeleteAsync(int id);
+
         Task<string[]> GetLibrariesAsync();
-        Task<Part> GetPartAsync(string id);
+
+        Task<Part> GetPartAsync(int id);
+
         Task<Part[]> GetPartsAsync();
     }
 }

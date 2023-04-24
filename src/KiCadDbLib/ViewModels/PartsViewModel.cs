@@ -132,7 +132,7 @@ namespace KiCadDbLib.ViewModels
 
         private async Task<PartViewModel> CreatePartViewModel(Part? part = null)
         {
-            if (part?.Id is null)
+            if (part is null || part.Id == default)
             {
                 part = new Part();
             }
