@@ -228,8 +228,14 @@ namespace KiCadDbLib.ViewModels
             _part.Id = Id.GetValueOrDefault();
 
             await _partRepository.AddOrUpdateAsync(_part).ConfigureAwait(true);
-            await _libaryBuilder.Build().ConfigureAwait(true);
-            await HostScreen.Router.NavigateBack.Execute();
+            try
+            {
+                await _libaryBuilder.Build().ConfigureAwait(true);
+            }
+            finally
+            {
+                await HostScreen.Router.NavigateBack.Execute();
+            }
         }
     }
 }
