@@ -120,22 +120,38 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
             symbol.Insert(index, customProperty);
         }
 
-        private static SNode CreateCustomProperty(int propertyId, KeyValuePair<string, string> property)
+        private static SNode CreateCustomProperty(int? propertyId, KeyValuePair<string, string> property)
         {
-            var id = new SNode("id", new SNode(propertyId.ToString()));
-            var at = new SNode("at", new SNode("0"), new SNode("0"), new SNode("0"));
+            var childs = new List<SNode>();
+            if (propertyId.HasValue)
+            {
+                childs.Add(new SNode("id", new SNode(propertyId.Value.ToString())));
+            }
 
-            var font = new SNode("font", new SNode("size", new SNode("1.27"), new SNode("1.27")));
-            var effects = new SNode("effects", font, new SNode("hide"));
+            childs.AddRange(new[]
+            {
+                new SNode("at", new SNode("0"), new SNode("0"), new SNode("0")),
+                new SNode(
+                    "effects",
+                    new SNode("font", new SNode("size", new SNode("1.27"), new SNode("1.27"))),
+                    new SNode("hide")),
+                new SNode(property.Key, isString: true),
+                new SNode(property.Value, isString: true)
+            });
 
-            return new SNode(_property, new SNode(property.Key, isString: true), new SNode(property.Value, isString: true), id, at, effects);
+            return new SNode(_property, childs);
         }
 
-        private static int GetIdOfLastProperty(SNode symbol)
+        private static int? GetIdOfLastProperty(SNode symbol)
         {
-            static int GetIdOfProperty(SNode property)
+            static int? GetIdOfProperty(SNode property)
             {
-                var idNode = property.Childs.First(child => child.Name == "id");
+                var idNode = property.Childs.FirstOrDefault(child => child.Name == "id");
+                if (idNode is null)
+                {
+                    return null;
+                }
+
                 return int.Parse(idNode.Childs[0].Name!);
             }
 

@@ -19,9 +19,8 @@ namespace KiCadDbLib.Services.KiCad
         }
 
         public SNode(string name, params SNode[] childs)
-            : this(childs)
+            : this(name, childs.AsEnumerable())
         {
-            Name = name;
         }
 
         public SNode(params SNode[] childs)
@@ -29,8 +28,9 @@ namespace KiCadDbLib.Services.KiCad
             _childs = new(childs);
         }
 
-        public SNode(IEnumerable<SNode>? childs)
+        public SNode(string? name, IEnumerable<SNode>? childs)
         {
+            Name = name;
             if (childs != null)
             {
                 _childs = new(childs);
@@ -66,9 +66,8 @@ namespace KiCadDbLib.Services.KiCad
             var childs = _childs
                 ?.Select(child => child.Clone());
 
-            return new SNode(childs)
+            return new SNode(Name, childs)
             {
-                Name = Name,
                 IsString = IsString,
             };
         }

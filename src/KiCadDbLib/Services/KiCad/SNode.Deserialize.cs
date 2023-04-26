@@ -84,10 +84,7 @@ namespace KiCadDbLib.Services.KiCad
 
         public static SNode EmptyNode()
         {
-            return new SNode(Array.Empty<SNode>())
-            {
-                IsString = false,
-            };
+            return new SNode(Array.Empty<SNode>());
         }
 
         public static SNode PrimitiveNode(string name)
