@@ -65,7 +65,8 @@ All the paths are relative to the workspace directory. Absolute paths are suppor
 
 #### Fields:
 
-Add or delete custom fields like manufacturer, order codes etc.
+Add or delete custom fields like manufacturer, order codes etc.  
+⚠️ **Warning:** Fields do not support a space character. Use `_` instead.
 
 ### Add, update, delete part
 

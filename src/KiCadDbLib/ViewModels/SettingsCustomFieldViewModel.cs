@@ -10,8 +10,8 @@ namespace KiCadDbLib.ViewModels
 
         public SettingsCustomFieldViewModel(string value, Action<string> removeAction)
         {
-            Value = value;
-            _removeAction = removeAction ?? throw new ArgumentNullException(nameof(removeAction));
+            Value = value.Replace(' ', '_');
+            _removeAction = removeAction;
             Remove = ReactiveCommand.Create(execute: ExecuteRemove);
         }
 
