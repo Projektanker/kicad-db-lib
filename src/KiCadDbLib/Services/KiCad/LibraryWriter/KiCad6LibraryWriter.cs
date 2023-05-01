@@ -139,7 +139,12 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
 
         private static SNode CreateCustomProperty(int? propertyId, KeyValuePair<string, string> property)
         {
-            var childs = new List<SNode>();
+            var childs = new List<SNode>()
+            {
+                new SNode(property.Key, isString: true),
+                new SNode(property.Value, isString: true)
+            };
+
             if (propertyId.HasValue)
             {
                 childs.Add(new SNode("id", new SNode(propertyId.Value.ToString())));
@@ -152,8 +157,6 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
                     "effects",
                     new SNode("font", new SNode("size", new SNode("1.27"), new SNode("1.27"))),
                     new SNode("hide")),
-                new SNode(property.Key, isString: true),
-                new SNode(property.Value, isString: true)
             });
 
             return new SNode(_property, childs);
