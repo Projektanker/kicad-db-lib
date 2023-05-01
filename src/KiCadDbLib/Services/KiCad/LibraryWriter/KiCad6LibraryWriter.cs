@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using KiCadDbLib.Models;
 
@@ -37,12 +38,28 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
             return ValueTask.CompletedTask;
         }
 
-        public Task WriteStartLibrary()
+        public async Task WriteStartLibrary()
         {
+            var symbolLibFile = Directory
+                .EnumerateFiles(_symbolsDirectory, $"*{FileExtensions.KicadSym}")
+                .FirstOrDefault();
+
+            var version = default(string);
+            if (symbolLibFile is not null)
+            {
+                var versionRegex = new Regex(@"(?<=\(version )\d+(?=\))");
+                var symbolLibLines = File.ReadLinesAsync(symbolLibFile);
+                version = await symbolLibLines
+                    .Select(line => versionRegex.Match(line))
+                    .Where(match => match.Success)
+                    .Select(match => match.Value)
+                    .FirstOrDefaultAsync()
+                    .ConfigureAwait(false);
+            }
+
             _root.Name = "kicad_symbol_lib";
-            _root.Add(new SNode("version", new SNode("20201005")));
+            _root.Add(new SNode("version", new SNode(version ?? "20201005")));
             _root.Add(new SNode("generator", new SNode("kicad_db_lib")));
-            return Task.CompletedTask;
         }
 
         public async Task WriteEndLibrary()
