@@ -25,9 +25,9 @@ Create and maintain a database for your electric components with
 
 inside of `KiCad-Db-Lib`.
 
-Because it is build with [Avalonia](http://avaloniaui.net/) KiCad-Db-Lib can be used on Windows, Linux and MacOS.
+Because it is build with [Avalonia](http://avaloniaui.net/) `KiCad-Db-Lib` can be used on Windows, Linux and MacOS.
 
-![Screenshot](documentation/screenshot-parts.png 'Screenshot')
+![Screenshot](documentation/screenshot-parts.png)
 
 ## Usage
 
@@ -35,28 +35,33 @@ On Windows, download and unpack the `kicad-db-lib-win-x64.zip` from the [latest 
 
 On Linux, download and unpack the `kicad-db-lib-linux-x64.zip` from the [latest release](https://github.com/Projektanker/kicad-db-lib/releases/latest) and run `KiCadDbLib`.
 
-At first startup you have to go to the settings and configure your custom fields and your paths.
+At startup you have to pick a workspace directory by pressing the `folder` icon.
+
+![Screenshot](documentation/screenshot-pick-workspace.png)
+
+The workspace directory is the root directory for your database and library files.  
+You can press the `folder` icon again to change the workspace directory at any time.
 
 ### Settings
 
-
 #### Paths
+All the paths are relative to the workspace directory. Absolute paths are supported.
 
-- Parts:
+- Database:  
+  `default: parts`  
+  Directory where the parts created using `KiCad-Db-Lib` are stored. Every part you create is stored as a single JSON file. So it is possible to sync your parts across multiple devices by DropBox, OneDrive etc.
 
-  The parts folder is to store the parts created using kicad-db-lib. Every part you create is stored as a single JSON file. So it is possible to sync your parts across multiple devices by DropBox, OneDrive etc. E.g. `C:\kicad\parts`.
-
-- Symbol:
-
-  Directory where the KiCad symbols are stored. E.g. clone the `kicad-symbols` repository from https://gitlab.com/kicad/libraries/kicad-symbols to `C:\kicad\kicad-symbols`.
+- Symbols:  
+  `default: symbols`  
+  Directory where the KiCad symbols are stored. E.g. clone the `kicad-symbols` repository from https://gitlab.com/kicad/libraries/kicad-symbols to `{workspace directory}/symbols`.
 
 - Footprint:
-
-  Directory where the KiCad footprints are stored. On Windows, it is `C:\Program Files\KiCad\share\kicad\modules`.
+  `default: footprints`  
+  Directory where the KiCad footprints are stored. E.g. clone the `kicad-footprints` repository from https://gitlab.com/kicad/libraries/kicad-footprints to `{workspace directory}/footprints`.
 
 - Output:
-
-  Directory where the final created library files for use in KiCad go. E.g. `C:\kicad\library`.
+  `default: output`  
+  Directory where the final created library files for use in KiCad go.
 
 #### Fields:
 
