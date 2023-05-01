@@ -6,7 +6,7 @@ on:
       - "[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
-  build-win: 
+  build-win:
     name: 📯 Publish 🪟
     runs-on: windows-latest
     defaults:
@@ -14,25 +14,25 @@ jobs:
         working-directory: src/
     steps:
       - name: 🛒 Checkout
-        uses: actions/checkout@v2
-      
+        uses: actions/checkout@v3
+
       - name: 1️⃣2️⃣3️⃣ Set VERSION
         uses: ./.github/actions/version
-      
+
       - name: 💬 Release notes
         run: cat "../release-notes/${{ env.VERSION }}.md"
-      
+
       - name: 🟣 Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.x
-           
+          dotnet-version: 7.0.x
+
       - name: 🧪 Test
         run: dotnet test --verbosity normal
-      
+
       - name: 📯 Publish 🪟
         run: dotnet publish KiCadDbLib/KiCadDbLib.csproj -c Release --sc -r win-x64 -p:Version=${{ env.VERSION }} -o ../publish/win-x64
-      
+
       - name: 📤 Upload
         uses: actions/upload-artifact@v3
         with:
@@ -48,41 +48,41 @@ jobs:
         working-directory: src/
     steps:
       - name: 🛒 Checkout
-        uses: actions/checkout@v2
-      
+        uses: actions/checkout@v3
+
       - name: 1️⃣2️⃣3️⃣ Set VERSION
         uses: ./.github/actions/version
-      
+
       - name: 💬 Release notes
         run: cat "../release-notes/${{ env.VERSION }}.md"
-      
+
       - name: 🟣 Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.x
-           
+          dotnet-version: 7.0.x
+
       - name: 🧪 Test
         run: dotnet test --verbosity normal
-      
-      - name: 🪟 Download 
+
+      - name: 🪟 Download
         uses: ./.github/actions/download-delete-artifact
         with:
           name: win-x64
           path: publish/win-x64
-      
+
       - name: 🪟 Pack
-        run: | 
+        run: |
           cd ../publish/win-x64
           zip -r ../KiCad-Db-Lib-win-x64.zip .
 
-      - name: 📺 Publish 
-        run: | 
+      - name: 📺 Publish
+        run: |
           dotnet publish KiCadDbLib/KiCadDbLib.csproj -c Release --sc -r linux-x64 -p:Version=$VERSION -o ../publish/linux-x64
           cd ../publish/linux-x64
           tar -cvzf ../KiCad-Db-Lib-linux-x64.tar.gz *
-      
+
       - name: 🍏 Publish
-        run: | 
+        run: |
           dotnet publish KiCadDbLib/KiCadDbLib.csproj -c Release --sc -r osx-x64 -p:Version=$VERSION -o ../publish/osx-x64
           cd ../publish/osx-x64
           tar -cvzf ../KiCad-Db-Lib-macOS.tar.gz *
@@ -95,4 +95,3 @@ jobs:
             publish/KiCad-Db-Lib-win-x64.zip
             publish/KiCad-Db-Lib-linux-x64.tar.gz
             publish/KiCad-Db-Lib-macOS.tar.gz
-
