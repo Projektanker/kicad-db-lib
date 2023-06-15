@@ -80,12 +80,12 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
             SetSymbolId(symbol, part.Value);
             UpdateUnitIds(symbol, symbolInfo.Name, part.Value);
 
-            SetPropertyByName(symbol, "Reference", part.Reference);
-            SetPropertyByName(symbol, "Value", part.Value);
-            SetPropertyByName(symbol, "Footprint", part.Footprint);
-            SetPropertyByName(symbol, "Datasheet", string.IsNullOrEmpty(part.Datasheet) ? "~" : part.Datasheet);
-            SetPropertyByName(symbol, "ki_keywords", part.Keywords);
-            SetPropertyByName(symbol, "ki_description", part.Description);
+            SetOrAddPropertyByName(symbol, "Reference", part.Reference);
+            SetOrAddPropertyByName(symbol, "Value", part.Value);
+            SetOrAddPropertyByName(symbol, "Footprint", part.Footprint);
+            SetOrAddPropertyByName(symbol, "Datasheet", string.IsNullOrEmpty(part.Datasheet) ? "~" : part.Datasheet);
+            SetOrAddPropertyByName(symbol, "ki_keywords", part.Keywords);
+            SetOrAddPropertyByName(symbol, "ki_description", part.Description);
 
             foreach (var customField in part.CustomFields.OrderBy(cf => cf.Key))
             {
@@ -113,20 +113,23 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
             }
         }
 
-        private static void SetPropertyByName(SNode symbol, string propertyName, string value)
+        private static void SetOrAddPropertyByName(SNode symbol, string propertyName, string value)
         {
             var property = symbol.Childs
                 .Where(child => child.Name == _property)
                 .SingleOrDefault(property => property.Childs[0].Name == propertyName);
 
-            if (property is null)
+            if (property is not null)
             {
-                var symbolName = symbol.Childs[0].Name;
-                throw new KeyNotFoundException($"Property \"{propertyName}\" not found in symbol\"{symbolName}\".");
+                property.Childs[1].Name = value;
+                property.Childs[1].IsString = true;
             }
-
-            property.Childs[1].Name = value;
-            property.Childs[1].IsString = true;
+            else
+            {
+                var index = GetIndexOfLastProperty(symbol) + 1;
+                property = CreateCustomProperty(null, KeyValuePair.Create(propertyName, value));
+                symbol.Insert(index, property);
+            }
         }
 
         private static void AddCustomProperty(SNode symbol, KeyValuePair<string, string> property)
@@ -176,7 +179,7 @@ namespace KiCadDbLib.Services.KiCad.LibraryWriter
             }
 
             return symbol.Childs
-                .Where(child => child.Name == "property")
+                .Where(child => child.Name == _property)
                 .Select(GetIdOfProperty)
                 .Last();
         }
