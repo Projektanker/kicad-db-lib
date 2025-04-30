@@ -38,6 +38,8 @@ public class KiCad6LibraryReaderTest
         symbols.Should().Contain("Device:L");
 
         symbols.Should().NotContain("Device:C_0_0");
-        symbols.Should().NotContain("Device:Filter_EMI_C", because: "it only extends Device:C_Feedthrough");
+        symbols
+            .Should()
+            .NotContain("Device:Filter_EMI_C", because: "it only extends Device:C_Feedthrough");
     }
 }
