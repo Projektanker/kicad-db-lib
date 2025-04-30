@@ -14,7 +14,7 @@ jobs:
         working-directory: src/
     steps:
       - name: 🛒 Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 1️⃣2️⃣3️⃣ Set VERSION
         uses: ./.github/actions/version
@@ -23,7 +23,7 @@ jobs:
         run: cat "../release-notes/${{ env.VERSION }}.md"
 
       - name: 🟣 Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 7.0.x
 
@@ -34,7 +34,7 @@ jobs:
         run: dotnet publish KiCadDbLib/KiCadDbLib.csproj -c Release --sc -r win-x64 -p:Version=${{ env.VERSION }} -o ../publish/win-x64
 
       - name: 📤 Upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: win-x64
           path: publish/win-x64
@@ -48,7 +48,7 @@ jobs:
         working-directory: src/
     steps:
       - name: 🛒 Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 1️⃣2️⃣3️⃣ Set VERSION
         uses: ./.github/actions/version
@@ -57,7 +57,7 @@ jobs:
         run: cat "../release-notes/${{ env.VERSION }}.md"
 
       - name: 🟣 Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 7.0.x
 
@@ -88,7 +88,7 @@ jobs:
           tar -cvzf ../KiCad-Db-Lib-macOS.tar.gz *
 
       - name: 🚀 Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           body_path: release-notes/${{ env.VERSION }}.md
           files: |
